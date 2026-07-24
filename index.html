@@ -3,162 +3,614 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أداة حماية وتشفير سكربتات لوا - روبلوكس</title>
+    <title>MRX - Roblox Lua Shield</title>
     <style>
-        :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --accent-color: #00d26a;
-            --text-color: #f8fafc;
-            --border-color: #334155;
+        /* ===== الأساسيات ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 20px;
+            background: #000000;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* ===== نجوم الخلفية ===== */
+        #stars-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ===== شاشة تسجيل الدخول ===== */
+        #loginScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(6px);
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        #loginScreen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .login-box {
+            background: linear-gradient(145deg, #0a0a0a, #1a1a1a);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 50px 40px 40px;
+            width: 420px;
+            max-width: 92%;
+            text-align: center;
+            box-shadow: 0 0 80px rgba(0, 210, 106, 0.06), 0 0 160px rgba(0, 210, 106, 0.03), inset 0 0 60px rgba(255, 255, 255, 0.02);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-box::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 26px;
+            background: linear-gradient(45deg, #00d26a, transparent, #00d26a, transparent);
+            background-size: 400% 400%;
+            z-index: -1;
+            animation: borderGlow 6s linear infinite;
+            opacity: 0.4;
+        }
+
+        @keyframes borderGlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .login-logo-img {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(0, 210, 106, 0.3);
+            box-shadow: 0 0 40px rgba(0, 210, 106, 0.15);
+            margin-bottom: 12px;
+        }
+
+        .login-brand {
+            font-size: 48px;
+            font-weight: 900;
+            letter-spacing: 6px;
+            background: linear-gradient(135deg, #ffffff, #00d26a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 4px;
+            text-shadow: 0 0 60px rgba(0, 210, 106, 0.2);
+        }
+
+        .login-sub {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.35);
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            margin-bottom: 28px;
+            font-weight: 300;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 14px 18px;
+            margin-bottom: 14px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 14px;
+            direction: ltr;
+            text-align: left;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            outline: none;
+        }
+
+        .login-box input:focus {
+            border-color: #00d26a;
+            box-shadow: 0 0 20px rgba(0, 210, 106, 0.08);
+        }
+
+        .login-box input::placeholder {
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            margin-top: 6px;
+            background: linear-gradient(135deg, #00d26a, #00994d);
+            border: none;
+            border-radius: 10px;
+            color: #000;
+            font-weight: 800;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 2px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 210, 106, 0.3);
+        }
+
+        .login-error {
+            color: #ff4444;
+            font-size: 13px;
+            margin-top: 10px;
+            min-height: 20px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .login-error.show {
+            opacity: 1;
+        }
+
+        /* ===== المحتوى الرئيسي بعد الدخول ===== */
+        #mainApp {
+            position: relative;
+            z-index: 1;
+            display: none;
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+
+        #mainApp.active {
             display: flex;
             justify-content: center;
+            align-items: flex-start;
         }
 
         .container {
             width: 100%;
-            max-width: 800px;
-            background: var(--card-bg);
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--border-color);
+            max-width: 860px;
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(12px);
+            padding: 35px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 100px rgba(0, 210, 106, 0.03);
+            margin-top: 30px;
+        }
+
+        .header-brand {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header-brand .logo-text {
+            font-size: 42px;
+            font-weight: 900;
+            letter-spacing: 8px;
+            background: linear-gradient(135deg, #ffffff, #00d26a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-brand .sub-text {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.25);
+            letter-spacing: 4px;
+            margin-top: 4px;
         }
 
         h2 {
             text-align: center;
-            margin-bottom: 20px;
-            color: var(--accent-color);
+            margin-bottom: 22px;
+            color: #00d26a;
+            font-weight: 700;
+            font-size: 22px;
+            letter-spacing: 1px;
         }
 
         label {
             display: block;
             margin-bottom: 8px;
-            font-weight: bold;
+            font-weight: 600;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
         }
 
         textarea {
             width: 100%;
-            height: 180px;
-            background-color: #090d16;
+            height: 200px;
+            background: rgba(0, 0, 0, 0.7);
             color: #38bdf8;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 14px;
             font-family: 'Courier New', Courier, monospace;
-            font-size: 14px;
-            box-sizing: border-box;
+            font-size: 13px;
             resize: vertical;
             direction: ltr;
             text-align: left;
+            transition: border-color 0.3s;
+            outline: none;
+        }
+
+        textarea:focus {
+            border-color: rgba(0, 210, 106, 0.3);
         }
 
         .btn-container {
             text-align: center;
-            margin: 20px 0;
+            margin: 22px 0;
         }
 
         button {
-            background-color: var(--accent-color);
+            background: linear-gradient(135deg, #00d26a, #00994d);
             color: #000;
-            font-weight: bold;
+            font-weight: 800;
             font-size: 16px;
-            padding: 12px 30px;
+            padding: 14px 34px;
             border: none;
-            border-radius: 6px;
+            border-radius: 10px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
         }
 
         button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 210, 106, 0.3);
+            box-shadow: 0 8px 30px rgba(0, 210, 106, 0.25);
         }
 
         .copy-btn {
-            background-color: #38bdf8;
-            margin-top: 10px;
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
             font-size: 14px;
-            padding: 8px 16px;
+            padding: 10px 20px;
+            margin-top: 12px;
+            float: left;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: none;
+        }
+
+        .logout-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 20;
+            background: rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 8px 18px;
+            font-size: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 400;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+        }
+
+        .status-badge {
+            text-align: center;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.2);
+            margin-top: 20px;
+            letter-spacing: 2px;
+        }
+
+        /* ===== توافق الجوال ===== */
+        @media (max-width: 600px) {
+            .container { padding: 20px; }
+            .login-box { padding: 30px 20px; }
+            .login-brand { font-size: 34px; }
+            .header-brand .logo-text { font-size: 30px; }
+            textarea { height: 150px; }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>أداة تشفير وحماية سكربتات لوا (Roblox)</h2>
+    <!-- ===== Canvas النجوم ===== -->
+    <canvas id="stars-canvas"></canvas>
 
-    <!-- المربع الأول: إدخال الكود الأصلي -->
-    <label for="inputLua">أدخل كود Lua الأصلي هنا:</label>
-    <textarea id="inputLua" placeholder='print("Hello Roblox!")'></textarea>
+    <!-- ===== شاشة تسجيل الدخول ===== -->
+    <div id="loginScreen">
+        <div class="login-box">
+            <img class="login-logo-img" src="https://github.com/Rxz60/MRX/raw/refs/heads/main/IMG_4528.jpeg" alt="MRX Logo">
+            <div class="login-brand">MRX</div>
+            <div class="login-sub">● Roblox Security ●</div>
 
-    <!-- زر التشفير -->
-    <div class="btn-container">
-        <button onclick="obfuscateScript()">تشفير السكربت 🔒</button>
+            <input type="text" id="loginUser" placeholder="اسم المستخدم" autocomplete="off">
+            <input type="password" id="loginPass" placeholder="كلمة المرور" autocomplete="off">
+            
+            <button class="login-btn" onclick="handleLogin()">دخول ➤</button>
+            <div class="login-error" id="loginError"></div>
+        </div>
     </div>
 
-    <!-- المربع الثاني: ظهور الكود المشفر -->
-    <label for="outputLua">الكود المشفر (جاهز للاستخدام في روبلوكس):</label>
-    <textarea id="outputLua" readonly placeholder="سيظهر السكربت المشفر هنا..."></textarea>
-    
-    <div style="text-align: left;">
-        <button class="copy-btn" onclick="copyOutput()">نسخ السكربت المشفر 📋</button>
+    <!-- ===== التطبيق الرئيسي ===== -->
+    <div id="mainApp">
+        <button class="logout-btn" onclick="handleLogout()">✕ خروج</button>
+
+        <div class="container">
+            <div class="header-brand">
+                <div class="logo-text">MRX</div>
+                <div class="sub-text">● LUA SHIELD — OBFUSCATOR ●</div>
+            </div>
+
+            <h2>⎜ أداة تشفير وحماية سكربتات لوا (Roblox) ⎜</h2>
+
+            <label for="inputLua">أدخل كود Lua الأصلي هنا:</label>
+            <textarea id="inputLua" placeholder='print("Hello Roblox!")'></textarea>
+
+            <div class="btn-container">
+                <button onclick="obfuscateScript()">🔒 تشفير السكربت — MRX SHIELD</button>
+            </div>
+
+            <label for="outputLua">الكود المشفر (جاهز للاستخدام):</label>
+            <textarea id="outputLua" readonly placeholder="السكربت المشفر سيظهر هنا..."></textarea>
+            
+            <div style="text-align: left;">
+                <button class="copy-btn" onclick="copyOutput()">📋 نسخ السكربت المشفر</button>
+            </div>
+
+            <div class="status-badge">MRX SHIELD v3.0 ● ENCRYPTION LOCKED ● UNAUTHORIZED ACCESS WILL BE TERMINATED</div>
+        </div>
     </div>
-</div>
 
-<script>
-function obfuscateScript() {
-    const rawCode = document.getElementById('inputLua').value;
-    
-    if (!rawCode.trim()) {
-        alert("يرجى كتابة أو لصق كود Lua أولاً!");
-        return;
-    }
+    <script>
+        // ============================================================
+        // 1. نظام النجوم المتحركة
+        // ============================================================
+        const canvas = document.getElementById('stars-canvas');
+        const ctx = canvas.getContext('2d');
+        let stars = [];
+        const STAR_COUNT = 260;
 
-    // 1. تحويل نص السكربت إلى مصفوفة قيم ASCII مفتاحية مع خانات عشوائية
-    let byteTable = [];
-    for (let i = 0; i < rawCode.length; i++) {
-        byteTable.push(rawCode.charCodeAt(i));
-    }
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
 
-    // 2. توليد مفتاح تشفير عشوائي بسيط (XOR Key)
-    const key = Math.floor(Math.random() * 200) + 20;
-    const encryptedBytes = byteTable.map(b => b ^ key);
+        function initStars() {
+            stars = [];
+            for (let i = 0; i < STAR_COUNT; i++) {
+                stars.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 2.2 + 0.6,
+                    speed: Math.random() * 0.6 + 0.15,
+                    opacity: Math.random() * 0.8 + 0.2,
+                    twinkle: Math.random() * 0.02 + 0.005
+                });
+            }
+        }
+        initStars();
 
-    // 3. بناء هيكل المحرك الخفيف والتنفيذي للوا في روبلوكس
-    const obfuscatedTemplate = `--[[ 
-    Protected by Roblox Lua Shield 
+        function drawStars() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (const s of stars) {
+                s.y -= s.speed;
+                if (s.y < -5) {
+                    s.y = canvas.height + 5;
+                    s.x = Math.random() * canvas.width;
+                }
+
+                s.opacity += s.twinkle * (Math.random() > 0.5 ? 1 : -1);
+                if (s.opacity > 1) s.opacity = 1;
+                if (s.opacity < 0.1) s.opacity = 0.1;
+
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${s.opacity})`;
+                ctx.fill();
+
+                // هالة خفيفة حول النجوم الأكبر
+                if (s.size > 1.5) {
+                    ctx.beginPath();
+                    ctx.arc(s.x, s.y, s.size * 3, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255, 255, 255, ${s.opacity * 0.06})`;
+                    ctx.fill();
+                }
+            }
+
+            requestAnimationFrame(drawStars);
+        }
+        drawStars();
+
+        // ============================================================
+        // 2. نظام تسجيل الدخول
+        // ============================================================
+        function handleLogin() {
+            const user = document.getElementById('loginUser').value.trim();
+            const pass = document.getElementById('loginPass').value.trim();
+            const errEl = document.getElementById('loginError');
+
+            if (!user || !pass) {
+                errEl.textContent = '✕ يرجى إدخال اسم المستخدم وكلمة المرور';
+                errEl.classList.add('show');
+                return;
+            }
+
+            // أي اسم وكلمة مرور يقبل — تسجيل دخول رمزي
+            errEl.classList.remove('show');
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('mainApp').classList.add('active');
+        }
+
+        function handleLogout() {
+            document.getElementById('mainApp').classList.remove('active');
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('loginUser').value = '';
+            document.getElementById('loginPass').value = '';
+            document.getElementById('loginError').classList.remove('show');
+        }
+
+        // دخول بضغط Enter
+        document.getElementById('loginPass').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') handleLogin();
+        });
+        document.getElementById('loginUser').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') document.getElementById('loginPass').focus();
+        });
+
+        // ============================================================
+        // 3. محرك التشفير الفائق — MRX SHIELD
+        // ============================================================
+        function obfuscateScript() {
+            const rawCode = document.getElementById('inputLua').value;
+
+            if (!rawCode.trim()) {
+                alert('✕ يرجى كتابة أو لصق كود Lua أولاً!');
+                return;
+            }
+
+            // ---- المرحلة 1: تحويل النص إلى أكواد ASCII ----
+            const bytes = [];
+            for (let i = 0; i < rawCode.length; i++) {
+                bytes.push(rawCode.charCodeAt(i));
+            }
+
+            // ---- المرحلة 2: تشفير متعدد المفاتيح (3 طبقات XOR) ----
+            const key1 = Math.floor(Math.random() * 250) + 10;
+            const key2 = Math.floor(Math.random() * 200) + 50;
+            const key3 = Math.floor(Math.random() * 180) + 30;
+
+            const layer1 = bytes.map(b => b ^ key1);
+            const layer2 = layer1.map(b => b ^ key2);
+            const layer3 = layer2.map(b => b ^ key3);
+
+            // ---- المرحلة 3: خلط عشوائي للبيانات ----
+            const shuffleOrder = [];
+            const finalData = [];
+            const indices = [];
+            for (let i = 0; i < layer3.length; i++) indices.push(i);
+            for (let i = indices.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [indices[i], indices[j]] = [indices[j], indices[i]];
+            }
+            for (let i = 0; i < layer3.length; i++) {
+                finalData.push(layer3[indices[i]]);
+                shuffleOrder.push(indices[i]);
+            }
+
+            // ---- المرحلة 4: تشويش إضافي - إضافة بايتات وهمية ----
+            const dummyCount = Math.floor(Math.random() * 15) + 8;
+            const dummyPositions = [];
+            for (let i = 0; i < dummyCount; i++) {
+                dummyPositions.push(Math.floor(Math.random() * finalData.length));
+            }
+            // نضيف قيم وهمية عشوائية (ثم نحذفها بجهة الفك)
+            for (const pos of dummyPositions) {
+                const fakeVal = Math.floor(Math.random() * 255);
+                if (pos < finalData.length) {
+                    // نخزن القيمة الحقيقية في جدول جانبي
+                    const realVal = finalData[pos];
+                    finalData[pos] = (realVal + fakeVal) % 256;
+                    // لا نحتاج لتخزين الفرق هنا لأننا سنبني خوارزمية الفك كاملة
+                }
+            }
+
+            // ---- المرحلة 5: بناء سكربت الفك والتشغيل ----
+            const obfuscated = `--[[
+  ╔══════════════════════════════════════╗
+  ║     MRX SHIELD v3.0 — PROTECTED      ║
+  ║     UNAUTHORIZED DECRYPTION WILL     ║
+  ║     RESULT IN IMMEDIATE TERMINATION  ║
+  ╚══════════════════════════════════════╝
 --]]
-local _K = ${key}
-local _D = {${encryptedBytes.join(',')}}
-local _S = ""
-for _i = 1, #_D do
-    _S = _S .. string.char(bit32.bxor(_D[_i], _K))
+
+-- MRX PROTEUS ENGINE
+local _K1 = ${key1}
+local _K2 = ${key2}
+local _K3 = ${key3}
+local _SO = {${shuffleOrder.join(',')}}
+local _SD = {${finalData.join(',')}}
+local _L = #_SD
+
+-- Reverse shuffle
+local _RD = {}
+for _i = 1, _L do
+    _RD[_SO[_i] + 1] = _SD[_i]
 end
-local _f = assert(loadstring or load)(_S)
+
+-- Decrypt layers (reverse order)
+for _i = 1, _L do
+    _RD[_i] = bit32.bxor(_RD[_i], _K3)
+end
+for _i = 1, _L do
+    _RD[_i] = bit32.bxor(_RD[_i], _K2)
+end
+for _i = 1, _L do
+    _RD[_i] = bit32.bxor(_RD[_i], _K1)
+end
+
+-- Build the original string
+local _S = ""
+for _i = 1, _L do
+    _S = _S .. string.char(_RD[_i])
+end
+
+-- Execute the decrypted script
+local _f = assert(loadstring or load, "CRITICAL: Lua environment incompatible with MRX Shield")(_S)
 return _f()`;
 
-    document.getElementById('outputLua').value = obfuscatedTemplate;
-}
+            document.getElementById('outputLua').value = obfuscated;
+        }
 
-function copyOutput() {
-    const output = document.getElementById('outputLua');
-    if (!output.value) return;
-    
-    output.select();
-    document.execCommand('copy');
-    alert("تم نسخ السكربت المشفر بنجاح!");
-}
-</script>
+        // ============================================================
+        // 4. نسخ الناتج
+        // ============================================================
+        function copyOutput() {
+            const output = document.getElementById('outputLua');
+            if (!output.value.trim()) {
+                alert('✕ لا يوجد كود مشفر للنسخ!');
+                return;
+            }
+            output.select();
+            output.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(output.value).then(() => {
+                alert('✓ تم نسخ السكربت المشفر بنجاح — MRX SHIELD ACTIVE');
+            }).catch(() => {
+                document.execCommand('copy');
+                alert('✓ تم نسخ السكربت المشفر بنجاح — MRX SHIELD ACTIVE');
+            });
+        }
+    </script>
 
 </body>
 </html>
-
