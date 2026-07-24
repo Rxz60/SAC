@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MRX - Roblox Lua Shield</title>
+    <title>MRX - Roblox Lua </title>
     <style>
         /* ===== الأساسيات ===== */
         * {
@@ -439,7 +439,6 @@
                 ctx.fillStyle = `rgba(255, 255, 255, ${s.opacity})`;
                 ctx.fill();
 
-                // هالة خفيفة حول النجوم الأكبر
                 if (s.size > 1.5) {
                     ctx.beginPath();
                     ctx.arc(s.x, s.y, s.size * 3, 0, Math.PI * 2);
@@ -466,7 +465,6 @@
                 return;
             }
 
-            // أي اسم وكلمة مرور يقبل — تسجيل دخول رمزي
             errEl.classList.remove('show');
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('mainApp').classList.add('active');
@@ -480,7 +478,6 @@
             document.getElementById('loginError').classList.remove('show');
         }
 
-        // دخول بضغط Enter
         document.getElementById('loginPass').addEventListener('keydown', function(e) {
             if (e.key === 'Enter') handleLogin();
         });
@@ -489,7 +486,7 @@
         });
 
         // ============================================================
-        // 3. محرك التشفير الفائق — MRX SHIELD
+        // 3. محرك التشفير الفائق — MRX SHIELD (معدل ومضمون)
         // ============================================================
         function obfuscateScript() {
             const rawCode = document.getElementById('inputLua').value;
@@ -499,53 +496,38 @@
                 return;
             }
 
-            // ---- المرحلة 1: تحويل النص إلى أكواد ASCII ----
+            // ---- المرحلة 1: تحويل النص إلى أرقام ASCII ----
             const bytes = [];
             for (let i = 0; i < rawCode.length; i++) {
                 bytes.push(rawCode.charCodeAt(i));
             }
 
-            // ---- المرحلة 2: تشفير متعدد المفاتيح (3 طبقات XOR) ----
-            const key1 = Math.floor(Math.random() * 250) + 10;
-            const key2 = Math.floor(Math.random() * 200) + 50;
-            const key3 = Math.floor(Math.random() * 180) + 30;
+            // ---- المرحلة 2: تشفير ثلاثي الطبقات عبر XOR ----
+            const key1 = Math.floor(Math.random() * 200) + 15;
+            const key2 = Math.floor(Math.random() * 180) + 25;
+            const key3 = Math.floor(Math.random() * 220) + 10;
 
             const layer1 = bytes.map(b => b ^ key1);
             const layer2 = layer1.map(b => b ^ key2);
             const layer3 = layer2.map(b => b ^ key3);
 
-            // ---- المرحلة 3: خلط عشوائي للبيانات ----
+            // ---- المرحلة 3: الخلط المكان العشوائي (Shuffling) ----
             const shuffleOrder = [];
             const finalData = [];
             const indices = [];
             for (let i = 0; i < layer3.length; i++) indices.push(i);
+            
             for (let i = indices.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [indices[i], indices[j]] = [indices[j], indices[i]];
             }
+            
             for (let i = 0; i < layer3.length; i++) {
                 finalData.push(layer3[indices[i]]);
                 shuffleOrder.push(indices[i]);
             }
 
-            // ---- المرحلة 4: تشويش إضافي - إضافة بايتات وهمية ----
-            const dummyCount = Math.floor(Math.random() * 15) + 8;
-            const dummyPositions = [];
-            for (let i = 0; i < dummyCount; i++) {
-                dummyPositions.push(Math.floor(Math.random() * finalData.length));
-            }
-            // نضيف قيم وهمية عشوائية (ثم نحذفها بجهة الفك)
-            for (const pos of dummyPositions) {
-                const fakeVal = Math.floor(Math.random() * 255);
-                if (pos < finalData.length) {
-                    // نخزن القيمة الحقيقية في جدول جانبي
-                    const realVal = finalData[pos];
-                    finalData[pos] = (realVal + fakeVal) % 256;
-                    // لا نحتاج لتخزين الفرق هنا لأننا سنبني خوارزمية الفك كاملة
-                }
-            }
-
-            // ---- المرحلة 5: بناء سكربت الفك والتشغيل ----
+            // ---- المرحلة 4: بناء محرك فك التشفير الشغال لـ Roblox ----
             const obfuscated = `--[[
   ╔══════════════════════════════════════╗
   ║     MRX SHIELD v3.0 — PROTECTED      ║
@@ -554,7 +536,6 @@
   ╚══════════════════════════════════════╝
 --]]
 
--- MRX PROTEUS ENGINE
 local _K1 = ${key1}
 local _K2 = ${key2}
 local _K3 = ${key3}
@@ -562,31 +543,35 @@ local _SO = {${shuffleOrder.join(',')}}
 local _SD = {${finalData.join(',')}}
 local _L = #_SD
 
--- Reverse shuffle
+-- Reverse Shuffle
 local _RD = {}
 for _i = 1, _L do
     _RD[_SO[_i] + 1] = _SD[_i]
 end
 
--- Decrypt layers (reverse order)
+-- Bitwise Decryption
+local bit = bit32 or bit
 for _i = 1, _L do
-    _RD[_i] = bit32.bxor(_RD[_i], _K3)
-end
-for _i = 1, _L do
-    _RD[_i] = bit32.bxor(_RD[_i], _K2)
-end
-for _i = 1, _L do
-    _RD[_i] = bit32.bxor(_RD[_i], _K1)
-end
-
--- Build the original string
-local _S = ""
-for _i = 1, _L do
-    _S = _S .. string.char(_RD[_i])
+    local b = _RD[_i]
+    b = bit.bxor(b, _K3)
+    b = bit.bxor(b, _K2)
+    b = bit.bxor(b, _K1)
+    _RD[_i] = b
 end
 
--- Execute the decrypted script
-local _f = assert(loadstring or load, "CRITICAL: Lua environment incompatible with MRX Shield")(_S)
+-- Reconstruct Source String
+local _chars = {}
+for _i = 1, _L do
+    _chars[_i] = string.char(_RD[_i])
+end
+local _S = table.concat(_chars)
+
+-- Execution in Roblox Environment
+local _loader = loadstring or load
+local _f, _err = _loader(_S)
+if not _f then
+    error("[MRX SHIELD]: Exec Error -> " .. tostring(_err))
+end
 return _f()`;
 
             document.getElementById('outputLua').value = obfuscated;
@@ -603,12 +588,15 @@ return _f()`;
             }
             output.select();
             output.setSelectionRange(0, 99999);
-            navigator.clipboard.writeText(output.value).then(() => {
-                alert('✓ تم نسخ السكربت المشفر بنجاح — MRX SHIELD ACTIVE');
-            }).catch(() => {
+            
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(output.value).then(() => {
+                    alert('✓ تم نسخ السكربت المشفر بنجاح — MRX SHIELD ACTIVE');
+                });
+            } else {
                 document.execCommand('copy');
                 alert('✓ تم نسخ السكربت المشفر بنجاح — MRX SHIELD ACTIVE');
-            });
+            }
         }
     </script>
 
