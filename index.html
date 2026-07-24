@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TREMUX — HACKER TERMINAL v8.0</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+    --bg-primary: #0a0e0a;
+    --bg-secondary: #0d120d;
+    --bg-card: #111a11;
+    --bg-input: #0a100a;
+    --border-color: #1a3a1a;
+    --border-glow: #2aff2a;
+    --text-primary: #ccffcc;
+    --text-secondary: #55aa55;
+    --text-dim: #226622;
+    --accent-1: #00ff00;
+    --accent-2: #33ff33;
+    --accent-3: #66ff66;
+    --accent-glow: rgba(0,255,0,0.15);
+    --success: #00ff00;
+    --danger: #ff3333;
+    --warning: #ffaa00;
+    --font-arabic: 'Cairo', sans-serif;
+    --font-code: 'JetBrains Mono', monospace;
+    --terminal-bg: #050805;
+    --header-bg: #0b130b;
+}
+
+body {
+    font-family: var(--font-arabic);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+    direction: rtl;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background:
+        radial-gradient(ellipse at 50% 0%, rgba(0,255,0,0.03) 0%, transparent 50%),
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,0,0.015) 2px, rgba(0,255,0,0.015) 4px);
+    pointer-events: none;
+    z-index: 0;
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-secondary); }
+::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-1); }
+
+.scanlines {
+    position: fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,0,0.008) 2px, rgba(0,255,0,0.008) 4px);
+    pointer-events: none;
+    z-index: 9999;
+}
+
+.cursor-glow {
+    position: fixed;
+    width:300px; height:300px;
+    border-radius:50%;
+    background: radial-gradient(circle, rgba(0,255,0,0.03) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+    transition: all 0.1s;
+}
+
+/* ====== TOP HEADER ====== */
+.top-header {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:12px 25px;
+    background: var(--header-bg);
+    border-bottom:1px solid var(--border-color);
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+.header-left { display:flex; align-items:center; gap:15px; }
+
+.header-logo {
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-family: var(--font-code);
+    font-size:18px;
+    font-weight:700;
+    color: var(--accent-1);
+    text-shadow:0 0 15px rgba(0,255,0,0.2);
+}
+
+.header-logo .logo-icon {
+    width:32px; height:32px;
+    background: #003300;
+    border:1px solid var(--accent-1);
+    border-radius:6px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:14px;
+}
+
+.header-status {
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-family: var(--font-code);
+    font-size:11px;
+    color: var(--text-secondary);
+}
+.status-dot {
+    width:6px; height:6px;
+    background: var(--accent-1);
+    border-radius:50%;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse {
+    0%,100% { opacity:1; }
+    50% { opacity:0.4; }
+}
+
+.header-right { display:flex; align-items:center; gap:12px; }
+
+.header-user {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:6px 14px;
+    background: var(--bg-card);
+    border:1px solid var(--border-color);
+    border-radius:8px;
+    font-family: var(--font-code);
+    font-size:12px;
+    color: var(--text-secondary);
+}
+
+.header-user .user-icon {
+    width:28px; height:28px;
+    background: #003300;
+    border:1px solid var(--border-color);
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:11px;
+    color: var(--accent-1);
+}
+
+/* ====== MAIN LAYOUT ====== */
+.main-layout {
+    display:grid;
+    grid-template-columns: 280px 1fr 320px;
+    gap:15px;
+    padding:15px 20px;
+    max-width: 1600px;
+    margin: 0 auto;
+    min-height: calc(100vh - 60px);
+}
+
+/* ====== SIDEBAR ====== */
+.sidebar {
+    background: var(--bg-card);
+    border:1px solid var(--border-color);
+    border-radius:12px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+}
+
+.sidebar-tabs {
+    display:flex;
+    border-bottom:1px solid var(--border-color);
+}
+
+.sidebar-tab {
+    flex:1;
+    padding:12px;
+    background: transparent;
+    border:none;
+    color: var(--text-dim);
+    font-family: var(--font-code);
+    font-size:11px;
+    font-weight:600;
+    cursor:pointer;
+    transition:all 0.3s;
+    border-bottom:2px solid transparent;
+}
+.sidebar-tab.active {
+    color: var(--accent-1);
+    border-bottom-color: var(--accent-1);
+    background: rgba(0,255,0,0.03);
+}
+.sidebar-tab:hover { color: var(--text-secondary); }
+
+.sidebar-content {
+    flex:1;
+    overflow-y:auto;
+    padding:12px;
+}
+
+/* ====== TOOLS LIST ====== */
+.tool-category {
+    margin-bottom:15px;
+}
+
+.tool-category-title {
+    font-family: var(--font-code);
+    font-size:10px;
+    color: var(--text-dim);
+    text-transform:uppercase;
+    letter-spacing:2px;
+    padding:6px 8px;
+    border-bottom:1px solid var(--border-color);
+    margin-bottom:6px;
+}
+
+.tool-item {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:8px 10px;
+    background: var(--bg-input);
+    border:1px solid transparent;
+    border-radius:6px;
+    margin-bottom:4px;
+    cursor:pointer;
+    transition:all 0.2s;
+}
+.tool-item:hover {
+    border-color: var(--border-color);
+    background: rgba(0,255,0,0.02);
+}
+.tool-item.active {
+    border-color: var(--accent-1);
+    background: rgba(0,255,0,0.05);
+}
+
+.tool-item-left {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    overflow:hidden;
+    flex:1;
+}
+
+.tool-icon {
+    font-size:14px;
+    flex-shrink:0;
+    width:20px;
+    text-align:center;
+}
+
+.tool-name {
+    font-family: var(--font-code);
+    font-size:12px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    color: var(--text-primary);
+}
+
+.tool-badge {
+    padding:2px 8px;
+    background: rgba(0,255,0,0.08);
+    border:1px solid rgba(0,255,0,0.15);
+    border-radius:4px;
+    font-family: var(--font-code);
+    font-size:9px;
+    color: var(--text-secondary);
+    flex-shrink:0;
+}
+
+/* ====== TERMINAL / MAIN ====== */
+.terminal-panel {
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.terminal-header {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:12px 16px;
+    background: var(--bg-card);
+    border:1px solid var(--border-color);
+    border-radius:12px 12px 0 0;
+}
+
+.terminal-header-left {
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-family: var(--font-code);
+    font-size:12px;
+    color: var(--text-secondary);
+}
+.terminal-dots {
+    display:flex;
+    gap:5px;
+}
+.terminal-dot {
+    width:10px; height:10px;
+    border-radius:50%;
+}
+.terminal-dot.red { background:#ff5f56; }
+.terminal-dot.yellow { background:#ffbd2e; }
+.terminal-dot.green { background:#27c93f; }
+
+.terminal-title {
+    font-family: var(--font-code);
+    font-size:12px;
+    color: var(--text-dim);
+}
+
+.terminal-body {
+    background: var(--terminal-bg);
+    border:1px solid var(--border-color);
+    border-top:none;
+    border-radius:0 0 12px 12px;
+    padding:16px;
+    min-height:350px;
+    max-height:450px;
+    overflow-y:auto;
+    font-family: var(--font-code);
+    font-size:13px;
+    line-height:1.6;
+    direction:ltr;
+    text-align:left;
+}
+
+.terminal-line {
+    color: var(--text-secondary);
+    word-break:break-all;
+}
+
+.terminal-line .prompt {
+    color: var(--accent-1);
+    font-weight:600;
+}
+
+.terminal-line .output {
+    color: var(--text-primary);
+}
+
+.terminal-line .error {
+    color: var(--danger);
+}
+
+.terminal-line .success {
+    color: var(--success);
+}
+
+.terminal-line .info {
+    color: var(--accent-3);
+}
+
+.terminal-input-line {
+    display:flex;
+    align-items:center;
+    gap:4px;
+    margin-top:4px;
+}
+
+.terminal-input-line .prompt {
+    color: var(--accent-1);
+    font-weight:600;
+    flex-shrink:0;
+}
+
+.terminal-input {
+    flex:1;
+    background: transparent;
+    border:none;
+    color: var(--text-primary);
+    font-family: var(--font-code);
+    font-size:13px;
+    outline:none;
+    caret-color: var(--accent-1);
+}
+
+/* ====== FILE MANAGER ====== */
+.file-manager {
+    background: var(--bg-card);
+    border:1px solid var(--border-color);
+    border-radius:12px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+}
+
+.file-manager-header {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:12px 16px;
+    border-bottom:1px solid var(--border-color);
+    font-family: var(--font-code);
+    font-size:12px;
+    color: var(--text-secondary);
+}
+
+.file-manager-actions {
+    display:flex;
+    gap:5px;
+}
+
+.fm-btn {
+    padding:4px 10px;
+    background: var(--bg-input);
+    border:1px solid var(--border-color);
+    border-radius:5px;
+    color: var(--text-secondary);
+    font-family: var(--font-code);
+    font-size:10px;
+    cursor:pointer;
+    transition:all 0.2s;
+}
+.fm-btn:hover {
+    border-color: var(--accent-1);
+    color: var(--accent-1);
+}
+.fm-btn.danger:hover {
+    border-color: var(--danger);
+    color: var(--danger);
+}
+
+.file-manager-body {
+    flex:1;
+    padding:8px;
+    overflow-y:auto;
+    min-height:200px;
+    max-height:400px;
+}
+
+.file-entry {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:6px 10px;
+    background: transparent;
+    border-radius:5px;
+    cursor:pointer;
+    transition:all 0.15s;
+}
+.file-entry:hover { background: rgba(0,255,0,0.03); }
+
+.file-entry-left {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    overflow:hidden;
+    flex:1;
+}
+
+.file-entry-icon {
+    font-size:13px;
+    flex-shrink:0;
+}
+
+.file-entry-name {
+    font-family: var(--font-code);
+    font-size:12px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    color: var(--text-primary);
+}
+
+.file-entry-size {
+    font-family: var(--font-code);
+    font-size:10px;
+    color: var(--text-dim);
+    flex-shrink:0;
+}
+
+/* ====== TOOL INFO ====== */
+.tool-info-panel {
+    background: var(--bg-card);
+    border:1px solid var(--border-color);
+    border-radius:12px;
+    overflow:hidden;
+}
+
+.tool-info-header {
+    padding:14px 16px;
+    border-bottom:1px solid var(--border-color);
+    font-family: var(--font-code);
+    font-size:13px;
+    color: var(--accent-1);
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.tool-info-body {
+    padding:14px 16px;
+    font-family: var(--font-code);
+    font-size:12px;
+    color: var(--text-secondary);
+    line-height:1.7;
+}
+
+.tool-detail-row {
+    display:flex;
+    justify-content:space-between;
+    padding:5px 0;
+    border-bottom:1px solid rgba(26,58,26,0.3);
+}
+.tool-detail-row:last-child { border-bottom:none; }
+.tool-detail-label { color: var(--text-dim); }
+.tool-detail-value { color: var(--text-primary); }
+
+.tool-install-btn {
+    width:100%;
+    padding:12px;
+    margin-top:12px;
+    background: linear-gradient(135deg, #003300, #008800);
+    border:1px solid var(--accent-1);
+    border-radius:8px;
+    color: var(--accent-1);
+    font-family: var(--font-code);
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    transition:all 0.3s;
+}
+.tool-install-btn:hover {
+    background: linear-gradient(135deg, #004400, #00aa00);
+    box-shadow:0 0 20px rgba(0,255,0,0.15);
+}
+
+/* ====== OUTPUT/MONITOR ====== */
+.output-panel {
+    background: var(--bg-card);
+    border:1px solid var(--border-color);
+    border-radius:12px;
+    overflow:hidden;
+}
+
+.output-header {
+    padding:10px 14px;
+    border-bottom:1px solid var(--border-color);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    font-family: var(--font-code);
+    font-size:11px;
+    color: var(--text-dim);
+}
+
+.output-body {
+    padding:12px 14px;
+    font-family: var(--font-code);
+    font-size:11px;
+    color: var(--text-secondary);
+    min-height:80px;
+    max-height:150px;
+    overflow-y:auto;
+    background: var(--terminal-bg);
+    direction:ltr;
+    text-align:left;
+    line-height:1.5;
+}
+
+/* ====== NOTIFICATION ====== */
+.notification {
+    position:fixed;
+    top:20px;
+    left:50%;
+    transform:translateX(-50%) translateY(-100px);
+    padding:14px 24px;
+    background: var(--bg-card);
+    border:1px solid var(--border-color);
+    border-radius:10px;
+    font-family: var(--font-code);
+    font-size:13px;
+    z-index:5000;
+    opacity:0;
+    transition:all 0.4s cubic-bezier(0.68,-0.55,0.265,1.55);
+    direction:ltr;
+    text-align:left;
+    box-shadow:0 10px 40px rgba(0,0,0,0.5);
+}
+.notification.show { opacity:1; transform:translateX(-50%) translateY(0); }
+.notification.success { border-color:var(--success); color:var(--success); }
+.notification.error { border-color:var(--danger); color:var(--danger); }
+.notification.info { border-color:var(--accent-1); color:var(--accent-1); }
+
+/* ====== RESPONSIVE ====== */
+@media (max-width:1200px) {
+    .main-layout { grid-template-columns: 250px 1fr; }
+    .right-sidebar { display:none; }
+}
+
+@media (max-width:850px) {
+    .main-layout { grid-template-columns: 1fr; padding:12px; }
+    .sidebar { display:none; }
+    .top-header { padding:10px 15px; flex-wrap:wrap; gap:8px; }
+}
+</style>
+</head>
+<body>
+
+<div class="scanlines"></div>
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<!-- ====== NOTIFICATION ====== -->
+<div class="notification" id="notification"><span id="notifText"></span></div>
+
+<!-- ====== MAIN APP ====== -->
+<div id="mainApp">
+
+    <!-- Header -->
+    <div class="top-header">
+        <div class="header-left">
+            <div class="header-logo">
+                <div class="logo-icon">₷</div>
+                <span>TREMUX</span>
+                <div class="header-status">
+                    <span class="status-dot"></span>
+                    <span>SYSTEM ACTIVE</span>
+                </div>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="header-user">
+                <div class="user-icon">#</div>
+                <span>root</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Layout -->
+    <div class="main-layout">
+
+        <!-- LEFT SIDEBAR: Tools -->
+        <div class="sidebar">
+            <div class="sidebar-tabs">
+                <button class="sidebar-tab active" onclick="switchSidebarTab('tools',this)">📦 TOOLS</button>
+                <button class="sidebar-tab" onclick="switchSidebarTab('files',this)">📁 FILES</button>
+            </div>
+            <div class="sidebar-content" id="toolsTab">
+                <div id="toolsList"></div>
+            </div>
+            <div class="sidebar-content" id="filesTab" style="display:none;">
+                <div id="filesList"></div>
+            </div>
+        </div>
+
+        <!-- CENTER: Terminal -->
+        <div class="terminal-panel">
+            <div class="terminal-header">
+                <div class="terminal-header-left">
+                    <div class="terminal-dots">
+                        <div class="terminal-dot red"></div>
+                        <div class="terminal-dot yellow"></div>
+                        <div class="terminal-dot green"></div>
+                    </div>
+                    <span class="terminal-title">root@tremux: ~ — bash</span>
+                </div>
+                <div style="display:flex;gap:5px;">
+                    <button class="fm-btn" onclick="clearTerminal()">CLS</button>
+                </div>
+            </div>
+            <div class="terminal-body" id="terminalBody">
+                <div class="terminal-line">
+                    <span style="color:var(--accent-1);font-weight:600;">┌──(root💀tremux)-[~]</span>
+                </div>
+                <div class="terminal-line">
+                    <span style="color:var(--accent-1);font-weight:600;">└─</span> <span style="color:var(--accent-2);font-weight:600;">#</span> <span style="color:var(--text-secondary);">TREMUX v8.0 — Hacker Terminal Loaded</span>
+                </div>
+                <div class="terminal-line">
+                    <span style="color:var(--text-dim);">Type 'help' for commands | 'tools' to list tools</span>
+                </div>
+                <div class="terminal-line" style="margin-top:2px;">
+                    <span style="color:var(--accent-1);font-weight:600;">┌──(root💀tremux)-[~]</span>
+                </div>
+                <div class="terminal-input-line">
+                    <span class="prompt">└─# </span>
+                    <input type="text" class="terminal-input" id="terminalInput" autofocus spellcheck="false">
+                </div>
+            </div>
+
+            <!-- Output Monitor -->
+            <div class="output-panel">
+                <div class="output-header">
+                    <span>⬤ OUTPUT MONITOR</span>
+                    <button class="fm-btn" onclick="clearOutput()">CLEAR</button>
+                </div>
+                <div class="output-body" id="outputBody">
+                    <span style="color:var(--text-dim);">[SYSTEM] TREMUX initialized. Waiting for commands...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT SIDEBAR: Tool Info -->
+        <div class="right-sidebar" style="display:flex;flex-direction:column;gap:12px;">
+            <div class="tool-info-panel">
+                <div class="tool-info-header">
+                    <span>ℹ</span> TOOL INFO
+                </div>
+                <div class="tool-info-body" id="toolInfoBody">
+                    <div style="color:var(--text-dim);text-align:center;padding:20px 0;">
+                        Select a tool from the list<br>
+                        to view details and install.
+                    </div>
+                </div>
+            </div>
+            <div class="file-manager">
+                <div class="file-manager-header">
+                    <span>📂 QUICK FILES</span>
+                    <div class="file-manager-actions">
+                        <button class="fm-btn" onclick="refreshFileList()">⟳</button>
+                    </div>
+                </div>
+                <div class="file-manager-body" id="fileManagerBody">
+                    <div style="color:var(--text-dim);font-family:var(--font-code);font-size:11px;padding:10px;text-align:center;">
+                        No files yet.<br>Install tools to populate.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+// ============================================================================
+// TOOLS DATABASE
+// ============================================================================
+const TOOLS = {
+    recon: {
+        title: '🔍 RECONNAISSANCE',
+        items: [
+            { name: 'nmap', icon: '🌐', desc: 'Network scanner & port discovery', install: 'pkg install nmap', version: '7.95', category: 'Recon' },
+            { name: 'theHarvester', icon: '🕵️', desc: 'Email, subdomain & name OSINT', install: 'git clone https://github.com/laramies/theHarvester', version: '4.6', category: 'OSINT' },
+            { name: 'sublist3r', icon: '📡', desc: 'Subdomain enumeration tool', install: 'git clone https://github.com/aboul3la/Sublist3r', version: '2.0', category: 'Recon' },
+            { name: 'amass', icon: '🧠', desc: 'Network mapping & attack surface', install: 'go install github.com/owasp-amass/amass/v4/...@master', version: '4.2', category: 'Recon' },
+            { name: 'rustscan', icon: '⚡', desc: 'Fast port scanner (Rust)', install: 'cargo install rustscan', version: '2.3', category: 'Recon' },
+            { name: 'naabu', icon: '🎯', desc: 'Fast port scanner (Go)', install: 'go install github.com/projectdiscovery/naabu/v2/cmd/naabu@latest', version: '2.3', category: 'Recon' },
+            { name: 'httpx', icon: '🌍', desc: 'HTTP probe toolkit', install: 'go install github.com/projectdiscovery/httpx/cmd/httpx@latest', version: '1.6', category: 'Recon' },
+            { name: 'gospider', icon: '🕸️', desc: 'Web spider & crawler', install: 'go install github.com/jaeles-project/gospider@latest', version: '1.1', category: 'Recon' },
+        ]
+    },
+    exploitation: {
+        title: '💥 EXPLOITATION',
+        items: [
+            { name: 'metasploit', icon: '💀', desc: 'Exploitation framework', install: 'pkg install metasploit', version: '6.4', category: 'Exploit' },
+            { name: 'sqlmap', icon: '🗄️', desc: 'SQL injection automation', install: 'pkg install sqlmap', version: '1.8', category: 'Exploit' },
+            { name: 'commix', icon: '⚙️', desc: 'Command injection tool', install: 'git clone https://github.com/commixproject/commix', version: '3.9', category: 'Exploit' },
+            { name: 'beef', icon: '🪤', desc: 'Browser exploitation framework', install: 'git clone https://github.com/beefproject/beef', version: '0.5', category: 'Exploit' },
+            { name: 'hydra', icon: '🔐', desc: 'Password brute-force tool', install: 'pkg install hydra', version: '9.6', category: 'Exploit' },
+            { name: 'patator', icon: '🔨', desc: 'Multi-purpose brute-forcer', install: 'pip install patator', version: '1.0', category: 'Exploit' },
+            { name: 'searchsploit', icon: '📚', desc: 'Exploit database search', install: 'git clone https://github.com/offensive-security/exploitdb', version: '2024', category: 'Exploit' },
+        ]
+    },
+    osint: {
+        title: '🕵️ OSINT',
+        items: [
+            { name: 'sherlock', icon: '🔎', desc: 'Social media username search', install: 'git clone https://github.com/sherlock-project/sherlock', version: '0.15', category: 'OSINT' },
+            { name: 'holehe', icon: '📧', desc: 'Email OSINT (account check)', install: 'pip install holehe', version: '1.6', category: 'OSINT' },
+            { name: 'phoneinfoga', icon: '📱', desc: 'Phone number OSINT', install: 'git clone https://github.com/sundowndev/phoneinfoga', version: '2.10', category: 'OSINT' },
+            { name: 'osintgram', icon: '📸', desc: 'Instagram OSINT tool', install: 'git clone https://github.com/Datalux/Osintgram', version: '1.4', category: 'OSINT' },
+            { name: 'recon-ng', icon: '🧩', desc: 'Full-featured recon framework', install: 'git clone https://github.com/lanmaster53/recon-ng', version: '5.1', category: 'OSINT' },
+            { name: 'social-analyzer', icon: '📊', desc: 'Social media analysis', install: 'git clone https://github.com/qeeqbox/social-analyzer', version: '2.0', category: 'OSINT' },
+            { name: 'maigret', icon: '🕵️', desc: 'Username search engine', install: 'pip install maigret', version: '1.4', category: 'OSINT' },
+        ]
+    },
+    web: {
+        title: '🌐 WEB HACKING',
+        items: [
+            { name: 'gobuster', icon: '🚀', desc: 'Directory/file brute-forcer', install: 'go install github.com/OJ/gobuster/v3@latest', version: '3.6', category: 'Web' },
+            { name: 'ffuf', icon: '🎯', desc: 'Fast web fuzzer', install: 'go install github.com/ffuf/ffuf/v2@latest', version: '2.1', category: 'Web' },
+            { name: 'dirsearch', icon: '📂', desc: 'Advanced web path scanner', install: 'git clone https://github.com/maurosoria/dirsearch', version: '0.4', category: 'Web' },
+            { name: 'xsstrike', icon: '⚠️', desc: 'XSS detection & exploit', install: 'git clone https://github.com/s0md3v/XSStrike', version: '3.1', category: 'Web' },
+            { name: 'nikto', icon: '🛡️', desc: 'Web server scanner', install: 'pkg install nikto', version: '2.5', category: 'Web' },
+            { name: 'whatweb', icon: '🔍', desc: 'Website fingerprinting', install: 'pkg install whatweb', version: '0.5', category: 'Web' },
+            { name: 'wpscan', icon: '🔌', desc: 'WordPress vulnerability scanner', install: 'gem install wpscan', version: '3.8', category: 'Web' },
+            { name: 'paramspider', icon: '🕸️', desc: 'Parameter discovery tool', install: 'git clone https://github.com/devanshbatham/ParamSpider', version: '1.0', category: 'Web' },
+        ]
+    },
+    wireless: {
+        title: '📡 WIRELESS',
+        items: [
+            { name: 'aircrack-ng', icon: '📶', desc: 'Wi-Fi security auditing', install: 'pkg install aircrack-ng', version: '1.7', category: 'Wireless' },
+            { name: 'bettercap', icon: '🎭', desc: 'MITM framework & monitor', install: 'apt install bettercap', version: '2.32', category: 'Wireless' },
+            { name: 'reaver', icon: '🔓', desc: 'WPS/WPA attack tool', install: 'pkg install reaver', version: '1.6', category: 'Wireless' },
+            { name: 'wifite', icon: '📡', desc: 'Automated Wi-Fi auditor', install: 'git clone https://github.com/derv82/wifite2', version: '2.7', category: 'Wireless' },
+            { name: 'hcxdumptool', icon: '💾', desc: 'Wi-Fi packet capture', install: 'git clone https://github.com/ZerBea/hcxdumptool', version: '6.3', category: 'Wireless' },
+            { name: 'kismet', icon: '📊', desc: 'Wireless network detector', install: 'pkg install kismet', version: '2023', category: 'Wireless' },
+        ]
+    },
+    password: {
+        title: '🔑 PASSWORD ATTACKS',
+        items: [
+            { name: 'hashcat', icon: '💻', desc: 'GPU-based password cracker', install: 'pkg install hashcat', version: '6.2', category: 'Password' },
+            { name: 'john', icon: '🔓', desc: 'John the Ripper password cracker', install: 'pkg install john', version: '1.9', category: 'Password' },
+            { name: 'hashid', icon: '🔬', desc: 'Hash type identifier', install: 'pip install hashid', version: '1.1', category: 'Password' },
+            { name: 'cewl', icon: '📝', desc: 'Custom wordlist generator', install: 'pkg install cewl', version: '5.5', category: 'Password' },
+            { name: 'crunch', icon: '📦', desc: 'Wordlist generator', install: 'pkg install crunch', version: '3.6', category: 'Password' },
+        ]
+    },
+    post: {
+        title: '🔄 POST-EXPLOITATION',
+        items: [
+            { name: 'powersploit', icon: '⚡', desc: 'PowerShell post-exploitation', install: 'git clone https://github.com/PowerShellMafia/PowerSploit', version: '3.0', category: 'Post-Exploit' },
+            { name: 'empire', icon: '👑', desc: 'Post-exploitation framework', install: 'git clone https://github.com/BCSecurity/Empire', version: '5.9', category: 'Post-Exploit' },
+            { name: 'pupy', icon: '🐍', desc: 'Cross-platform RAT', install: 'git clone https://github.com/n1nj4sec/pupy', version: '2.0', category: 'Post-Exploit' },
+            { name: 'shellter', icon: '🐚', desc: 'Dynamic shellcode injector', install: 'pkg install shellter', version: '7.2', category: 'Post-Exploit' },
+            { name: 'veil', icon: '🎭', desc: 'Payload generator (AV bypass)', install: 'git clone https://github.com/Veil-Framework/Veil', version: '3.1', category: 'Post-Exploit' },
+        ]
+    }
+};
+
+// ============================================================================
+// STATE
+// ============================================================================
+let currentTool = null;
+let fileStore = {};
+let terminalHistory = [];
+let historyIndex = -1;
+
+// ============================================================================
+// NOTIFICATION
+// ============================================================================
+function showNotification(msg, type) {
+    var n = document.getElementById('notification');
+    document.getElementById('notifText').textContent = msg;
+    n.className = 'notification ' + (type||'info') + ' show';
+    clearTimeout(n._t);
+    n._t = setTimeout(function(){ n.classList.remove('show'); }, 3000);
+}
+
+// ============================================================================
+// SIDEBAR TABS
+// ============================================================================
+function switchSidebarTab(tab, btn) {
+    document.querySelectorAll('.sidebar-tab').forEach(function(t){ t.classList.remove('active'); });
+    btn.classList.add('active');
+    document.getElementById('toolsTab').style.display = tab === 'tools' ? 'block' : 'none';
+    document.getElementById('filesTab').style.display = tab === 'files' ? 'block' : 'none';
+}
+
+// ============================================================================
+// TOOLS LIST
+// ============================================================================
+function renderTools() {
+    var container = document.getElementById('toolsList');
+    container.innerHTML = '';
+    var catKeys = Object.keys(TOOLS);
+    catKeys.forEach(function(key){
+        var cat = TOOLS[key];
+        var div = document.createElement('div');
+        div.className = 'tool-category';
+        var title = document.createElement('div');
+        title.className = 'tool-category-title';
+        title.textContent = cat.title;
+        div.appendChild(title);
+        cat.items.forEach(function(tool){
+            var item = document.createElement('div');
+            item.className = 'tool-item' + (currentTool && currentTool.name === tool.name ? ' active' : '');
+            item.dataset.toolName = tool.name;
+            item.innerHTML =
+                '<div class="tool-item-left">' +
+                    '<span class="tool-icon">' + tool.icon + '</span>' +
+                    '<span class="tool-name">' + tool.name + '</span>' +
+                '</div>' +
+                '<span class="tool-badge">v' + tool.version + '</span>';
+            item.onclick = function(){ selectTool(tool); };
+            div.appendChild(item);
+        });
+        container.appendChild(div);
+    });
+}
+
+function selectTool(tool) {
+    currentTool = tool;
+    document.querySelectorAll('.tool-item').forEach(function(t){ t.classList.remove('active'); });
+    var items = document.querySelectorAll('.tool-item');
+    for (var i=0; i<items.length; i++) {
+        if (items[i].dataset.toolName === tool.name) { items[i].classList.add('active'); break; }
+    }
+    renderToolInfo(tool);
+    showNotification('[>] Selected: ' + tool.name, 'info');
+}
+
+function renderToolInfo(tool) {
+    var body = document.getElementById('toolInfoBody');
+    body.innerHTML =
+        '<div style="font-weight:600;color:var(--accent-1);margin-bottom:8px;">' + tool.icon + ' ' + tool.name + ' <span style="color:var(--text-dim);font-weight:400;">v' + tool.version + '</span></div>' +
+        '<div style="margin-bottom:10px;color:var(--text-primary);">' + tool.desc + '</div>' +
+        '<div class="tool-detail-row"><span class="tool-detail-label">Category</span><span class="tool-detail-value">' + tool.category + '</span></div>' +
+        '<div class="tool-detail-row"><span class="tool-detail-label">Version</span><span class="tool-detail-value">' + tool.version + '</span></div>' +
+        '<div class="tool-detail-row"><span class="tool-detail-label">Status</span><span class="tool-detail-value" style="color:var(--text-dim);">Not Installed</span></div>' +
+        '<div style="margin-top:8px;padding:8px;background:var(--terminal-bg);border:1px solid var(--border-color);border-radius:5px;font-size:11px;color:var(--accent-2);word-break:break-all;">' + tool.install + '</div>' +
+        '<button class="tool-install-btn" onclick="installTool(\'' + tool.name + '\')">📥 INSTALL ' + tool.name.toUpperCase() + '</button>';
+}
+
+// ============================================================================
+// INSTALL TOOL
+// ============================================================================
+function installTool(name) {
+    if (!currentTool || currentTool.name !== name) {
+        var found = null;
+        for (var k in TOOLS) {
+            for (var i=0; i<TOOLS[k].items.length; i++) {
+                if (TOOLS[k].items[i].name === name) { found = TOOLS[k].items[i]; break; }
+            }
+            if (found) break;
+        }
+        if (!found) { showNotification('[!] Tool not found', 'error'); return; }
+        currentTool = found;
+    }
+    var cmd = currentTool.install;
+    showNotification('[>] Installing ' + name + '...', 'info');
+    appendTerminal('root@tremux:~$ ' + cmd);
+    appendOutput('[>] Installing ' + name + '...\n');
+
+    setTimeout(function(){
+        appendTerminal('[✓] ' + name + ' installed successfully');
+        appendOutput('[✓] ' + name + ' installed successfully\n');
+        showNotification('[✓] ' + name + ' installed', 'success');
+
+        var fileName = name + '.py';
+        fileStore[fileName] = '# ' + name + ' v' + currentTool.version + '\n# ' + currentTool.desc + '\n\nimport sys\n\ndef main():\n    print("[+] ' + name + ' loaded")\n\nif __name__ == "__main__":\n    main()\n';
+        refreshFileList();
+        renderToolInfo(currentTool);
+    }, 1500);
+}
+
+// ============================================================================
+// FILE MANAGER
+// ============================================================================
+function refreshFileList() {
+    var container = document.getElementById('filesList');
+    var body = document.getElementById('fileManagerBody');
+    var names = Object.keys(fileStore);
+
+    if (names.length === 0) {
+        container.innerHTML = '<div style="color:var(--text-dim);font-family:var(--font-code);font-size:11px;padding:15px;text-align:center;">No tools installed yet.</div>';
+    } else {
+        container.innerHTML = '';
+        names.sort().forEach(function(name){
+            var entry = document.createElement('div');
+            entry.className = 'file-entry';
+            entry.innerHTML =
+                '<div class="file-entry-left">' +
+                    '<span class="file-entry-icon">📄</span>' +
+                    '<span class="file-entry-name">' + name + '</span>' +
+                '</div>' +
+                '<span class="file-entry-size">' + (fileStore[name].length) + 'B</span>';
+            entry.onclick = function(){ viewFile(name); };
+            container.appendChild(entry);
+        });
+    }
+
+    if (names.length === 0) {
+        body.innerHTML = '<div style="color:var(--text-dim);font-family:var(--font-code);font-size:11px;padding:10px;text-align:center;">No files yet.<br>Install tools to populate.</div>';
+    } else {
+        body.innerHTML = '';
+        names.sort().forEach(function(name){
+            var entry = document.createElement('div');
+            entry.className = 'file-entry';
+            entry.innerHTML =
+                '<div class="file-entry-left">' +
+                    '<span class="file-entry-icon">📄</span>' +
+                    '<span class="file-entry-name">' + name + '</span>' +
+                '</div>' +
+                '<span class="file-entry-size">' + (fileStore[name].length) + 'B</span>';
+            entry.onclick = function(){ viewFile(name); };
+            body.appendChild(entry);
+        });
+    }
+}
+
+function viewFile(name) {
+    var content = fileStore[name];
+    if (!content) { showNotification('[!] File not found', 'error'); return; }
+    appendTerminal('root@tremux:~$ cat ' + name);
+    var lines = content.split('\n');
+    lines.forEach(function(line){ appendTerminal(line); });
+    showNotification('[>] Displaying: ' + name, 'info');
+}
+
+// ============================================================================
+// TERMINAL
+// ============================================================================
+function appendTerminal(text) {
+    var body = document.getElementById('terminalBody');
+    var inputLine = body.querySelector('.terminal-input-line');
+    var line = document.createElement('div');
+    line.className = 'terminal-line';
+    if (text.startsWith('[✓]')) {
+        line.innerHTML = '<span class="success">' + text + '</span>';
+    } else if (text.startsWith('[!]') || text.startsWith('[✗]')) {
+        line.innerHTML = '<span class="error">' + text + '</span>';
+    } else if (text.startsWith('[>]')) {
+        line.innerHTML = '<span class="info">' + text + '</span>';
+    } else if (text.startsWith('root@')) {
+        line.innerHTML = '<span class="prompt">' + text + '</span>';
+    } else {
+        line.innerHTML = '<span class="output">' + text + '</span>';
+    }
+    body.insertBefore(line, inputLine);
+    body.scrollTop = body.scrollHeight;
+}
+
+function appendOutput(text) {
+    var body = document.getElementById('outputBody');
+    body.innerHTML += text;
+    body.scrollTop = body.scrollHeight;
+}
+
+function clearTerminal() {
+    var body = document.getElementById('terminalBody');
+    var inputLine = body.querySelector('.terminal-input-line');
+    body.innerHTML =
+        '<div class="terminal-line"><span style="color:var(--accent-1);font-weight:600;">┌──(root💀tremux)-[~]</span></div>' +
+        '<div class="terminal-line"><span style="color:var(--accent-1);font-weight:600;">└─</span> <span style="color:var(--accent-2);font-weight:600;">#</span> <span style="color:var(--text-secondary);">Terminal cleared</span></div>' +
+        '<div class="terminal-input-line">' +
+            '<span class="prompt">└─# </span>' +
+            '<input type="text" class="terminal-input" id="terminalInput" autofocus spellcheck="false">' +
+        '</div>';
+    document.getElementById('terminalInput').focus();
+    showNotification('[>] Terminal cleared', 'info');
+}
+
+function clearOutput() {
+    document.getElementById('outputBody').innerHTML = '[SYSTEM] Output cleared.\n';
+    showNotification('[>] Output cleared', 'info');
+}
+
+function processCommand(cmd) {
+    cmd = cmd.trim();
+    if (!cmd) return;
+
+    appendTerminal('root@tremux:~$ ' + cmd);
+    appendOutput('$ ' + cmd + '\n');
+
+    var parts = cmd.split(/\s+/);
+    var main = parts[0].toLowerCase();
+
+    switch(main) {
+        case 'help':
+            appendTerminal('[>] Available commands:');
+            appendTerminal('  help       — Show this help');
+            appendTerminal('  tools      — List all tools');
+            appendTerminal('  install    — Install <toolname>');
+            appendTerminal('  search     — Search <query>');
+            appendTerminal('  ls         — List files');
+            appendTerminal('  cat        — View <filename>');
+            appendTerminal('  clear/cls  — Clear terminal');
+            appendTerminal('  whoami     — Show user');
+            appendTerminal('  date       — Show date');
+            appendOutput('[>] Help displayed\n');
+            break;
+
+        case 'tools':
+            var count = 0;
+            for (var k in TOOLS) {
+                count += TOOLS[k].items.length;
+                var names = TOOLS[k].items.map(function(t){ return t.name; }).join(', ');
+                appendTerminal('  [' + TOOLS[k].title + '] ' + names);
+            }
+            appendTerminal('[>] Total: ' + count + ' tools available');
+            appendOutput('[>] Listed ' + count + ' tools\n');
+            break;
+
+        case 'install':
+            var toolName = parts.slice(1).join(' ');
+            if (!toolName) {
+                appendTerminal('[!] Usage: install <toolname>');
+                appendOutput('[!] Usage: install <toolname>\n');
+                break;
+            }
+            var found = null;
+            for (var k in TOOLS) {
+                for (var i=0; i<TOOLS[k].items.length; i++) {
+                    if (TOOLS[k].items[i].name.toLowerCase() === toolName.toLowerCase()) {
+                        found = TOOLS[k].items[i]; break;
+                    }
+                }
+                if (found) break;
+            }
+            if (found) {
+                currentTool = found;
+                installTool(found.name);
+            } else {
+                appendTerminal('[!] Tool "' + toolName + '" not found. Type "tools" to list.');
+                appendOutput('[!] Tool not found\n');
+            }
+            break;
+
+        case 'search':
+            var query = parts.slice(1).join(' ').toLowerCase();
+            if (!query) {
+                appendTerminal('[!] Usage: search <query>');
+                appendOutput('[!] Usage: search <query>\n');
+                break;
+            }
+            var results = [];
+            for (var k in TOOLS) {
+                for (var i=0; i<TOOLS[k].items.length; i++) {
+                    if (TOOLS[k].items[i].name.toLowerCase().includes(query) ||
+                        TOOLS[k].items[i].desc.toLowerCase().includes(query)) {
+                        results.push(TOOLS[k].items[i]);
+                    }
+                }
+            }
+            if (results.length > 0) {
+                appendTerminal('[>] Found ' + results.length + ' result(s):');
+                results.forEach(function(r){ appendTerminal('  ' + r.icon + ' ' + r.name + ' — ' + r.desc); });
+            } else {
+                appendTerminal('[!] No results for "' + query + '"');
+            }
+            appendOutput('[>] Search completed\n');
+            break;
+
+        case 'ls':
+            var names = Object.keys(fileStore);
+            if (names.length === 0) {
+                appendTerminal('[>] No files. Install tools first.');
+            } else {
+                appendTerminal('[>] Files (' + names.length + '):');
+                names.sort().forEach(function(n){
+                    appendTerminal('  📄 ' + n + ' (' + fileStore[n].length + 'B)');
+                });
+            }
+            appendOutput('[>] File list displayed\n');
+            break;
+
+        case 'cat':
+            var fileName = parts.slice(1).join(' ');
+            if (!fileName) {
+                appendTerminal('[!] Usage: cat <filename>');
+                appendOutput('[!] Usage: cat <filename>\n');
+                break;
+            }
+            if (fileStore[fileName]) {
+                var lines = fileStore[fileName].split('\n');
+                lines.forEach(function(l){ appendTerminal(l); });
+            } else {
+                appendTerminal('[!] File not found: ' + fileName);
+            }
+            break;
+
+        case 'clear': case 'cls':
+            clearTerminal();
+            break;
+
+        case 'whoami':
+            appendTerminal('[>] root');
+            appendOutput('[>] root\n');
+            break;
+
+        case 'date':
+            appendTerminal('[>] ' + new Date().toLocaleString());
+            appendOutput('[>] ' + new Date().toLocaleString() + '\n');
+            break;
+
+        default:
+            appendTerminal('[!] Command not found: ' + main + '. Type "help" for commands.');
+            appendOutput('[!] Command not found\n');
+    }
+}
+
+// ============================================================================
+// INIT
+// ============================================================================
+function initApp() {
+    renderTools();
+    refreshFileList();
+
+    setTimeout(function(){
+        var input = document.getElementById('terminalInput');
+        if (!input) return;
+        input.addEventListener('keydown', function(e){
+            if (e.key === 'Enter') {
+                var cmd = this.value;
+                this.value = '';
+                processCommand(cmd);
+                terminalHistory.push(cmd);
+                historyIndex = terminalHistory.length;
+            }
+            if (e.key === 'ArrowUp') {
+                if (historyIndex > 0) {
+                    historyIndex--;
+                    this.value = terminalHistory[historyIndex] || '';
+                }
+                e.preventDefault();
+            }
+            if (e.key === 'ArrowDown') {
+                if (historyIndex < terminalHistory.length - 1) {
+                    historyIndex++;
+                    this.value = terminalHistory[historyIndex] || '';
+                } else {
+                    historyIndex = terminalHistory.length;
+                    this.value = '';
+                }
+                e.preventDefault();
+            }
+        });
+    }, 100);
+
+    showNotification('[✓] TREMUX initialized', 'success');
+}
+
+// ============================================================================
+// CURSOR GLOW
+// ============================================================================
+document.addEventListener('mousemove', function(e){
+    var glow = document.getElementById('cursorGlow');
+    glow.style.left = (e.clientX - 150) + 'px';
+    glow.style.top = (e.clientY - 150) + 'px';
+});
+
+// ============================================================================
+// START
+// ============================================================================
+initApp();
+
+console.log('%c[TREMUX v8.0]', 'color:#00ff00;font-weight:bold;font-size:20px;');
+console.log('%cHacker Terminal — Loaded', 'color:#55aa55;font-size:12px;');
+</script>
+</body>
+</html>
