@@ -1,1311 +1,164 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TREMUX — TERMINAL v8.0</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
-
-* { margin:0; padding:0; box-sizing:border-box; }
-
-:root {
-    --bg-primary: #0a0e0a;
-    --bg-secondary: #0d120d;
-    --bg-card: #111a11;
-    --bg-input: #0a100a;
-    --border-color: #1a3a1a;
-    --border-glow: #2aff2a;
-    --text-primary: #ccffcc;
-    --text-secondary: #55aa55;
-    --text-dim: #226622;
-    --accent-1: #00ff00;
-    --accent-2: #33ff33;
-    --accent-3: #66ff66;
-    --accent-glow: rgba(0,255,0,0.15);
-    --success: #00ff00;
-    --danger: #ff3333;
-    --warning: #ffaa00;
-    --info: #33aaff;
-    --font-arabic: 'Cairo', sans-serif;
-    --font-code: 'JetBrains Mono', monospace;
-    --terminal-bg: #050805;
-    --header-bg: #0b130b;
-}
-
-body {
-    font-family: var(--font-arabic);
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    min-height: 100vh;
-    overflow-x: hidden;
-    direction: rtl;
-}
-
-body::before {
-    content: '';
-    position: fixed;
-    top:0; left:0;
-    width:100%; height:100%;
-    background:
-        radial-gradient(ellipse at 50% 0%, rgba(0,255,0,0.03) 0%, transparent 50%),
-        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,0,0.015) 2px, rgba(0,255,0,0.015) 4px);
-    pointer-events: none;
-    z-index: 0;
-}
-
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: var(--bg-secondary); }
-::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: var(--accent-1); }
-
-.scanlines {
-    position: fixed;
-    top:0; left:0;
-    width:100%; height:100%;
-    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,0,0.008) 2px, rgba(0,255,0,0.008) 4px);
-    pointer-events: none;
-    z-index: 9999;
-}
-
-/* ====== TOP HEADER ====== */
-.top-header {
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:10px 20px;
-    background: var(--header-bg);
-    border-bottom:1px solid var(--border-color);
-    position:sticky;
-    top:0;
-    z-index:100;
-}
-
-.header-logo {
-    display:flex;
-    align-items:center;
-    gap:10px;
-    font-family: var(--font-code);
-    font-size:16px;
-    font-weight:700;
-    color: var(--accent-1);
-    text-shadow:0 0 15px rgba(0,255,0,0.2);
-}
-
-.header-logo .logo-icon {
-    width:30px; height:30px;
-    background: #003300;
-    border:1px solid var(--accent-1);
-    border-radius:6px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:13px;
-    font-family: var(--font-code);
-}
-
-.header-status {
-    display:flex;
-    align-items:center;
-    gap:5px;
-    font-family: var(--font-code);
-    font-size:10px;
-    color: var(--text-secondary);
-}
-.status-dot {
-    width:5px; height:5px;
-    background: var(--accent-1);
-    border-radius:50%;
-    animation: pulse 1.5s ease-in-out infinite;
-}
-@keyframes pulse {
-    0%,100% { opacity:1; }
-    50% { opacity:0.3; }
-}
-
-.header-user {
-    display:flex;
-    align-items:center;
-    gap:6px;
-    padding:4px 12px;
-    background: var(--bg-card);
-    border:1px solid var(--border-color);
-    border-radius:6px;
-    font-family: var(--font-code);
-    font-size:11px;
-    color: var(--text-secondary);
-}
-
-/* ====== MAIN GRID ====== */
-.main-grid {
-    display:grid;
-    grid-template-columns: 1fr 1fr;
-    gap:12px;
-    padding:12px 16px;
-    max-width: 1400px;
-    margin: 0 auto;
-    min-height: calc(100vh - 52px);
-}
-
-/* ====== CARDS ====== */
-.card {
-    background: var(--bg-card);
-    border:1px solid var(--border-color);
-    border-radius:10px;
-    overflow:hidden;
-    display:flex;
-    flex-direction:column;
-}
-
-.card-full {
-    grid-column: 1 / -1;
-}
-
-.card-header {
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:10px 14px;
-    background: var(--bg-secondary);
-    border-bottom:1px solid var(--border-color);
-    font-family: var(--font-code);
-    font-size:11px;
-    color: var(--text-secondary);
-}
-
-.card-header .card-title {
-    display:flex;
-    align-items:center;
-    gap:6px;
-    color: var(--accent-1);
-    font-weight:600;
-    font-size:12px;
-}
-
-.card-body {
-    padding:14px;
-    flex:1;
-    overflow-y:auto;
-}
-
-/* ====== TOOLS GRID (SQUARES) ====== */
-.tools-grid {
-    display:grid;
-    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-    gap:8px;
-}
-
-.tool-square {
-    background: var(--bg-input);
-    border:1px solid var(--border-color);
-    border-radius:8px;
-    padding:12px 8px;
-    text-align:center;
-    cursor:pointer;
-    transition:all 0.2s;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:6px;
-}
-
-.tool-square:hover {
-    border-color: var(--accent-1);
-    background: rgba(0,255,0,0.03);
-    transform:translateY(-1px);
-    box-shadow:0 4px 15px rgba(0,255,0,0.05);
-}
-
-.tool-square.active {
-    border-color: var(--accent-1);
-    background: rgba(0,255,0,0.06);
-    box-shadow:0 0 20px rgba(0,255,0,0.08);
-}
-
-.tool-square .tool-icon {
-    font-size:24px;
-    line-height:1;
-}
-
-.tool-square .tool-name {
-    font-family: var(--font-code);
-    font-size:10px;
-    color: var(--text-primary);
-    font-weight:600;
-}
-
-.tool-square .tool-desc {
-    font-size:8px;
-    color: var(--text-dim);
-}
-
-/* ====== HUNTER CONTROLS ====== */
-.hunter-controls {
-    display:flex;
-    gap:8px;
-    flex-wrap:wrap;
-    margin-bottom:12px;
-    align-items:flex-end;
-}
-
-.hunter-group {
-    display:flex;
-    flex-direction:column;
-    gap:3px;
-}
-
-.hunter-group label {
-    font-family: var(--font-code);
-    font-size:9px;
-    color: var(--text-dim);
-    text-transform:uppercase;
-    letter-spacing:1px;
-}
-
-.hunter-group input,
-.hunter-group select {
-    background: var(--bg-input);
-    border:1px solid var(--border-color);
-    border-radius:5px;
-    padding:6px 10px;
-    font-family: var(--font-code);
-    font-size:12px;
-    color: var(--text-primary);
-    outline:none;
-    min-width:80px;
-    transition:border 0.2s;
-}
-
-.hunter-group input:focus,
-.hunter-group select:focus {
-    border-color: var(--accent-1);
-}
-
-.hunter-group select option {
-    background: var(--bg-card);
-    color: var(--text-primary);
-}
-
-.hunter-btn {
-    padding:7px 16px;
-    background: rgba(0,255,0,0.08);
-    border:1px solid var(--accent-1);
-    border-radius:5px;
-    font-family: var(--font-code);
-    font-size:11px;
-    font-weight:600;
-    color: var(--accent-1);
-    cursor:pointer;
-    transition:all 0.2s;
-}
-
-.hunter-btn:hover {
-    background: rgba(0,255,0,0.15);
-    box-shadow:0 0 20px rgba(0,255,0,0.1);
-}
-
-.hunter-btn.danger {
-    border-color: var(--danger);
-    color: var(--danger);
-    background: rgba(255,50,50,0.08);
-}
-
-.hunter-btn.danger:hover {
-    background: rgba(255,50,50,0.15);
-}
-
-/* ====== STATS ROW ====== */
-.hunter-stats {
-    display:flex;
-    gap:8px;
-    margin-bottom:12px;
-    flex-wrap:wrap;
-}
-
-.stat-card {
-    flex:1;
-    min-width:70px;
-    background: var(--bg-input);
-    border:1px solid var(--border-color);
-    border-radius:6px;
-    padding:8px 10px;
-    text-align:center;
-}
-
-.stat-card .stat-value {
-    font-family: var(--font-code);
-    font-size:18px;
-    font-weight:700;
-    color: var(--text-primary);
-}
-
-.stat-card .stat-label {
-    font-size:9px;
-    color: var(--text-dim);
-    margin-top:2px;
-    font-family: var(--font-code);
-}
-
-.stat-card.found .stat-value { color: var(--accent-1); }
-.stat-card.checked .stat-value { color: var(--info); }
-.stat-card.speed .stat-value { color: var(--warning); }
-
-/* ====== RESULTS LIST ====== */
-.results-box {
-    max-height:200px;
-    overflow-y:auto;
-    background: var(--bg-input);
-    border:1px solid var(--border-color);
-    border-radius:6px;
-    margin-bottom:10px;
-}
-
-.results-box .result-item {
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:6px 10px;
-    border-bottom:1px solid rgba(255,255,255,0.03);
-    font-family: var(--font-code);
-    font-size:11px;
-}
-
-.results-box .result-item:last-child { border-bottom:none; }
-
-.results-box .result-item .r-user {
-    color: var(--accent-1);
-    font-weight:600;
-    direction:ltr;
-    text-align:left;
-}
-
-.results-box .result-item .r-status {
-    font-size:10px;
-}
-
-.results-box .result-item .r-status.available { color: var(--accent-1); }
-.results-box .result-item .r-status.taken { color: var(--text-dim); }
-
-.results-box .result-item .r-actions {
-    display:flex;
-    gap:4px;
-}
-
-.results-box .result-item .r-actions button {
-    padding:2px 8px;
-    background: rgba(0,255,0,0.06);
-    border:1px solid var(--border-color);
-    border-radius:3px;
-    font-family: var(--font-code);
-    font-size:9px;
-    color: var(--text-secondary);
-    cursor:pointer;
-    transition:0.2s;
-}
-
-.results-box .result-item .r-actions button:hover {
-    border-color: var(--accent-1);
-    color: var(--accent-1);
-}
-
-.results-box .result-item .r-actions button.register {
-    border-color: var(--accent-1);
-    color: var(--accent-1);
-}
-
-.results-box .result-item .r-actions button.register:hover {
-    background: rgba(0,255,0,0.15);
-}
-
-/* ====== TERMINAL LOG ====== */
-.terminal-log {
-    background: var(--terminal-bg);
-    border:1px solid var(--border-color);
-    border-radius:6px;
-    padding:10px;
-    max-height:120px;
-    overflow-y:auto;
-    font-family: var(--font-code);
-    font-size:10px;
-    line-height:1.7;
-    direction:ltr;
-    text-align:left;
-}
-
-.terminal-log .log-line {
-    color: var(--text-secondary);
-}
-
-.terminal-log .log-line .log-info { color: var(--info); }
-.terminal-log .log-line .log-success { color: var(--accent-1); }
-.terminal-log .log-line .log-warn { color: var(--warning); }
-.terminal-log .log-line .log-error { color: var(--danger); }
-
-/* ====== TERMINAL INPUT ====== */
-.terminal-input-area {
-    display:flex;
-    align-items:center;
-    gap:6px;
-    background: var(--terminal-bg);
-    border:1px solid var(--border-color);
-    border-radius:6px;
-    padding:8px 12px;
-    margin-top:8px;
-    direction:ltr;
-    text-align:left;
-}
-
-.terminal-input-area .term-prompt {
-    font-family: var(--font-code);
-    font-size:12px;
-    color: var(--accent-1);
-    font-weight:700;
-    white-space:nowrap;
-}
-
-.terminal-input-area input {
-    flex:1;
-    background:transparent;
-    border:none;
-    font-family: var(--font-code);
-    font-size:12px;
-    color: var(--text-primary);
-    outline:none;
-    caret-color: var(--accent-1);
-    direction:ltr;
-    text-align:left;
-}
-
-.terminal-input-area input::placeholder {
-    color: var(--text-dim);
-    font-size:10px;
-}
-
-/* ====== CODE EXECUTOR ====== */
-.executor-area {
-    display:flex;
-    flex-direction:column;
-    gap:8px;
-}
-
-.executor-area textarea {
-    width:100%;
-    min-height:200px;
-    background: var(--terminal-bg);
-    border:1px solid var(--border-color);
-    border-radius:6px;
-    padding:12px;
-    font-family: var(--font-code);
-    font-size:12px;
-    color: var(--text-primary);
-    outline:none;
-    resize:vertical;
-    direction:ltr;
-    text-align:left;
-    line-height:1.6;
-}
-
-.executor-area textarea:focus {
-    border-color: var(--accent-1);
-}
-
-.executor-area textarea::placeholder {
-    color: var(--text-dim);
-    font-size:11px;
-}
-
-.executor-controls {
-    display:flex;
-    gap:8px;
-    align-items:center;
-}
-
-.executor-btn {
-    padding:8px 20px;
-    background: rgba(0,255,0,0.1);
-    border:1px solid var(--accent-1);
-    border-radius:6px;
-    font-family: var(--font-code);
-    font-size:12px;
-    font-weight:600;
-    color: var(--accent-1);
-    cursor:pointer;
-    transition:all 0.2s;
-}
-
-.executor-btn:hover {
-    background: rgba(0,255,0,0.2);
-    box-shadow:0 0 25px rgba(0,255,0,0.1);
-}
-
-.executor-btn.danger {
-    border-color: var(--danger);
-    color: var(--danger);
-    background: rgba(255,50,50,0.08);
-}
-
-/* ====== NOTIFICATION ====== */
-.notification {
-    position:fixed;
-    top:60px;
-    right:20px;
-    padding:10px 18px;
-    background: var(--bg-card);
-    border:1px solid var(--border-color);
-    border-radius:8px;
-    font-family: var(--font-code);
-    font-size:12px;
-    color: var(--text-primary);
-    box-shadow:0 10px 40px rgba(0,0,0,0.5);
-    z-index:99999;
-    transform:translateX(120%);
-    transition:transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    max-width:350px;
-    backdrop-filter:blur(10px);
-}
-
-.notification.show { transform:translateX(0); }
-.notification.success { border-color:var(--accent-1); }
-.notification.error { border-color:var(--danger); }
-.notification.info { border-color:var(--info); }
-
-/* ====== EMPTY STATE ====== */
-.empty-state {
-    padding:20px;
-    text-align:center;
-    color: var(--text-dim);
-    font-family: var(--font-code);
-    font-size:11px;
-}
-
-/* ====== RESPONSIVE ====== */
-@media (max-width:900px) {
-    .main-grid { grid-template-columns:1fr; padding:10px; gap:10px; }
-    .tools-grid { grid-template-columns:repeat(auto-fill, minmax(100px, 1fr)); }
-    .hunter-controls { flex-direction:column; }
-    .hunter-group input, .hunter-group select { min-width:100%; }
-}
-
-@media (max-width:500px) {
-    .tools-grid { grid-template-columns:repeat(3, 1fr); }
-    .stat-card .stat-value { font-size:14px; }
-    .top-header { padding:8px 12px; }
-    .header-logo { font-size:13px; }
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أداة حماية وتشفير سكربتات لوا - روبلوكس</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent-color: #00d26a;
+            --text-color: #f8fafc;
+            --border-color: #334155;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--accent-color);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        textarea {
+            width: 100%;
+            height: 180px;
+            background-color: #090d16;
+            color: #38bdf8;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            box-sizing: border-box;
+            resize: vertical;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .btn-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        button {
+            background-color: var(--accent-color);
+            color: #000;
+            font-weight: bold;
+            font-size: 16px;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 210, 106, 0.3);
+        }
+
+        .copy-btn {
+            background-color: #38bdf8;
+            margin-top: 10px;
+            font-size: 14px;
+            padding: 8px 16px;
+        }
+    </style>
 </head>
 <body>
 
-<div class="scanlines"></div>
+<div class="container">
+    <h2>أداة تشفير وحماية سكربتات لوا (Roblox)</h2>
 
-<!-- ====== NOTIFICATION ====== -->
-<div class="notification" id="notification">
-    <span id="notifText"></span>
-</div>
+    <!-- المربع الأول: إدخال الكود الأصلي -->
+    <label for="inputLua">أدخل كود Lua الأصلي هنا:</label>
+    <textarea id="inputLua" placeholder='print("Hello Roblox!")'></textarea>
 
-<!-- ====== HEADER ====== -->
-<div class="top-header">
-    <div class="header-logo">
-        <div class="logo-icon">⏣</div>
-        <span>TREMUX</span>
-        <div class="header-status">
-            <span class="status-dot"></span>
-            <span id="statusText">IDLE</span>
-        </div>
-    </div>
-    <div class="header-user">
-        <span>⚡ root@tremux</span>
-    </div>
-</div>
-
-<!-- ====== MAIN GRID ====== -->
-<div class="main-grid" id="mainApp">
-
-    <!-- ====== TOOLS SQUARES (يمين أعلى) ====== -->
-    <div class="card">
-        <div class="card-header">
-            <div class="card-title">📦 الأدوات</div>
-            <span style="font-size:9px;color:var(--text-dim);">v8.0</span>
-        </div>
-        <div class="card-body">
-            <div class="tools-grid" id="toolsGrid">
-                <div class="tool-square active" onclick="switchTool('hunter', this)">
-                    <div class="tool-icon">🎯</div>
-                    <div class="tool-name">صيد يوزرات</div>
-                    <div class="tool-desc">تيك توك 3 أحرف</div>
-                </div>
-                <div class="tool-square" onclick="switchTool('executor', this)">
-                    <div class="tool-icon">⚡</div>
-                    <div class="tool-name">منفذ أكواد</div>
-                    <div class="tool-desc">TRX CRACKER</div>
-                </div>
-                <div class="tool-square" onclick="switchTool('terminal', this)">
-                    <div class="tool-icon">💻</div>
-                    <div class="tool-name">ترمنل</div>
-                    <div class="tool-desc">أوامر مباشرة</div>
-                </div>
-                <div class="tool-square" onclick="switchTool('scanner', this)">
-                    <div class="tool-icon">🔍</div>
-                    <div class="tool-name">سكانر</div>
-                    <div class="tool-desc">ساب دومين</div>
-                </div>
-                <div class="tool-square" onclick="switchTool('encrypt', this)">
-                    <div class="tool-icon">🔐</div>
-                    <div class="tool-name">تشفير</div>
-                    <div class="tool-desc">Script Encoder</div>
-                </div>
-                <div class="tool-square" onclick="switchTool('settings', this)">
-                    <div class="tool-icon">⚙️</div>
-                    <div class="tool-name">إعدادات</div>
-                    <div class="tool-desc">System Config</div>
-                </div>
-            </div>
-        </div>
+    <!-- زر التشفير -->
+    <div class="btn-container">
+        <button onclick="obfuscateScript()">تشفير السكربت 🔒</button>
     </div>
 
-    <!-- ====== HUNTER PANEL (يسار أعلى - الرئيسي) ====== -->
-    <div class="card" id="panelHunter">
-        <div class="card-header">
-            <div class="card-title">🎯 صيد يوزرات تيك توك — 3 أحرف</div>
-            <span style="font-size:9px;color:var(--text-dim);">tiktok.com/@username</span>
-        </div>
-        <div class="card-body">
-
-            <!-- Controls -->
-            <div class="hunter-controls">
-                <div class="hunter-group">
-                    <label>طول اليوزر</label>
-                    <select id="usernameLength">
-                        <option value="3">3 أحرف</option>
-                        <option value="4">4 أحرف</option>
-                        <option value="5">5 أحرف</option>
-                    </select>
-                </div>
-                <div class="hunter-group">
-                    <label>نوع الأحرف</label>
-                    <select id="charType">
-                        <option value="all">أحرف + أرقام</option>
-                        <option value="letters">أحرف فقط</option>
-                        <option value="numbers">أرقام فقط</option>
-                    </select>
-                </div>
-                <div class="hunter-group">
-                    <label>عدد النتائج</label>
-                    <input type="number" id="maxResults" value="100" min="10" max="5000">
-                </div>
-                <div class="hunter-group">
-                    <label>تأخير (ms)</label>
-                    <input type="number" id="delayMs" value="200" min="50" max="2000">
-                </div>
-                <button class="hunter-btn" id="startBtn" onclick="startHunt()">▶ صيد</button>
-                <button class="hunter-btn danger" id="stopBtn" onclick="stopHunt()" style="display:none;">■ إيقاف</button>
-                <button class="hunter-btn" onclick="clearResults()" style="border-color:var(--text-dim);color:var(--text-dim);">✕ مسح</button>
-            </div>
-
-            <!-- Stats -->
-            <div class="hunter-stats">
-                <div class="stat-card checked">
-                    <div class="stat-value" id="statChecked">0</div>
-                    <div class="stat-label">تم الفحص</div>
-                </div>
-                <div class="stat-card found">
-                    <div class="stat-value" id="statFound">0</div>
-                    <div class="stat-label">🎯 متاح</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="statTaken">0</div>
-                    <div class="stat-label">❌ مأخوذ</div>
-                </div>
-                <div class="stat-card speed">
-                    <div class="stat-value" id="statSpeed">0</div>
-                    <div class="stat-label">⚡/ثانية</div>
-                </div>
-            </div>
-
-            <!-- Results -->
-            <div class="results-box" id="resultsList">
-                <div class="empty-state">
-                    🎯 اضغط "صيد" عشان تبدأ تبحث عن يوزرات 3 أحرف متاحة<br>
-                    <span style="font-size:9px;">~ 46,656 احتمال لـ 3 أحرف ~</span>
-                </div>
-            </div>
-
-            <!-- Terminal Log -->
-            <div class="terminal-log" id="huntLog">
-                <div class="log-line"><span class="log-info">[TREMUX]</span> System initialized.</div>
-                <div class="log-line"><span class="log-info">[TIKTOK]</span> Username Hunter loaded. 46,656 combinations.</div>
-            </div>
-
-            <!-- Terminal Input -->
-            <div class="terminal-input-area">
-                <span class="term-prompt">root@tremux:~$</span>
-                <input type="text" id="termInput" placeholder="اكتب أمر أو 'help'..." onkeydown="handleTerminalInput(event)">
-            </div>
-
-        </div>
+    <!-- المربع الثاني: ظهور الكود المشفر -->
+    <label for="outputLua">الكود المشفر (جاهز للاستخدام في روبلوكس):</label>
+    <textarea id="outputLua" readonly placeholder="سيظهر السكربت المشفر هنا..."></textarea>
+    
+    <div style="text-align: left;">
+        <button class="copy-btn" onclick="copyOutput()">نسخ السكربت المشفر 📋</button>
     </div>
-
-    <!-- ====== EXECUTOR PANEL (يمين سفلي) ====== -->
-    <div class="card" id="panelExecutor" style="display:none;">
-        <div class="card-header">
-            <div class="card-title">⚡ TRX CRACKER — منفذ أكواد</div>
-            <span style="font-size:9px;color:var(--text-dim);">Delta-Core v8.0</span>
-        </div>
-        <div class="card-body">
-            <div class="executor-area">
-                <textarea id="codeArea" placeholder="-- اكتب كود Lua هنا أو الصق\nprint('Hello from TRX CRACKER!')"></textarea>
-                <div class="executor-controls">
-                    <button class="executor-btn" onclick="executeCode()">🔄 تشغيل</button>
-                    <button class="executor-btn danger" onclick="clearCode()">✕ مسح</button>
-                    <button class="executor-btn" onclick="loadExample()" style="border-color:var(--info);color:var(--info);background:rgba(50,170,255,0.06);">📥 مثال</button>
-                    <span style="font-size:10px;color:var(--text-dim);font-family:var(--font-code);margin-right:auto;">
-                        <span id="execStatus" style="color:var(--accent-1);">● جاهز</span>
-                    </span>
-                </div>
-                <div class="terminal-log" id="execLog" style="max-height:150px;margin-top:8px;">
-                    <div class="log-line"><span class="log-info">[TRX]</span> Executor ready. Delta-Core v8.0 loaded.</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ====== TERMINAL PANEL (يسار سفلي) ====== -->
-    <div class="card" id="panelTerminal" style="display:none;">
-        <div class="card-header">
-            <div class="card-title">💻 ترمنل</div>
-            <span style="font-size:9px;color:var(--text-dim);">bash</span>
-        </div>
-        <div class="card-body" style="padding:0;">
-            <div style="background:var(--terminal-bg);padding:14px;min-height:200px;font-family:var(--font-code);font-size:12px;line-height:1.7;direction:ltr;text-align:left;">
-                <div style="color:var(--accent-1);">┌──(root㉿tremux)-[~]</div>
-                <div style="color:var(--text-secondary);">└─# <span style="color:var(--text-dim);">— نظام تريمكس —</span></div>
-                <div style="color:var(--text-dim);font-size:10px;">الأمراض: help | tools | hunt | exec | clear</div>
-                <div style="color:var(--accent-1);margin-top:6px;">┌──(root㉿tremux)-[~]</div>
-                <div style="display:flex;align-items:center;gap:4px;margin-top:2px;">
-                    <span style="color:var(--accent-1);font-weight:700;">└─#</span>
-                    <input type="text" style="flex:1;background:transparent;border:none;color:var(--text-primary);font-family:var(--font-code);font-size:12px;outline:none;caret-color:var(--accent-1);direction:ltr;" placeholder="اكتب أمر..." id="termInput2" onkeydown="handleTerminal2(event)">
-                </div>
-            </div>
-        </div>
-    </div>
-
 </div>
 
 <script>
-// ============================================================================
-// STATE
-// ============================================================================
-let isHunting = false;
-let shouldStop = false;
-let totalChecked = 0;
-let totalFound = 0;
-let totalTaken = 0;
-let resultsCache = [];
-let speedCount = 0;
-let speedValue = 0;
-let speedInterval = null;
-let currentTool = 'hunter';
-
-// ============================================================================
-// NOTIFICATION
-// ============================================================================
-function showNotif(msg, type) {
-    var n = document.getElementById('notification');
-    document.getElementById('notifText').textContent = msg;
-    n.className = 'notification ' + (type||'info') + ' show';
-    clearTimeout(n._t);
-    n._t = setTimeout(function(){ n.classList.remove('show'); }, 3000);
-}
-
-function updateStatus(text) {
-    document.getElementById('statusText').textContent = text;
-}
-
-// ============================================================================
-// SWITCH TOOL
-// ============================================================================
-function switchTool(tool, btn) {
-    document.querySelectorAll('.tool-square').forEach(function(s){ s.classList.remove('active'); });
-    if (btn) btn.classList.add('active');
-    currentTool = tool;
-
-    // Show/hide panels
-    var panels = {
-        hunter: document.getElementById('panelHunter'),
-        executor: document.getElementById('panelExecutor'),
-        terminal: document.getElementById('panelTerminal')
-    };
-
-    // Reset all
-    panels.hunter.style.display = 'none';
-    panels.executor.style.display = 'none';
-    panels.terminal.style.display = 'none';
-
-    // Show selected
-    if (tool === 'hunter') panels.hunter.style.display = 'flex';
-    else if (tool === 'executor') panels.executor.style.display = 'flex';
-    else if (tool === 'terminal') panels.terminal.style.display = 'flex';
-
-    // For other tools, show hunter by default but change title
-    if (tool === 'scanner' || tool === 'encrypt' || tool === 'settings') {
-        panels.hunter.style.display = 'flex';
-        var title = panels.hunter.querySelector('.card-title');
-        if (tool === 'scanner') {
-            title.innerHTML = '🔍 سكانر ساب دومين';
-            showNotif('🔍 Scanner tool selected', 'info');
-        } else if (tool === 'encrypt') {
-            title.innerHTML = '🔐 تشفير سكريبتات';
-            showNotif('🔐 Encoder tool selected', 'info');
-        } else if (tool === 'settings') {
-            title.innerHTML = '⚙️ إعدادات النظام';
-            showNotif('⚙️ Settings loaded', 'info');
-        }
-    }
-
-    updateStatus(tool.toUpperCase());
-}
-
-// ============================================================================
-// USERNAME GENERATOR
-// ============================================================================
-function generateCombos(length, type) {
-    var chars = '';
-    switch(type) {
-        case 'letters': chars = 'abcdefghijklmnopqrstuvwxyz'; break;
-        case 'numbers': chars = '0123456789'; break;
-        default: chars = 'abcdefghijklmnopqrstuvwxyz0123456789'; break;
-    }
-
-    if (length <= 0) return [];
-
-    function gen(current, depth, results) {
-        if (depth === length) {
-            results.push(current);
-            return;
-        }
-        for (var i=0; i<chars.length; i++) {
-            gen(current + chars[i], depth + 1, results);
-        }
-    }
-
-    var results = [];
-    gen('', 0, results);
-    return results;
-}
-
-// ============================================================================
-// CHECK TIKTOK USERNAME
-// ============================================================================
-function checkTikTok(username) {
-    return new Promise(function(resolve) {
-        var xhr = new XMLHttpRequest();
-        var url = 'https://www.tiktok.com/@' + encodeURIComponent(username);
-        xhr.open('GET', url, true);
-        xhr.timeout = 8000;
-
-        xhr.onload = function() {
-            // TikTok returns 200 for existing users, 404 for not found
-            if (xhr.status === 404) {
-                resolve({ status: 'available', message: 'Username available!' });
-            } else if (xhr.status === 200) {
-                resolve({ status: 'taken', message: 'Username taken' });
-            } else {
-                resolve({ status: 'error', message: 'Status: ' + xhr.status });
-            }
-        };
-
-        xhr.onerror = function() {
-            // Try alternate method - check response body for signup page
-            resolve({ status: 'error', message: 'Network error' });
-        };
-
-        xhr.ontimeout = function() {
-            resolve({ status: 'error', message: 'Timeout' });
-        };
-
-        xhr.send();
-    });
-}
-
-// ============================================================================
-// TIKTOK REGISTER HELPER
-// ============================================================================
-function openRegister(username) {
-    // Opens TikTok signup with username pre-filled
-    window.open('https://www.tiktok.com/signup?username=' + encodeURIComponent(username), '_blank');
-    addLog('🔗 فتح تسجيل لـ @' + username, 'info');
-}
-
-function copyUsername(username) {
-    navigator.clipboard.writeText(username).then(function() {
-        showNotif('✅ تم نسخ: @' + username, 'success');
-        addLog('📋 نسخ: @' + username, 'info');
-    }).catch(function() {
-        // Fallback
-        var ta = document.createElement('textarea');
-        ta.value = username;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-        showNotif('✅ تم نسخ: @' + username, 'success');
-    });
-}
-
-// ============================================================================
-// LOG FUNCTIONS
-// ============================================================================
-function addLog(msg, type) {
-    var log = document.getElementById('huntLog');
-    var line = document.createElement('div');
-    line.className = 'log-line';
-    var prefix = type === 'success' ? '[✓]' :
-                 type === 'warn' ? '[!]' :
-                 type === 'error' ? '[✗]' : '[*]';
-    var colorClass = type === 'success' ? 'log-success' :
-                     type === 'warn' ? 'log-warn' :
-                     type === 'error' ? 'log-error' : 'log-info';
-    line.innerHTML = '<span class="' + colorClass + '">' + prefix + '</span> ' + msg;
-    log.appendChild(line);
-    log.scrollTop = log.scrollHeight;
-}
-
-function addResult(username, status, time) {
-    var list = document.getElementById('resultsList');
-
-    // Remove empty state
-    var firstChild = list.children[0];
-    if (firstChild && firstChild.className === 'empty-state') {
-        list.innerHTML = '';
-    }
-
-    var item = document.createElement('div');
-    item.className = 'result-item';
-
-    var statusText = status === 'available' ? '✅ متاح' : '❌ مأخوذ';
-    var statusClass = status === 'available' ? 'available' : 'taken';
-
-    var actions = '';
-    if (status === 'available') {
-        actions = '<button class="register" onclick="openRegister(\'' + username + '\')">📝 تسجيل</button>' +
-                  '<button onclick="copyUsername(\'' + username + '\')">📋 نسخ</button>';
-    } else {
-        actions = '<button onclick="copyUsername(\'' + username + '\')">📋 نسخ</button>';
-    }
-
-    item.innerHTML =
-        '<span class="r-user">@' + username + '</span>' +
-        '<span class="r-status ' + statusClass + '">' + statusText + '</span>' +
-        '<span class="r-actions">' + actions + '</span>';
-
-    // Keep newest at top
-    list.insertBefore(item, list.firstChild);
-}
-
-// ============================================================================
-// STATS UPDATE
-// ============================================================================
-function updateStats() {
-    document.getElementById('statChecked').textContent = totalChecked;
-    document.getElementById('statFound').textContent = totalFound;
-    document.getElementById('statTaken').textContent = totalTaken;
-    document.getElementById('statSpeed').textContent = speedValue;
-}
-
-// ============================================================================
-// HUNT LOGIC
-// ============================================================================
-async function startHunt() {
-    if (isHunting) return;
-
-    var length = parseInt(document.getElementById('usernameLength').value);
-    var charType = document.getElementById('charType').value;
-    var maxResults = parseInt(document.getElementById('maxResults').value) || 100;
-    var delay = parseInt(document.getElementById('delayMs').value) || 200;
-
-    isHunting = true;
-    shouldStop = false;
-    totalChecked = 0;
-    totalFound = 0;
-    totalTaken = 0;
-
-    document.getElementById('startBtn').style.display = 'none';
-    document.getElementById('stopBtn').style.display = 'inline-block';
-
-    // Speed counter
-    speedCount = 0;
-    speedValue = 0;
-    if (speedInterval) clearInterval(speedInterval);
-    speedInterval = setInterval(function(){
-        speedValue = speedCount;
-        speedCount = 0;
-        updateStats();
-    }, 1000);
-
-    updateStatus('HUNT');
-
-    var totalCombos = Math.pow(charType === 'numbers' ? 10 : charType === 'letters' ? 26 : 36, length);
-    addLog('🎯 بدأ الصيد: ' + length + ' أحرف | ' + totalCombos + ' احتمال', 'info');
-    showNotif('🎯 صيد يوزرات تيك توك...', 'info');
-
-    // Generate and shuffle
-    var combos = generateCombos(length, charType);
-    for (var i=combos.length-1; i>0; i--) {
-        var j = Math.floor(Math.random() * (i+1));
-        var tmp = combos[i]; combos[i] = combos[j]; combos[j] = tmp;
-    }
-
-    addLog('تم توليد وخلط ' + combos.length + ' يوزر', 'info');
-
-    var foundCount = 0;
-    var batchSize = 2;
-    var errors = 0;
-
-    for (var idx=0; idx<combos.length; idx++) {
-        if (shouldStop) break;
-        if (foundCount >= maxResults) {
-            addLog('📊 وصلت للحد الأقصى: ' + maxResults + ' يوزر', 'warn');
-            showNotif('✅ لقينا ' + foundCount + ' يوزر متاح!', 'success');
-            break;
-        }
-
-        var username = combos[idx];
-        var startTime = performance.now();
-
-        var result = await checkTikTok(username);
-        var elapsed = performance.now() - startTime;
-
-        totalChecked++;
-        speedCount++;
-
-        if (result.status === 'available') {
-            totalFound++;
-            foundCount++;
-            addResult(username, 'available', elapsed);
-            addLog('🎯 لقينا: @' + username + ' (' + elapsed.toFixed(0) + 'ms)', 'success');
-            errors = 0;
-        } else if (result.status === 'taken') {
-            totalTaken++;
-            addResult(username, 'taken', elapsed);
-        } else {
-            errors++;
-            if (errors > 50) {
-                addLog('⚠️ أخطاء كثيرة: ' + errors + ' — ممكن محظور', 'warn');
-                showNotif('⚠️ يمكن IP محظور من تيك توك', 'error');
-                break;
-            }
-        }
-
-        if (totalChecked % 10 === 0) updateStats();
-
-        if (delay > 0) {
-            await new Promise(function(r){ setTimeout(r, delay); });
-        }
-    }
-
-    clearInterval(speedInterval);
-    speedValue = 0;
-    updateStats();
-
-    isHunting = false;
-    document.getElementById('startBtn').style.display = 'inline-block';
-    document.getElementById('stopBtn').style.display = 'none';
-    updateStatus('IDLE');
-
-    addLog('🏁 انتهى الصيد | فحص: ' + totalChecked + ' | لقينا: ' + totalFound, 'info');
-
-    if (totalFound > 0) {
-        showNotif('🎯 خلص! لقينا ' + totalFound + ' يوزر متاح!', 'success');
-    } else {
-        showNotif('😴 ما لقينا شي... جرب بعدين', 'info');
-    }
-}
-
-function stopHunt() {
-    shouldStop = true;
-    addLog('■ أوقف الصيد يدوي', 'warn');
-    showNotif('■ تم الإيقاف', 'error');
-    document.getElementById('startBtn').style.display = 'inline-block';
-    document.getElementById('stopBtn').style.display = 'none';
-    isHunting = false;
-    clearInterval(speedInterval);
-    updateStatus('IDLE');
-}
-
-function clearResults() {
-    if (isHunting) { showNotif('أوقف الصيد أولاً!', 'error'); return; }
-
-    document.getElementById('resultsList').innerHTML =
-        '<div class="empty-state">🎯 اضغط "صيد" عشان تبدأ تبحث عن يوزرات 3 أحرف متاحة<br>' +
-        '<span style="font-size:9px;">~ 46,656 احتمال لـ 3 أحرف ~</span></div>';
-    totalChecked = 0; totalFound = 0; totalTaken = 0;
-    speedValue = 0; resultsCache = [];
-    updateStats();
-    document.getElementById('huntLog').innerHTML =
-        '<div class="log-line"><span class="log-info">[TREMUX]</span> Results cleared.</div>' +
-        '<div class="log-line"><span class="log-info">[TIKTOK]</span> Ready for new hunt.</div>';
-    showNotif('✕ مسح النتائج', 'info');
-}
-
-// ============================================================================
-// TERMINAL INPUT
-// ============================================================================
-function handleTerminalInput(e) {
-    if (e.key !== 'Enter') return;
-    var input = document.getElementById('termInput');
-    var cmd = input.value.trim().toLowerCase();
-    input.value = '';
-
-    addLog('$ ' + cmd, 'info');
-
-    if (cmd === 'help') {
-        addLog('الأوامر: help | hunt | stop | clear | exec | tools | tiktok', 'info');
-    } else if (cmd === 'hunt' || cmd === 'صيد') {
-        if (!isHunting) startHunt();
-        else addLog('⚠ الصيد شغال حالياً', 'warn');
-    } else if (cmd === 'stop' || cmd === 'قف') {
-        if (isHunting) stopHunt();
-        else addLog('⚠ ما فيه صيد نشط', 'warn');
-    } else if (cmd === 'clear' || cmd === 'مسح') {
-        clearResults();
-    } else if (cmd === 'exec' || cmd === 'منفذ') {
-        switchTool('executor', document.querySelectorAll('.tool-square')[1]);
-        addLog('⚡ تم فتح منفذ الأكواد', 'success');
-    } else if (cmd === 'tools' || cmd === 'أدوات') {
-        addLog('📦 الأدوات: صيد يوزرات | TRX منفذ أكواد | ترمنل | سكانر | تشفير | إعدادات', 'info');
-    } else if (cmd === 'tiktok') {
-        addLog('🎯 TikTok Username Hunter — 3,4,5 character sniping', 'info');
-    } else if (cmd === 'stats' || cmd === 'إحصائيات') {
-        addLog('📊 فحص: ' + totalChecked + ' | متاح: ' + totalFound + ' | مأخوذ: ' + totalTaken + ' | سرعة: ' + speedValue + '/sec', 'info');
-    } else if (cmd) {
-        addLog('⚠ أمر غير معروف: ' + cmd + ' — اكتب help', 'warn');
-    }
-}
-
-function handleTerminal2(e) {
-    if (e.key !== 'Enter') return;
-    var input = document.getElementById('termInput2');
-    var cmd = input.value.trim();
-    input.value = '';
-
-    // Just echo in terminal 2
-    var termDiv = input.closest('div[style]') || input.parentElement.parentElement;
-    // Actually let's just redirect to main terminal
-    var huntLog = document.getElementById('huntLog');
-    var line = document.createElement('div');
-    line.className = 'log-line';
-    line.innerHTML = '<span class="log-info">[$$]</span> ' + cmd;
-    huntLog.appendChild(line);
-    huntLog.scrollTop = huntLog.scrollHeight;
-
-    // Handle commands
-    if (cmd === 'help') {
-        addLog('الأوامر المتاحة: help, hunt, stop, clear, exec, tools', 'info');
-    } else if (cmd === 'hunt') {
-        if (!isHunting) startHunt();
-    } else if (cmd === 'stop') {
-        if (isHunting) stopHunt();
-    } else if (cmd === 'clear') {
-        clearResults();
-    } else if (cmd === 'exec') {
-        switchTool('executor', document.querySelectorAll('.tool-square')[1]);
-    } else if (cmd) {
-        addLog('⚠ أمر غير معروف', 'warn');
-    }
-}
-
-// ============================================================================
-// CODE EXECUTOR (TRX CRACKER)
-// ============================================================================
-function executeCode() {
-    var code = document.getElementById('codeArea').value.trim();
-    if (!code) {
-        showNotif('✕ اكتب كود أولاً!', 'error');
+function obfuscateScript() {
+    const rawCode = document.getElementById('inputLua').value;
+    
+    if (!rawCode.trim()) {
+        alert("يرجى كتابة أو لصق كود Lua أولاً!");
         return;
     }
 
-    var execLog = document.getElementById('execLog');
-    var line = document.createElement('div');
-    line.className = 'log-line';
+    // 1. تحويل نص السكربت إلى مصفوفة قيم ASCII مفتاحية مع خانات عشوائية
+    let byteTable = [];
+    for (let i = 0; i < rawCode.length; i++) {
+        byteTable.push(rawCode.charCodeAt(i));
+    }
 
-    // Simulate execution - in real scenario this would connect to Roblox
-    line.innerHTML = '<span class="log-success">[TRX]</span> ⚡ تنفيذ الكود...';
-    execLog.appendChild(line);
+    // 2. توليد مفتاح تشفير عشوائي بسيط (XOR Key)
+    const key = Math.floor(Math.random() * 200) + 20;
+    const encryptedBytes = byteTable.map(b => b ^ key);
 
-    // Show the code being executed (truncated)
-    var preview = code.substring(0, 80) + (code.length > 80 ? '...' : '');
-    var line2 = document.createElement('div');
-    line2.className = 'log-line';
-    line2.innerHTML = '<span class="log-info">[CODE]</span> ' + preview.replace(/\n/g, ' ');
-    execLog.appendChild(line2);
-
-    // Delta-Core decryption simulation
-    var line3 = document.createElement('div');
-    line3.className = 'log-line';
-    line3.innerHTML = '<span class="log-info">[DECRYPT]</span> Delta-Core v8.0 — فك التشفير...';
-    execLog.appendChild(line3);
-
-    setTimeout(function(){
-        var line4 = document.createElement('div');
-        line4.className = 'log-line';
-        line4.innerHTML = '<span class="log-success">[✓]</span> ✅ تم التنفيذ بنجاح!';
-        execLog.appendChild(line4);
-        execLog.scrollTop = execLog.scrollHeight;
-        showNotif('⚡ تم تنفيذ الكود!', 'success');
-        document.getElementById('execStatus').innerHTML = '● تم';
-    }, 500 + Math.random() * 1000);
-
-    execLog.scrollTop = execLog.scrollHeight;
-    document.getElementById('execStatus').innerHTML = '● جاري...';
-}
-
-function clearCode() {
-    document.getElementById('codeArea').value = '';
-    document.getElementById('execLog').innerHTML =
-        '<div class="log-line"><span class="log-info">[TRX]</span> Code cleared.</div>';
-    document.getElementById('execStatus').innerHTML = '● جاهز';
-    showNotif('✕ مسح الكود', 'info');
-}
-
-function loadExample() {
-    document.getElementById('codeArea').value =
-`-- TRX CRACKER v8.0 — Delta-Core
--- Roblox Script Executor
-
-local player = game:GetService("Players").LocalPlayer
-local char = player.Character or player.CharacterAdded:Wait()
-
--- Example: ESP
-for _, v in pairs(game:GetService("Players"):GetPlayers()) do
-    if v ~= player and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
-        local billboard = Instance.new("BillboardGui")
-        local text = Instance.new("TextLabel")
-        billboard.AlwaysOnTop = true
-        billboard.Size = UDim2.new(0, 200, 0, 50)
-        text.Text = "🎯 "..v.Name
-        text.Size = UDim2.new(1, 0, 1, 0)
-        text.BackgroundTransparency = 1
-        text.TextColor3 = Color3.fromRGB(0, 255, 0)
-        text.TextScaled = true
-        text.Parent = billboard
-        billboard.Parent = v.Character.HumanoidRootPart
-    end
+    // 3. بناء هيكل المحرك الخفيف والتنفيذي للوا في روبلوكس
+    const obfuscatedTemplate = `--[[ 
+    Protected by Roblox Lua Shield 
+--]]
+local _K = ${key}
+local _D = {${encryptedBytes.join(',')}}
+local _S = ""
+for _i = 1, #_D do
+    _S = _S .. string.char(bit32.bxor(_D[_i], _K))
 end
+local _f = assert(loadstring or load)(_S)
+return _f()`;
 
-print("✅ TRX CRACKER — Executed!")`;
-    showNotif('📥 تم تحميل مثال', 'info');
-    document.getElementById('execStatus').innerHTML = '● جاهز';
+    document.getElementById('outputLua').value = obfuscatedTemplate;
 }
 
-// ============================================================================
-// INIT
-// ============================================================================
-addLog('✅ TREMUX v8.0 جاهز — TikTok Hunter + TRX Executor', 'success');
-updateStats();
-
-console.log('%c⏣ TREMUX v8.0', 'color:#00ff00;font-size:24px;font-weight:bold;');
-console.log('%c🎯 TikTok 3-Char Username Hunter', 'color:#55aa55;');
-console.log('%c⚡ TRX CRACKER Delta-Core Executor', 'color:#33ff33;');
+function copyOutput() {
+    const output = document.getElementById('outputLua');
+    if (!output.value) return;
+    
+    output.select();
+    document.execCommand('copy');
+    alert("تم نسخ السكربت المشفر بنجاح!");
+}
 </script>
+
 </body>
 </html>
+
