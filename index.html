@@ -3,558 +3,242 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MRX — id v4.0</title>
+    <title>MRX - Roblox ID</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #000000;
-            color: #ffffff;
+            background: #0a0a0f;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            position: relative;
-            overflow: hidden;
         }
-
-        #stars-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-        }
-
-        #splashScreen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 20;
-            background: #000;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 1s ease, visibility 1s ease;
-        }
-
-        #splashScreen.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .splash-logo {
-            font-size: 80px;
-            font-weight: 900;
-            letter-spacing: 12px;
-            background: linear-gradient(135deg, #ffffff, #00d26a, #ffffff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: pulseLogo 2s ease-in-out infinite;
-        }
-
-        @keyframes pulseLogo {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.8; }
-        }
-
-        .splash-sub {
-            color: rgba(255, 255, 255, 0.2);
-            font-size: 14px;
-            letter-spacing: 8px;
-            margin-top: 8px;
-        }
-
-        .splash-loader {
-            margin-top: 40px;
-            width: 200px;
-            height: 2px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 2px;
-            overflow: hidden;
-        }
-
-        .splash-loader-bar {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #00d26a, #ffffff);
-            border-radius: 2px;
-            animation: loadBar 2.5s ease-in-out forwards;
-        }
-
-        @keyframes loadBar {
-            0% { width: 0%; }
-            100% { width: 100%; }
-        }
-
-        #mainApp {
-            position: relative;
-            z-index: 1;
-            width: 100%;
-            max-width: 820px;
-            padding: 20px;
-            display: none;
-        }
-
-        #mainApp.active {
-            display: block;
-        }
-
-        .card {
-            background: rgba(8, 8, 12, 0.92);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            border-radius: 24px;
+        .box {
+            background: #111118;
+            border: 1px solid #1a1a24;
+            border-radius: 16px;
             padding: 40px 35px;
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9), 0 0 120px rgba(0, 210, 106, 0.03);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: -1px;
-            left: 30%;
-            right: 30%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, #00d26a, transparent);
-            opacity: 0.4;
-        }
-
-        .header {
+            width: 520px;
+            max-width: 94%;
             text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+        }
+        .logo {
+            font-size: 44px;
+            font-weight: 900;
+            letter-spacing: 8px;
+            color: #00d26a;
+            margin-bottom: 4px;
+        }
+        .sub {
+            font-size: 11px;
+            color: #ffffff22;
+            letter-spacing: 5px;
             margin-bottom: 30px;
         }
-
-        .header .brand {
-            font-size: 52px;
-            font-weight: 900;
-            letter-spacing: 10px;
-            background: linear-gradient(135deg, #ffffff, #00d26a);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .header .tagline {
-            color: rgba(255, 255, 255, 0.15);
-            font-size: 12px;
-            letter-spacing: 6px;
-            margin-top: 4px;
-        }
-
-        .warning-strip {
-            background: rgba(255, 0, 0, 0.04);
-            border: 1px solid rgba(255, 0, 0, 0.08);
-            border-radius: 8px;
-            padding: 10px 16px;
-            text-align: center;
-            font-size: 11px;
-            color: rgba(255, 80, 80, 0.5);
-            letter-spacing: 3px;
-            margin-bottom: 28px;
-            direction: ltr;
-        }
-
-        .input-group {
-            margin-bottom: 18px;
-        }
-
-        .input-group label {
+        label {
             display: block;
             font-size: 13px;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.5);
-            margin-bottom: 8px;
+            color: #ffffff55;
+            margin-bottom: 10px;
             letter-spacing: 1px;
         }
-
-        .input-group input {
+        input {
             width: 100%;
-            padding: 16px 18px;
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 12px;
+            padding: 14px 16px;
+            background: #000;
+            border: 1px solid #1a1a2a;
+            border-radius: 10px;
             color: #38bdf8;
-            font-size: 14px;
             font-family: 'Courier New', monospace;
+            font-size: 13px;
             direction: ltr;
             text-align: left;
             outline: none;
-            transition: border-color 0.3s, box-shadow 0.3s;
         }
-
-        .input-group input:focus {
-            border-color: rgba(0, 210, 106, 0.25);
-            box-shadow: 0 0 30px rgba(0, 210, 106, 0.04);
+        input:focus {
+            border-color: #00d26a33;
         }
-
-        .input-group input::placeholder {
-            color: rgba(255, 255, 255, 0.1);
-        }
-
-        .btn-execute {
+        button {
             width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, #00d26a, #00994d);
+            padding: 14px;
+            margin-top: 14px;
+            background: #00d26a;
             border: none;
-            border-radius: 12px;
+            border-radius: 10px;
             color: #000;
             font-weight: 800;
-            font-size: 16px;
+            font-size: 15px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            letter-spacing: 3px;
-            margin: 8px 0 18px;
+            transition: 0.3s;
+            letter-spacing: 2px;
         }
-
-        .btn-execute:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 40px rgba(0, 210, 106, 0.2);
+        button:hover {
+            background: #00e675;
+            box-shadow: 0 4px 25px #00d26a33;
         }
-
-        .btn-execute:disabled {
+        button:disabled {
             opacity: 0.3;
             cursor: not-allowed;
-            transform: none;
             box-shadow: none;
         }
-
-        .terminal {
-            background: rgba(0, 0, 0, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            border-radius: 12px;
-            padding: 18px;
+        #status {
+            margin-top: 18px;
             font-family: 'Courier New', monospace;
             font-size: 12px;
             direction: ltr;
-            text-align: left;
-            min-height: 200px;
-            max-height: 320px;
-            overflow-y: auto;
-            margin-bottom: 18px;
-            line-height: 1.8;
+            min-height: 60px;
+            color: #ffffff44;
+            line-height: 2;
             display: none;
         }
-
-        .terminal.active {
+        #status.active {
             display: block;
         }
-
-        .terminal .line {
-            color: rgba(255, 255, 255, 0.6);
-            opacity: 0;
-            animation: fadeLine 0.3s ease forwards;
-        }
-
-        .terminal .line.green { color: #00d26a; }
-        .terminal .line.red { color: #ff4444; }
-        .terminal .line.cyan { color: #38bdf8; }
-        .terminal .line.yellow { color: #facc15; }
-        .terminal .line.dim { color: rgba(255, 255, 255, 0.2); }
-        .terminal .line.blink { animation: fadeLine 0.3s ease forwards, blinkText 0.8s step-end infinite; }
-
-        @keyframes fadeLine {
-            from { opacity: 0; transform: translateY(4px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes blinkText {
-            50% { opacity: 0.2; }
-        }
-
-        .result-box {
+        #result {
             display: none;
-            text-align: center;
-            padding: 30px 20px;
-            border: 1px solid rgba(0, 210, 106, 0.1);
-            border-radius: 16px;
-            background: rgba(0, 210, 106, 0.02);
-            margin-top: 10px;
+            margin-top: 18px;
+            padding: 20px;
+            border: 1px solid #00d26a11;
+            border-radius: 12px;
+            background: #00d26a04;
         }
-
-        .result-box.active {
+        #result.active {
             display: block;
-            animation: fadeLine 0.6s ease forwards;
         }
-
-        .result-box .congrats {
-            font-size: 42px;
-            font-weight: 900;
-            background: linear-gradient(135deg, #00d26a, #ffffff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        #result .emoji {
+            font-size: 32px;
             margin-bottom: 6px;
         }
-
-        .result-box .id-display {
+        #result .msg {
             font-size: 28px;
+            font-weight: 900;
+            color: #00d26a;
+        }
+        #result .id-label {
+            font-size: 11px;
+            color: #ffffff33;
+            letter-spacing: 3px;
+            margin: 10px 0 6px;
+        }
+        #result .roblox-id {
+            font-size: 32px;
             font-weight: 700;
             color: #38bdf8;
             font-family: 'Courier New', monospace;
-            letter-spacing: 4px;
-            direction: ltr;
-            margin: 12px 0;
-        }
-
-        .result-box .id-label {
-            color: rgba(255, 255, 255, 0.25);
-            font-size: 13px;
-            letter-spacing: 2px;
-        }
-
-        .result-box .emoji-line {
-            font-size: 30px;
-            margin: 10px 0;
-        }
-
-        .footer-note {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 10px;
-            color: rgba(255, 255, 255, 0.06);
-            letter-spacing: 4px;
+            letter-spacing: 3px;
             direction: ltr;
         }
-
-        .d1 { animation-delay: 0.1s; }
-        .d2 { animation-delay: 0.5s; }
-        .d3 { animation-delay: 0.9s; }
-        .d4 { animation-delay: 1.3s; }
-        .d5 { animation-delay: 1.7s; }
-        .d6 { animation-delay: 2.1s; }
-        .d7 { animation-delay: 2.5s; }
-        .d8 { animation-delay: 2.9s; }
-        .d9 { animation-delay: 3.3s; }
-        .d10 { animation-delay: 3.7s; }
-        .d11 { animation-delay: 4.1s; }
-        .d12 { animation-delay: 4.5s; }
-        .d13 { animation-delay: 4.9s; }
-        .d14 { animation-delay: 5.3s; }
-        .d15 { animation-delay: 5.7s; }
-        .d16 { animation-delay: 6.1s; }
-        .d17 { animation-delay: 6.5s; }
-
-        @media (max-width: 600px) {
-            .card { padding: 24px 18px; }
-            .header .brand { font-size: 34px; }
-            .splash-logo { font-size: 50px; }
-            .result-box .congrats { font-size: 28px; }
-            .result-box .id-display { font-size: 20px; }
+        #result .close-btn {
+            margin-top: 16px;
+            background: transparent;
+            border: 1px solid #ffffff11;
+            color: #ffffff44;
+            font-size: 12px;
+            padding: 8px 24px;
+            width: auto;
+        }
+        #result .close-btn:hover {
+            border-color: #ffffff33;
+            color: #fff;
+            box-shadow: none;
         }
     </style>
 </head>
 <body>
 
-    <canvas id="stars-canvas"></canvas>
+<div class="box">
+    <div class="logo">MRX</div>
+    <div class="sub">● ROBLOX ID EXTRACTOR ●</div>
 
-    <!-- شاشة البداية -->
-    <div id="splashScreen">
-        <div class="splash-logo">MRX</div>
-        <div class="splash-sub">● MEDIA EXPLOIT ENGINE ●</div>
-        <div class="splash-loader">
-            <div class="splash-loader-bar"></div>
-        </div>
+    <label>رابط raw GitHub للفيديو (webm)</label>
+    <input type="text" id="urlInput" placeholder="https://raw.githubusercontent.com/..." dir="ltr">
+
+    <button id="execBtn" onclick="start()">استخراج ID روبلكس</button>
+
+    <div id="status"></div>
+
+    <div id="result">
+        <div class="emoji">🎉</div>
+        <div class="msg">مبروك</div>
+        <div class="id-label">ROBLOX ASSET / USER ID</div>
+        <div class="roblox-id" id="robloxId">000000000</div>
+        <button class="close-btn" onclick="closeResult()">✕</button>
     </div>
+</div>
 
-    <!-- التطبيق الرئيسي -->
-    <div id="mainApp">
-        <div class="card">
-            <div class="header">
-                <div class="brand">MRX</div>
-                <div class="tagline">● MEDIA EXPLOIT ENGINE v4.0 — STEALTH MODE ●</div>
-            </div>
+<script>
+let cancel = false;
 
-            <div class="warning-strip">
-                ⚠️ UNAUTHORIZED ACCESS LOGGED ● IP TRACKED ● BEHAVIOR MONITORED
-            </div>
+function start() {
+    let url = document.getElementById('urlInput').value.trim();
+    if (!url) { alert('حط رابط أولاً'); return; }
+    if (!url.includes('raw.githubusercontent.com') && !url.includes('/raw/')) {
+        alert('الرابط مو من raw GitHub');
+        return;
+    }
 
-            <div class="input-group">
-                <label>⎜ RAW GITHUB URL (WEBM / MP4 / MEDIA)</label>
-                <input type="text" id="rawUrl" placeholder="https://raw.githubusercontent.com/user/repo/main/file.webm" dir="ltr">
-            </div>
+    document.getElementById('execBtn').disabled = true;
+    document.getElementById('execBtn').textContent = 'جاري الاستخراج...';
+    document.getElementById('result').classList.remove('active');
+    document.getElementById('status').classList.add('active');
+    document.getElementById('status').textContent = '';
 
-            <button class="btn-execute" id="execBtn" onclick="executeExploit()">⚡ EXECUTE — MRX MEDIA EXPLOIT</button>
+    cancel = false;
+    let lines = [
+        'MRX > جلب الملف...',
+        'MRX > تحليل اسم الملف...',
+        'MRX > استخراج المعرف الرقمي...',
+        'MRX > الاتصال بخادم روبلكس...',
+        'MRX > تم بنجاح ✓'
+    ];
+    let i = 0;
+    let status = document.getElementById('status');
+    status.textContent = '';
 
-            <div class="terminal" id="terminal"></div>
-
-            <div class="result-box" id="resultBox">
-                <div class="emoji-line">🎉</div>
-                <div class="congrats">مبروك</div>
-                <div class="id-label">EXPLOIT SUCCESSFUL — ASSIGNED ID</div>
-                <div class="id-display" id="generatedId">MRX-XXXX-XXXX</div>
-                <div style="margin-top:14px; font-size:12px; color:rgba(255,255,255,0.15); letter-spacing:2px;">
-                    ● MEDIA INJECTED ● SHELL READY ● CONNECTION SECURE ●
-                </div>
-                <div style="margin-top:20px;">
-                    <button onclick="resetApp()" style="background:rgba(255,255,255,0.04); color:rgba(255,255,255,0.3); border:1px solid rgba(255,255,255,0.04); padding:10px 30px; border-radius:8px; cursor:pointer; font-size:13px; transition:0.3s;">
-                        ✕ إغلاق
-                    </button>
-                </div>
-            </div>
-
-            <div class="footer-note">
-                MRX CORP ● ALL CONNECTIONS MONITORED ● 127.0.0.1
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // ===== النجوم =====
-        const canvas = document.getElementById('stars-canvas');
-        const ctx = canvas.getContext('2d');
-        let stars = [];
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+    let interval = setInterval(() => {
+        if (cancel || i >= lines.length) {
+            clearInterval(interval);
+            if (!cancel) showResult(url);
+            return;
         }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
+        status.textContent = lines[i];
+        i++;
+    }, 500);
+}
 
-        for (let i = 0; i < 280; i++) {
-            stars.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                size: Math.random() * 2 + 0.5,
-                speed: Math.random() * 0.5 + 0.1,
-                opacity: Math.random() * 0.8 + 0.2,
-                twinkle: Math.random() * 0.02 + 0.003
-            });
-        }
+function extractRobloxId(url) {
+    let name = url.split('/').pop().replace(/\.[^.]+$/, '');
+    let uuid = name.replace(/^[^-]+-/, '');
+    if (uuid === name) uuid = name;
+    let digits = uuid.replace(/\D/g, '');
+    if (digits.length >= 9) return digits.slice(0, 9);
+    if (digits.length > 0) return digits.padEnd(9, '0');
+    let hash = 0;
+    for (let c of name) { hash = ((hash << 5) - hash) + c.charCodeAt(0); hash |= 0; }
+    return String(Math.abs(hash)).slice(0, 9).padEnd(9, '0');
+}
 
-        function drawStars() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (const s of stars) {
-                s.y -= s.speed;
-                if (s.y < -5) {
-                    s.y = canvas.height + 5;
-                    s.x = Math.random() * canvas.width;
-                }
-                s.opacity += s.twinkle * (Math.random() > 0.5 ? 1 : -1);
-                if (s.opacity > 1) s.opacity = 1;
-                if (s.opacity < 0.1) s.opacity = 0.1;
-                ctx.beginPath();
-                ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(255, 255, 255, ${s.opacity})`;
-                ctx.fill();
-                if (s.size > 1.3) {
-                    ctx.beginPath();
-                    ctx.arc(s.x, s.y, s.size * 2.5, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(255, 255, 255, ${s.opacity * 0.05})`;
-                    ctx.fill();
-                }
-            }
-            requestAnimationFrame(drawStars);
-        }
-        drawStars();
+function showResult(url) {
+    let id = extractRobloxId(url);
+    document.getElementById('robloxId').textContent = id;
+    document.getElementById('result').classList.add('active');
+    document.getElementById('status').classList.remove('active');
+    document.getElementById('execBtn').disabled = false;
+    document.getElementById('execBtn').textContent = 'استخراج ID روبلكس';
+}
 
-        // ===== splash → main =====
-        setTimeout(() => {
-            document.getElementById('splashScreen').classList.add('hidden');
-            document.getElementById('mainApp').classList.add('active');
-        }, 3000);
-
-        // ===== المحرك =====
-        const terminal = document.getElementById('terminal');
-        const resultBox = document.getElementById('resultBox');
-        const execBtn = document.getElementById('execBtn');
-
-        function addLine(text, cls = '') {
-            const div = document.createElement('div');
-            div.className = `line ${cls}`;
-            div.textContent = text;
-            terminal.appendChild(div);
-            terminal.scrollTop = terminal.scrollHeight;
-        }
-
-        function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-
-        function genId() {
-            const c = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            return 'MRX-' + Array(4).fill().map(() => c[Math.floor(Math.random() * 36)]).join('') +
-                   '-' + Array(4).fill().map(() => c[Math.floor(Math.random() * 36)]).join('');
-        }
-
-        async function executeExploit() {
-            const url = document.getElementById('rawUrl').value.trim();
-            if (!url) {
-                alert('✕ حط رابط raw GitHub أولاً');
-                return;
-            }
-
-            if (!url.includes('raw.githubusercontent.com') && !url.includes('/raw/')) {
-                alert('✕ الرابط مو من raw GitHub');
-                return;
-            }
-
-            execBtn.disabled = true;
-            execBtn.textContent = '⏳ EXECUTING...';
-            resultBox.classList.remove('active');
-            terminal.innerHTML = '';
-            terminal.classList.add('active');
-
-            const lines = [
-                { t: '[MRX] Initializing media exploit engine...', c: 'green' },
-                { t: '[MRX] Fetching raw payload: ' + url, c: 'cyan' },
-                { t: '[MRX] Establishing secure tunnel...', c: 'dim' },
-                { t: '[MRX] Bypassing CORS restrictions...', c: 'yellow' },
-                { t: '[MRX] Injecting decoder module...', c: 'green' },
-                { t: '[MRX] Parsing media container...', c: 'dim' },
-                { t: '[MRX] Extracting key frames...', c: 'cyan' },
-                { t: '[MRX] Analyzing binary structure...', c: 'yellow' },
-                { t: '[MRX] Decrypting payload layer 1/3...', c: 'dim' },
-                { t: '[MRX] Decrypting payload layer 2/3...', c: 'dim' },
-                { t: '[MRX] Decrypting payload layer 3/3...', c: 'dim' },
-                { t: '[MRX] Payload decrypted successfully.', c: 'green' },
-                { t: '[MRX] Executing shellcode injection...', c: 'red' },
-                { t: '[MRX] Bypassing AV detection...', c: 'yellow' },
-                { t: '[MRX] Establishing persistence...', c: 'cyan' },
-                { t: '[MRX] Injecting into media stream...', c: 'dim' },
-            ];
-
-            for (const l of lines) {
-                addLine(l.t, l.c);
-                await sleep(350 + Math.random() * 250);
-            }
-
-            const newId = genId();
-            await sleep(300);
-            addLine('', 'dim');
-            addLine('═══════════════════════════════════════════════', 'green');
-            addLine(`  MRX ID: ${newId}  `, 'green');
-            addLine('  STATUS: SUCCESSFUL', 'green');
-            addLine('  PAYLOAD: MEDIA INJECTED', 'green');
-            addLine('═══════════════════════════════════════════════', 'green');
-            addLine('', 'dim');
-
-            await sleep(400);
-            document.getElementById('generatedId').textContent = newId;
-            resultBox.classList.add('active');
-
-            execBtn.disabled = false;
-            execBtn.textContent = '⚡ EXECUTE — MRX MEDIA EXPLOIT';
-        }
-
-        function resetApp() {
-            resultBox.classList.remove('active');
-            terminal.innerHTML = '';
-            terminal.classList.remove('active');
-            document.getElementById('rawUrl').value = '';
-        }
-    </script>
+function closeResult() {
+    cancel = true;
+    document.getElementById('result').classList.remove('active');
+    document.getElementById('status').classList.remove('active');
+    document.getElementById('status').textContent = '';
+    document.getElementById('execBtn').disabled = false;
+    document.getElementById('execBtn').textContent = 'استخراج ID روبلكس';
+}
+</script>
 
 </body>
 </html>
