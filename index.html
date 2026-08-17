@@ -3,242 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MRX - Roblox ID</title>
+    <title>شاشة الاختراق</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            background: #0a0a0f;
-            color: #fff;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            min-height: 100vh;
+            background-color: #050505;
             display: flex;
             justify-content: center;
             align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            font-family: monospace;
         }
-        .box {
-            background: #111118;
-            border: 1px solid #1a1a24;
-            border-radius: 16px;
-            padding: 40px 35px;
-            width: 520px;
-            max-width: 94%;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+
+        
+        .monitor {
+            position: relative;
+            width: 80vw;
+            max-width: 900px;
+            height: 55vw;
+            max-height: 550px;
+            background: #111;
+            border: 20px solid #222;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.2);
         }
-        .logo {
-            font-size: 44px;
-            font-weight: 900;
-            letter-spacing: 8px;
-            color: #00d26a;
-            margin-bottom: 4px;
-        }
-        .sub {
-            font-size: 11px;
-            color: #ffffff22;
-            letter-spacing: 5px;
-            margin-bottom: 30px;
-        }
-        label {
-            display: block;
-            font-size: 13px;
-            color: #ffffff55;
-            margin-bottom: 10px;
-            letter-spacing: 1px;
-        }
-        input {
+
+        
+        .screen {
+            position: relative;
             width: 100%;
-            padding: 14px 16px;
-            background: #000;
-            border: 1px solid #1a1a2a;
-            border-radius: 10px;
-            color: #38bdf8;
-            font-family: 'Courier New', monospace;
-            font-size: 13px;
-            direction: ltr;
-            text-align: left;
-            outline: none;
+            height: 100%;
+            background-color: #000;
+            overflow: hidden;
+            border: 2px solid #333;
         }
-        input:focus {
-            border-color: #00d26a33;
+
+        
+        .screen::before {
+            content: " ";
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+            background-size: 100% 4px;
+            z-index: 2;
+            pointer-events: none;
         }
-        button {
+
+        
+        canvas {
+            display: block;
             width: 100%;
-            padding: 14px;
-            margin-top: 14px;
-            background: #00d26a;
-            border: none;
-            border-radius: 10px;
-            color: #000;
-            font-weight: 800;
-            font-size: 15px;
-            cursor: pointer;
-            transition: 0.3s;
-            letter-spacing: 2px;
+            height: 100%;
         }
-        button:hover {
-            background: #00e675;
-            box-shadow: 0 4px 25px #00d26a33;
+
+        
+        .stand {
+            width: 160px;
+            height: 50px;
+            background: #1a1a1a;
+            margin: 0 auto;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
         }
-        button:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-        #status {
-            margin-top: 18px;
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
-            direction: ltr;
-            min-height: 60px;
-            color: #ffffff44;
-            line-height: 2;
-            display: none;
-        }
-        #status.active {
-            display: block;
-        }
-        #result {
-            display: none;
-            margin-top: 18px;
-            padding: 20px;
-            border: 1px solid #00d26a11;
-            border-radius: 12px;
-            background: #00d26a04;
-        }
-        #result.active {
-            display: block;
-        }
-        #result .emoji {
-            font-size: 32px;
-            margin-bottom: 6px;
-        }
-        #result .msg {
-            font-size: 28px;
-            font-weight: 900;
-            color: #00d26a;
-        }
-        #result .id-label {
-            font-size: 11px;
-            color: #ffffff33;
-            letter-spacing: 3px;
-            margin: 10px 0 6px;
-        }
-        #result .roblox-id {
-            font-size: 32px;
-            font-weight: 700;
-            color: #38bdf8;
-            font-family: 'Courier New', monospace;
-            letter-spacing: 3px;
-            direction: ltr;
-        }
-        #result .close-btn {
-            margin-top: 16px;
-            background: transparent;
-            border: 1px solid #ffffff11;
-            color: #ffffff44;
-            font-size: 12px;
-            padding: 8px 24px;
-            width: auto;
-        }
-        #result .close-btn:hover {
-            border-color: #ffffff33;
-            color: #fff;
-            box-shadow: none;
+
+        .base {
+            width: 280px;
+            height: 12px;
+            background: #252525;
+            margin: 0 auto;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
 
-<div class="box">
-    <div class="logo">MRX</div>
-    <div class="sub">● ROBLOX ID EXTRACTOR ●</div>
-
-    <label>رابط raw GitHub للفيديو (webm)</label>
-    <input type="text" id="urlInput" placeholder="https://raw.githubusercontent.com/..." dir="ltr">
-
-    <button id="execBtn" onclick="start()">استخراج ID روبلكس</button>
-
-    <div id="status"></div>
-
-    <div id="result">
-        <div class="emoji">🎉</div>
-        <div class="msg">مبروك</div>
-        <div class="id-label">ROBLOX ASSET / USER ID</div>
-        <div class="roblox-id" id="robloxId">000000000</div>
-        <button class="close-btn" onclick="closeResult()">✕</button>
+    <div>
+        <div class="monitor">
+            <div class="screen">
+                <canvas id="matrix"></canvas>
+            </div>
+        </div>
+        <div class="stand"></div>
+        <div class="base"></div>
     </div>
-</div>
 
-<script>
-let cancel = false;
+    <script>
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
 
-function start() {
-    let url = document.getElementById('urlInput').value.trim();
-    if (!url) { alert('حط رابط أولاً'); return; }
-    if (!url.includes('raw.githubusercontent.com') && !url.includes('/raw/')) {
-        alert('الرابط مو من raw GitHub');
-        return;
-    }
+       
+        canvas.width = canvas.parentElement.clientWidth;
+        canvas.height = canvas.parentElement.clientHeight;
 
-    document.getElementById('execBtn').disabled = true;
-    document.getElementById('execBtn').textContent = 'جاري الاستخراج...';
-    document.getElementById('result').classList.remove('active');
-    document.getElementById('status').classList.add('active');
-    document.getElementById('status').textContent = '';
+        const numbers = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const fontSize = 16;
+        const columns = Math.floor(canvas.width / fontSize);
+        const drops = Array(columns).fill(1);
 
-    cancel = false;
-    let lines = [
-        'MRX > جلب الملف...',
-        'MRX > تحليل اسم الملف...',
-        'MRX > استخراج المعرف الرقمي...',
-        'MRX > الاتصال بخادم روبلكس...',
-        'MRX > تم بنجاح ✓'
-    ];
-    let i = 0;
-    let status = document.getElementById('status');
-    status.textContent = '';
+    
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    let interval = setInterval(() => {
-        if (cancel || i >= lines.length) {
-            clearInterval(interval);
-            if (!cancel) showResult(url);
-            return;
+            ctx.fillStyle = '#0F0';
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = numbers.charAt(Math.floor(Math.random() * numbers.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
         }
-        status.textContent = lines[i];
-        i++;
-    }, 500);
-}
 
-function extractRobloxId(url) {
-    let name = url.split('/').pop().replace(/\.[^.]+$/, '');
-    let uuid = name.replace(/^[^-]+-/, '');
-    if (uuid === name) uuid = name;
-    let digits = uuid.replace(/\D/g, '');
-    if (digits.length >= 9) return digits.slice(0, 9);
-    if (digits.length > 0) return digits.padEnd(9, '0');
-    let hash = 0;
-    for (let c of name) { hash = ((hash << 5) - hash) + c.charCodeAt(0); hash |= 0; }
-    return String(Math.abs(hash)).slice(0, 9).padEnd(9, '0');
-}
+        setInterval(drawMatrix, 33);
 
-function showResult(url) {
-    let id = extractRobloxId(url);
-    document.getElementById('robloxId').textContent = id;
-    document.getElementById('result').classList.add('active');
-    document.getElementById('status').classList.remove('active');
-    document.getElementById('execBtn').disabled = false;
-    document.getElementById('execBtn').textContent = 'استخراج ID روبلكس';
-}
+    
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playHackingSound() {
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
 
-function closeResult() {
-    cancel = true;
-    document.getElementById('result').classList.remove('active');
-    document.getElementById('status').classList.remove('active');
-    document.getElementById('status').textContent = '';
-    document.getElementById('execBtn').disabled = false;
-    document.getElementById('execBtn').textContent = 'استخراج ID روبلكس';
-}
-</script>
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(Math.random() * 800 + 200, audioCtx.currentTime);
 
+            gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.08);
+        }
+
+        
+        setInterval(playHackingSound, 100);
+
+        
+        window.addEventListener('click', () => audioCtx.resume());
+        window.addEventListener('keydown', () => audioCtx.resume());
+    </script>
 </body>
 </html>
