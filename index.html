@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>TRX · </title>
+    <title>TRX · SPAM</title>
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
         body{background:#0a0a0a;color:#eee;font-family:sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px}
@@ -119,7 +119,7 @@
                     const retry = parseInt(res.headers.get('Retry-After')) || 2;
                     log(`⏳ معدل مرتفع، انتظار ${retry} ثانية`);
                     await new Promise(r => setTimeout(r, retry * 1000));
-                    return true; // نعيد المحاولة
+                    return true;
                 } else if (res.status === 404) {
                     showStatus('❌ الويب هوك غير موجود أو محذوف!', 'error');
                     log('❌ 404 - Webhook غير صحيح');
@@ -155,7 +155,7 @@
             if (!webhookInput.value.trim()) {
                 showStatus('❌ أدخل رابط Webhook', 'error');
                 return;
-            
+            }
             log('🔍 اختبار الويب هوك...');
             const ok = await send(true);
             if (!ok) {
@@ -169,7 +169,6 @@
             counter.textContent = '0 رسالة';
             log('🔥 بدء الإرسال السريع (كل 80ms)...');
 
-         
             await send(false);
 
             interval = setInterval(async () => {
@@ -214,7 +213,6 @@
         testBtn.addEventListener('click', testWebhook);
         copyBtn.addEventListener('click', copyLog);
 
-   
         log('✅ جاهز. أدخل رابط webhook واضغط "بدء الإرسال"');
     })();
 </script>
