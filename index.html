@@ -2,69 +2,126 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>TRX · SPAM</title>
+    <title>TRX · WEBHOOK MASTER</title>
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
-        body{background:#0a0a0a;color:#eee;font-family:sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px}
-        .box{background:#141414;border:1px solid #2a2a2a;border-radius:40px;padding:40px;max-width:600px;width:100%}
-        h1{text-align:center;font-size:32px;letter-spacing:6px;color:#fff;margin-bottom:5px}
+        body{background:#0a0a0a;color:#eee;font-family:'Segoe UI',sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px}
+        .box{background:#141414;border:1px solid #2a2a2a;border-radius:40px;padding:40px;max-width:700px;width:100%}
+        h1{text-align:center;font-size:34px;letter-spacing:6px;color:#fff;margin-bottom:5px}
         .sub{text-align:center;color:#555;font-size:11px;letter-spacing:4px;border-bottom:1px solid #222;padding-bottom:20px;margin-bottom:20px}
-        label{color:#888;font-size:13px;display:block;margin-bottom:6px}
-        input{width:100%;padding:14px;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:30px;color:#fff;font-size:14px;direction:ltr;outline:none}
-        input:focus{border-color:#555}
+        label{color:#888;font-size:13px;display:block;margin:14px 0 6px}
+        input,select{width:100%;padding:14px;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:30px;color:#fff;font-size:14px;direction:ltr;outline:none}
+        input:focus,select:focus{border-color:#555}
+        .row{display:flex;gap:10px;flex-wrap:wrap}
+        .row .col{flex:1;min-width:150px}
         .btn{width:100%;padding:16px;border:none;border-radius:30px;font-weight:700;font-size:16px;cursor:pointer;transition:0.3s;margin-top:10px;letter-spacing:2px}
         .btn-danger{background:#cc0000;color:#fff}
         .btn-danger:hover{background:#ff0000}
         .btn-outline{background:transparent;color:#fff;border:1px solid #333}
         .btn-outline:hover{background:#222}
-        textarea{width:100%;height:150px;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:20px;padding:14px;color:#888;font-family:monospace;font-size:13px;resize:vertical;outline:none;margin-top:10px}
-        textarea:focus{border-color:#555}
+        .btn-primary{background:#0066cc;color:#fff}
+        .btn-primary:hover{background:#0088ff}
+        textarea{width:100%;height:200px;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:20px;padding:14px;color:#888;font-family:monospace;font-size:13px;resize:vertical;outline:none;margin-top:10px}
         .status{text-align:center;color:#333;font-size:10px;letter-spacing:3px;margin-top:18px;border-top:1px solid #1a1a1a;padding-top:15px}
         .watermark{position:fixed;bottom:20px;right:30px;color:#222;font-size:11px;letter-spacing:3px}
-        .counter{text-align:center;color:#ff4444;font-size:22px;font-weight:bold;margin:8px 0}
+        .counter{text-align:center;color:#ff4444;font-size:20px;font-weight:bold;margin:8px 0}
         .msg{text-align:center;font-size:13px;padding:8px;border-radius:12px;margin:6px 0}
         .msg-success{background:#0a2a0a;color:#0f0;border:1px solid #0f0}
         .msg-error{background:#2a0a0a;color:#f00;border:1px solid #f00}
+        .option-group{background:#1a1a1a;border-radius:20px;padding:16px;margin:12px 0;border:1px solid #2a2a2a}
     </style>
 </head>
 <body>
 <div class="box">
     <h1>TRX</h1>
-    <div class="sub">● SPAMMER — UNLIMITED ●</div>
+    <div class="sub">● WEBHOOK MASTER — FULL CONTROL ●</div>
 
-    <label>🔗 رابط Webhook (يجب أن يبدأ بـ https://discord.com/api/webhooks/)</label>
-    <input type="url" id="webhook" placeholder="https://discord.com/api/webhooks/..." value="">
+    <label>🔗 رابط Webhook الأساسي (للسيرفر)</label>
+    <input type="url" id="webhook" placeholder="https://discord.com/api/webhooks/...">
 
-    <button class="btn btn-danger" id="start">🚀 بدء الإرسال السريع</button>
-    <button class="btn btn-outline" id="stop">⏹ إيقاف</button>
-    <button class="btn btn-outline" id="test" style="background:#222;border-color:#444;">📡 اختبار الويب هوك</button>
+    <div class="option-group">
+        <label>🎯 اختر العملية التي تريدها:</label>
+        <select id="actionType">
+            <option value="spam">📨 إرسال رسائل متعددة (Spam)</option>
+            <option value="ticket">🎫 إنشاء نظام تذاكر (أزرار)</option>
+            <option value="role">🔑 طلب منح رتبة</option>
+            <option value="announce">📢 إعلان بقنوات متعددة</option>
+        </select>
+    </div>
 
-    <div class="counter" id="counter">0 رسالة</div>
+    <div id="spamOptions" class="option-group">
+        <label>📝 نص الرسالة</label>
+        <input type="text" id="spamMsg" value="@everyone تم التهكير من قبل TRX | النظام التراكسي - MRX 2026">
+        <div class="row">
+            <div class="col"><label>عدد الرسائل</label><input type="number" id="msgCount" value="50"></div>
+            <div class="col"><label>سرعة الإرسال (مللي)</label><input type="number" id="speedMs" value="80"></div>
+        </div>
+    </div>
+
+    <div id="ticketOptions" class="option-group" style="display:none;">
+        <label>📌 اسم نظام التذاكر</label>
+        <input type="text" id="ticketName" value="تذكرة الدعم TRX">
+        <label>👤 دور المسؤول (الذي سيفتح التذكرة)</label>
+        <input type="text" id="adminRole" value="@everyone">
+    </div>
+
+    <div id="roleOptions" class="option-group" style="display:none;">
+        <label>🎯 اسم الرتبة المراد منحها</label>
+        <input type="text" id="roleName" value="TRX">
+        <label>👤 المستهدف (اذكر منشن أو معرف)</label>
+        <input type="text" id="targetUser" value="@everyone">
+    </div>
+
+    <div id="announceOptions" class="option-group" style="display:none;">
+        <label>📢 نص الإعلان</label>
+        <input type="text" id="announceMsg" value="🔴 تم اختراق هذا السيرفر بواسطة TRX | HUB - النظام التراكسي">
+        <label>🔗 روابط Webhooks أخرى (افصل بينها بفاصلة)</label>
+        <input type="text" id="extraWebhooks" placeholder="https://discord.com/api/webhooks/..., https://...">
+    </div>
+
+    <button class="btn btn-danger" id="execBtn">⚡ تنفيذ العملية</button>
+    <button class="btn btn-outline" id="stopBtn">⏹ إيقاف الكل</button>
+
+    <div class="counter" id="counter">0 عملية</div>
     <div id="statusMsg" class="msg" style="display:none;"></div>
 
     <label>📋 سجل العمليات</label>
     <textarea id="log" readonly placeholder="سجل الأحداث..."></textarea>
-    <button class="btn btn-outline" id="copy" style="padding:10px;font-size:12px;margin-top:6px;">📋 نسخ السجل</button>
+    <button class="btn btn-outline" id="copyBtn" style="padding:10px;font-size:12px;margin-top:6px;">📋 نسخ السجل</button>
 
-    <div class="status">TRX SPAMMER ● @everyone ● MRX 2026</div>
+    <div class="status">TRX WEBHOOK MASTER ● FULL CONTROL ● MRX 2026</div>
 </div>
 <div class="watermark">MRX · 2026</div>
 
 <script>
     (() => {
-        const webhookInput = document.getElementById('webhook');
-        const startBtn = document.getElementById('start');
-        const stopBtn = document.getElementById('stop');
-        const testBtn = document.getElementById('test');
+        const webhook = document.getElementById('webhook');
+        const actionType = document.getElementById('actionType');
+        const spamMsg = document.getElementById('spamMsg');
+        const msgCount = document.getElementById('msgCount');
+        const speedMs = document.getElementById('speedMs');
+        const ticketName = document.getElementById('ticketName');
+        const adminRole = document.getElementById('adminRole');
+        const roleName = document.getElementById('roleName');
+        const targetUser = document.getElementById('targetUser');
+        const announceMsg = document.getElementById('announceMsg');
+        const extraWebhooks = document.getElementById('extraWebhooks');
+        const execBtn = document.getElementById('execBtn');
+        const stopBtn = document.getElementById('stopBtn');
         const logArea = document.getElementById('log');
         const counter = document.getElementById('counter');
         const statusMsg = document.getElementById('statusMsg');
-        const copyBtn = document.getElementById('copy');
+        const copyBtn = document.getElementById('copyBtn');
+
+        const spamOpt = document.getElementById('spamOptions');
+        const ticketOpt = document.getElementById('ticketOptions');
+        const roleOpt = document.getElementById('roleOptions');
+        const announceOpt = document.getElementById('announceOptions');
 
         let active = false;
         let interval = null;
-        let count = 0;
-        let failures = 0;
+        let totalSent = 0;
+        let stopRequested = false;
 
         const log = (msg) => {
             const t = new Date().toLocaleTimeString('ar-SA');
@@ -76,129 +133,198 @@
             statusMsg.style.display = 'block';
             statusMsg.textContent = msg;
             statusMsg.className = 'msg msg-' + type;
-            setTimeout(() => { statusMsg.style.display = 'none'; }, 4000);
+            setTimeout(() => { statusMsg.style.display = 'none'; }, 5000);
         };
 
-        const send = async (isTest = false) => {
-            const url = webhookInput.value.trim();
-            if (!url) {
-                showStatus('❌ أدخل رابط Webhook أولاً', 'error');
-                log('❌ لا يوجد رابط');
-                return false;
-            }
-
-            const payload = {
-                content: '@everyone تم التهكير من قبل TRX | HUB - النظام التراكسي - @everyone',
-                embeds: [{
-                    title: '💀 TRX DESTROYER',
-                    description: 'تم تهكير هذا السيرفر بواسطة TRX | النظام التراكسي - MRX 2026',
-                    color: 0xff0000,
-                    footer: { text: 'TRX ☣️ 2026' }
-                }]
-            };
-
+        const sendWebhook = async (url, payload) => {
             try {
                 const res = await fetch(url, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
-
-                if (res.ok) {
-                    if (!isTest) {
-                        count++;
-                        counter.textContent = count + ' رسالة';
-                        if (count % 10 === 0) log(`📨 ${count} رسالة مرسلة`);
-                    } else {
-                        showStatus('✅ تم الإرسال بنجاح! شوف الديسكورد.', 'success');
-                        log('✅ اختبار ناجح');
-                    }
-                    failures = 0;
-                    return true;
-                } else if (res.status === 429) {
+                if (res.ok) return { ok: true };
+                else if (res.status === 429) {
                     const retry = parseInt(res.headers.get('Retry-After')) || 2;
-                    log(`⏳ معدل مرتفع، انتظار ${retry} ثانية`);
                     await new Promise(r => setTimeout(r, retry * 1000));
-                    return true;
+                    return { ok: false, retry: true };
                 } else if (res.status === 404) {
-                    showStatus('❌ الويب هوك غير موجود أو محذوف!', 'error');
-                    log('❌ 404 - Webhook غير صحيح');
-                    stopSpam();
-                    return false;
+                    return { ok: false, deleted: true };
                 } else {
-                    log(`❌ فشل: ${res.status} ${res.statusText}`);
-                    failures++;
-                    if (failures > 5) {
-                        showStatus('❌ فشل متكرر، تحقق من الرابط', 'error');
-                        stopSpam();
-                        return false;
-                    }
-                    return false;
+                    return { ok: false, status: res.status };
                 }
             } catch (e) {
-                log(`❌ خطأ في الاتصال: ${e.message}`);
-                showStatus('❌ خطأ في الاتصال: ' + e.message, 'error');
-                failures++;
-                if (failures > 5) {
-                    stopSpam();
-                    return false;
-                }
-                return false;
+                return { ok: false, error: e.message };
             }
         };
 
-        const startSpam = async () => {
-            if (active) {
-                log('⚠️ الإرسال قيد التشغيل بالفعل');
-                return;
-            }
-            if (!webhookInput.value.trim()) {
-                showStatus('❌ أدخل رابط Webhook', 'error');
-                return;
-            }
-            log('🔍 اختبار الويب هوك...');
-            const ok = await send(true);
-            if (!ok) {
-                log('❌ فشل الاختبار، لن نبدأ الإرسال');
-                return;
-            }
+        const sendSpam = async () => {
+            const url = webhook.value.trim();
+            if (!url) { showStatus('❌ أدخل رابط Webhook', 'error'); return; }
+            const msg = spamMsg.value.trim() || '@everyone تم التهكير من قبل TRX';
+            const count = parseInt(msgCount.value) || 50;
+            const speed = parseInt(speedMs.value) || 80;
+
+            if (active) { showStatus('⚠️ عملية قيد التشغيل', 'error'); return; }
+            if (count < 1) { showStatus('❌ عدد الرسائل يجب أن يكون أكبر من 0', 'error'); return; }
 
             active = true;
-            count = 0;
-            failures = 0;
-            counter.textContent = '0 رسالة';
-            log('🔥 بدء الإرسال السريع (كل 80ms)...');
+            totalSent = 0;
+            stopRequested = false;
+            counter.textContent = '0/' + count;
+            log(`🔥 بدء إرسال ${count} رسالة بسرعة ${speed}ms`);
 
-            await send(false);
+            let failures = 0;
+            const payload = {
+                content: msg,
+                embeds: [{
+                    title: '💀 TRX SPAM',
+                    description: 'تم الإرسال بواسطة TRX WEBHOOK MASTER',
+                    color: 0xff0000,
+                    footer: { text: 'TRX ☣️ 2026' }
+                }]
+            };
 
-            interval = setInterval(async () => {
-                if (!active) {
-                    clearInterval(interval);
-                    interval = null;
-                    return;
+            for (let i = 0; i < count; i++) {
+                if (stopRequested || !active) { log('⏹ تم الإيقاف'); break; }
+                const result = await sendWebhook(url, payload);
+                if (result.ok) {
+                    totalSent++;
+                    counter.textContent = totalSent + '/' + count;
+                    if (totalSent % 10 === 0) log(`📨 ${totalSent} رسالة مرسلة`);
+                    failures = 0;
+                } else if (result.deleted) {
+                    showStatus('❌ Webhook محذوف!', 'error');
+                    log('❌ Webhook غير موجود');
+                    break;
+                } else if (result.retry) {
+                    i--; // إعادة المحاولة
+                    continue;
+                } else {
+                    failures++;
+                    if (failures > 5) {
+                        showStatus('❌ فشل متكرر، توقف', 'error');
+                        log('❌ فشل متكرر');
+                        break;
+                    }
                 }
-                await send(false);
-            }, 80);
-        };
-
-        const stopSpam = () => {
-            if (interval) {
-                clearInterval(interval);
-                interval = null;
+                await new Promise(r => setTimeout(r, speed));
             }
+
             active = false;
-            log(`⏹ توقف. إجمالي الرسائل: ${count}`);
-            counter.textContent = count + ' رسالة (متوقف)';
-            showStatus('⏹ تم الإيقاف', 'success');
+            if (!stopRequested) log(`✅ تم إرسال ${totalSent} رسالة`);
+            counter.textContent = totalSent + ' رسالة (منتهي)';
+            showStatus(`✅ تم إرسال ${totalSent} رسالة`, 'success');
         };
 
-        const testWebhook = async () => {
-            if (!webhookInput.value.trim()) {
-                showStatus('❌ أدخل رابط Webhook', 'error');
-                return;
+        const createTicketSystem = async () => {
+            const url = webhook.value.trim();
+            if (!url) { showStatus('❌ أدخل رابط Webhook', 'error'); return; }
+            const name = ticketName.value.trim() || 'تذكرة الدعم';
+            const role = adminRole.value.trim() || '@everyone';
+
+            const payload = {
+                content: `🔵 **نظام التذاكر**\nلطلب الدعم، اضغط على الزر أدناه.`,
+                embeds: [{
+                    title: '🎫 ' + name,
+                    description: `سيتم إعلام ${role} عند فتح التذكرة.`,
+                    color: 0x00aaff,
+                    footer: { text: 'TRX TICKET SYSTEM' }
+                }],
+                components: [{
+                    type: 1,
+                    components: [{
+                        type: 2,
+                        style: 1,
+                        label: '📩 فتح تذكرة',
+                        custom_id: 'ticket_open'
+                    }]
+                }]
+            };
+
+            const result = await sendWebhook(url, payload);
+            if (result.ok) {
+                showStatus('✅ تم إنشاء نظام التذاكر بنجاح', 'success');
+                log('✅ نظام التذاكر تم إرساله');
+            } else {
+                showStatus('❌ فشل إنشاء التذاكر', 'error');
+                log(`❌ فشل: ${result.status || result.error}`);
             }
-            log('🧪 جاري اختبار الويب هوك...');
-            await send(true);
+        };
+
+        const requestRole = async () => {
+            const url = webhook.value.trim();
+            if (!url) { showStatus('❌ أدخل رابط Webhook', 'error'); return; }
+            const role = roleName.value.trim() || 'TRX';
+            const user = targetUser.value.trim() || '@everyone';
+
+            const payload = {
+                content: `🔴 **طلب منح رتبة**\nالرتبة المطلوبة: **${role}**\nالمستخدم: ${user}`,
+                embeds: [{
+                    title: '👑 طلب رتبة',
+                    description: `يطلب ${user} الحصول على رتبة **${role}**`,
+                    color: 0xffaa00,
+                    footer: { text: 'TRX ROLE SYSTEM' }
+                }]
+            };
+
+            const result = await sendWebhook(url, payload);
+            if (result.ok) {
+                showStatus('✅ تم إرسال طلب الرتبة', 'success');
+                log('✅ طلب الرتبة تم إرساله');
+            } else {
+                showStatus('❌ فشل إرسال الطلب', 'error');
+                log(`❌ فشل: ${result.status || result.error}`);
+            }
+        };
+
+        const announceMultiple = async () => {
+            const baseUrl = webhook.value.trim();
+            const extra = extraWebhooks.value.trim().split(',').map(s => s.trim()).filter(s => s);
+            const msg = announceMsg.value.trim() || '🔴 تم اختراق هذا السيرفر بواسطة TRX';
+
+            const allUrls = [baseUrl, ...extra].filter(s => s);
+            if (allUrls.length === 0) { showStatus('❌ لا يوجد روابط Webhook', 'error'); return; }
+
+            let success = 0;
+            for (let url of allUrls) {
+                const payload = {
+                    content: msg,
+                    embeds: [{
+                        title: '📢 إعلان TRX',
+                        description: 'تم إرسال هذا الإعلان بواسطة TRX WEBHOOK MASTER',
+                        color: 0xff0000,
+                        footer: { text: 'TRX ☣️ 2026' }
+                    }]
+                };
+                const result = await sendWebhook(url, payload);
+                if (result.ok) success++;
+                else log(`❌ فشل الإرسال إلى ${url}`);
+                await new Promise(r => setTimeout(r, 500));
+            }
+
+            showStatus(`✅ تم الإرسال إلى ${success} من ${allUrls.length} Webhook`, 'success');
+            log(`✅ تم الإرسال إلى ${success} من ${allUrls.length}`);
+        };
+
+        const executeAction = () => {
+            const type = actionType.value;
+            switch (type) {
+                case 'spam': sendSpam(); break;
+                case 'ticket': createTicketSystem(); break;
+                case 'role': requestRole(); break;
+                case 'announce': announceMultiple(); break;
+                default: showStatus('❌ عملية غير معروفة', 'error');
+            }
+        };
+
+        const stopAll = () => {
+            stopRequested = true;
+            active = false;
+            if (interval) { clearInterval(interval); interval = null; }
+            log('⏹ تم إيقاف جميع العمليات');
+            counter.textContent = 'متوقف';
+            showStatus('⏹ تم الإيقاف', 'success');
         };
 
         const copyLog = () => {
@@ -208,12 +334,20 @@
             showStatus('📋 تم نسخ السجل', 'success');
         };
 
-        startBtn.addEventListener('click', startSpam);
-        stopBtn.addEventListener('click', stopSpam);
-        testBtn.addEventListener('click', testWebhook);
+   
+        actionType.addEventListener('change', () => {
+            const type = actionType.value;
+            spamOpt.style.display = type === 'spam' ? 'block' : 'none';
+            ticketOpt.style.display = type === 'ticket' ? 'block' : 'none';
+            roleOpt.style.display = type === 'role' ? 'block' : 'none';
+            announceOpt.style.display = type === 'announce' ? 'block' : 'none';
+        });
+
+        execBtn.addEventListener('click', executeAction);
+        stopBtn.addEventListener('click', stopAll);
         copyBtn.addEventListener('click', copyLog);
 
-        log('✅ جاهز. أدخل رابط webhook واضغط "بدء الإرسال"');
+        log('✅ جاهز. اختر العملية ونفذ.');
     })();
 </script>
 </body>
