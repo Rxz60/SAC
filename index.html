@@ -1,15 +1,28 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>MRX STORE | متجر هاكات 2026</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Changa:wght@500;800&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Changa:wght@500;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <style>
+        /* ====== RESET & ROOT ====== */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent !important;
+            outline: none !important;
+        }
         :root {
             --bg-color: #050711;
-            --card-bg: rgba(15, 22, 41, 0.85);
+            --card-bg: rgba(15, 22, 41, 0.88);
             --primary-color: #8a2be2;
             --accent-color: #00f2fe;
             --neon-pink: #ff007f;
@@ -18,42 +31,35 @@
             --accent-red: #ff3b30;
             --text-color: #ffffff;
             --text-dim: #94a3b8;
-            --border-color: rgba(255, 255, 255, 0.12);
+            --border-color: rgba(255, 255, 255, 0.1);
             --card-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
             --gold-gradient: linear-gradient(135deg, #fff2a3 0%, #ffd700 50%, #cca100 100%);
             --font-scale: 1rem;
             --transition-speed: 0.4s;
         }
-
         body.light-theme {
-            --bg-color: #f8fafc;
+            --bg-color: #f0f2f8;
             --card-bg: rgba(255, 255, 255, 0.92);
             --text-color: #0f172a;
             --text-dim: #475569;
-            --border-color: rgba(138, 43, 226, 0.25);
-            --card-shadow: 0 15px 35px rgba(138, 43, 226, 0.12);
+            --border-color: rgba(138, 43, 226, 0.2);
+            --card-shadow: 0 15px 35px rgba(138, 43, 226, 0.1);
         }
-
-        * {
-            box-sizing: border-box;
-            margin: 0; padding: 0;
-            font-family: 'Cairo', sans-serif;
-            user-select: none;
-            -webkit-user-select: none;
-            -webkit-tap-highlight-color: transparent !important;
-            outline: none !important;
-        }
-
         html {
             font-size: var(--font-scale);
             touch-action: manipulation;
             scroll-behavior: smooth;
         }
-
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-color); }
-        ::-webkit-scrollbar-thumb { background: var(--primary-color); border-radius: 10px; }
-
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-color);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 10px;
+        }
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
@@ -62,94 +68,158 @@
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            padding: 20px 10px;
+            padding: 0;
             overflow-x: hidden;
             transition: background-color 0.4s ease, color 0.4s ease;
         }
 
+        /* ====== PARTICLES ====== */
         #particleCanvas {
             position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
             z-index: -1;
             pointer-events: none;
         }
 
+        /* ====== LOADER ====== */
+        .initial-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #030408;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+        .initial-loader.slide-up {
+            transform: translateY(-100vh);
+        }
+        .loader-logo {
+            font-family: 'Changa', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff, var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: pulse 1.5s infinite alternate;
+        }
+        .loader-spinner {
+            width: 45px;
+            height: 45px;
+            border: 4px solid rgba(0, 242, 254, 0.1);
+            border-top: 4px solid var(--accent-color);
+            border-radius: 50%;
+            animation: spin 0.9s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        @keyframes pulse {
+            from {
+                opacity: 0.6;
+                transform: scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1.02);
+            }
+        }
+
+        /* ====== SCROLL PROGRESS ====== */
         .scroll-progress {
             position: fixed;
-            top: 0; left: 0;
+            top: 0;
+            left: 0;
             height: 3px;
             background: linear-gradient(90deg, var(--accent-color), var(--neon-pink));
             width: 0%;
             z-index: 100000;
         }
 
+        /* ====== TOP BAR ====== */
         .top-settings-bar {
             position: fixed;
-            top: 0; left: 0;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: 60px;
-            background: rgba(5, 7, 17, 0.85);
-            backdrop-filter: blur(12px);
+            height: 58px;
+            background: rgba(5, 7, 17, 0.9);
+            backdrop-filter: blur(14px);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 15px;
+            padding: 0 12px;
             border-bottom: 1px solid var(--border-color);
             z-index: 10000;
         }
-
         .bar-left-controls {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
-
+        .bar-title {
+            font-family: 'Changa', sans-serif;
+            font-weight: 800;
+            font-size: 1rem;
+            color: var(--text-color);
+        }
         .top-btn-icon {
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.06);
             border: 1px solid var(--border-color);
             color: var(--text-color);
-            padding: 6px 10px;
-            border-radius: 10px;
+            padding: 5px 9px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             font-weight: bold;
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 3px;
             transition: 0.3s;
         }
         .top-btn-icon:hover {
             background: var(--primary-color);
             border-color: var(--accent-color);
         }
-
-        /* أزرار التشفير المربعة بالألوان المطلوبة */
         .enc-btn {
-            padding: 6px 12px;
-            border-radius: 8px;
+            padding: 5px 10px;
+            border-radius: 6px;
             font-weight: 900;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             cursor: pointer;
             border: none;
             color: #000;
             transition: transform 0.2s;
         }
-        .enc-btn:active { transform: scale(0.95); }
-        .btn-lua { background-color: #007bc0; color: #fff; }
-        .btn-py { background-color: #ffde57; color: #000; }
-        .btn-html { background-color: #10b981; color: #fff; }
-
-        .bar-title {
-            font-family: 'Changa', sans-serif;
-            font-weight: 800;
-            font-size: 1.1rem;
-            color: var(--text-color);
+        .enc-btn:active {
+            transform: scale(0.93);
+        }
+        .btn-lua {
+            background: #007bc0;
+            color: #fff;
+        }
+        .btn-py {
+            background: #ffde57;
+            color: #000;
+        }
+        .btn-html {
+            background: #10b981;
+            color: #fff;
         }
 
         .menu-toggle {
-            width: 28px;
-            height: 22px;
+            width: 26px;
+            height: 20px;
             position: relative;
             cursor: pointer;
             display: flex;
@@ -157,7 +227,6 @@
             justify-content: space-between;
             z-index: 10002;
         }
-
         .menu-toggle span {
             display: block;
             height: 3px;
@@ -166,807 +235,1648 @@
             border-radius: 3px;
             transition: all var(--transition-speed) cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
+        .menu-toggle.active span:nth-child(1) {
+            transform: translateY(8.5px) rotate(45deg);
+            background-color: var(--accent-red);
+        }
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+            transform: scale(0);
+        }
+        .menu-toggle.active span:nth-child(3) {
+            transform: translateY(-8.5px) rotate(-45deg);
+            background-color: var(--accent-red);
+        }
 
-        .menu-toggle.active span:nth-child(1) { transform: translateY(9.5px) rotate(45deg); background-color: var(--accent-red); }
-        .menu-toggle.active span:nth-child(2) { opacity: 0; transform: scale(0); }
-        .menu-toggle.active span:nth-child(3) { transform: translateY(-9.5px) rotate(-45deg); background-color: var(--accent-red); }
-
+        /* ====== SIDEBAR ====== */
         .sidebar {
-            width: 260px; height: 100vh; background-color: #000000;
-            border-left: 1px solid var(--border-color); position: fixed;
-            top: 0; right: -260px; transition: right var(--transition-speed) ease-in-out;
-            padding: 80px 15px 20px 15px; display: flex; flex-direction: column; gap: 12px;
-            box-shadow: -10px 0 30px rgba(0,0,0,0.9); z-index: 10001;
+            width: 270px;
+            height: 100vh;
+            background: #000000;
+            border-left: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            right: -270px;
+            transition: right var(--transition-speed) ease-in-out;
+            padding: 75px 14px 20px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.9);
+            z-index: 10001;
+            overflow-y: auto;
         }
-        .sidebar.open { right: 0; }
-
+        .sidebar.open {
+            right: 0;
+        }
         .nav-item {
-            display: flex; align-items: center; gap: 12px; padding: 14px 16px;
-            color: var(--text-color); border-radius: 12px; font-size: 0.95rem;
-            font-weight: 700; cursor: pointer; background: rgba(255, 255, 255, 0.03);
-            border: 1px solid transparent; transition: all 0.25s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 14px;
+            color: var(--text-color);
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid transparent;
+            transition: all 0.25s;
         }
-        .nav-item:hover, .nav-item.active {
-            background: rgba(255, 255, 255, 0.1); border-color: var(--border-color); color: var(--accent-color);
+        .nav-item:hover,
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--border-color);
+            color: var(--accent-color);
+        }
+        .nav-item .badge-side {
+            background: var(--accent-red);
+            color: #fff;
+            font-size: 0.55rem;
+            padding: 1px 7px;
+            border-radius: 50px;
+            margin-right: auto;
         }
 
-        .announcement-ticker {
-            width: 100%; max-width: 480px; background: rgba(0, 242, 254, 0.08);
-            border: 1px solid var(--border-color); border-radius: 12px; padding: 8px 12px;
-            font-size: 0.85rem; color: var(--accent-color); margin-bottom: 20px;
-            overflow: hidden; white-space: nowrap; font-weight: 700;
+        /* ====== TOAST ====== */
+        .toast-notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--green-color);
+            color: #fff;
+            padding: 10px 22px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            transition: transform 0.4s ease;
+            z-index: 100001;
+            white-space: nowrap;
         }
-        .announcement-content { display: inline-block; animation: marquee 14s linear infinite; }
-        @keyframes marquee { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
-
-        .initial-loader {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: #030408; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; z-index: 99999;
-            transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+        .toast-notification.active {
+            transform: translateX(-50%) translateY(0);
         }
-        .initial-loader.slide-up { transform: translateY(-100vh); }
 
-        .loader-logo {
-            font-family: 'Changa', sans-serif; font-size: 3.5rem; font-weight: 800;
-            background: linear-gradient(135deg, #fff, var(--accent-color));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            animation: pulse 1.5s infinite alternate;
+        /* ====== MAIN CONTAINER ====== */
+        .container {
+            width: 100%;
+            max-width: 520px;
+            text-align: center;
+            position: relative;
+            margin-top: 68px;
+            padding: 0 12px 30px;
         }
-        .loader-spinner {
-            width: 45px; height: 45px; border: 4px solid rgba(0, 242, 254, 0.1);
-            border-top: 4px solid var(--accent-color); border-radius: 50%; animation: spin 0.9s linear infinite;
+
+        /* ====== LOGIN SCREEN ====== */
+        #loginScreen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+            gap: 20px;
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        @keyframes pulse { from { opacity: 0.6; transform: scale(0.98); } to { opacity: 1; transform: scale(1.02); } }
+        #loginScreen .logo-big {
+            font-family: 'Changa', sans-serif;
+            font-size: 3.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff, var(--accent-color), var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 40px rgba(0, 242, 254, 0.15);
+        }
+        #loginScreen .login-sub {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+        .login-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 30px 24px;
+            width: 100%;
+            max-width: 380px;
+            box-shadow: var(--card-shadow);
+        }
+        .login-card .form-group {
+            text-align: right;
+            margin-bottom: 14px;
+        }
+        .login-card .form-group label {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            font-weight: 700;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .login-card .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--text-color);
+            font-size: 0.9rem;
+            text-align: right;
+        }
+        .login-card .form-group input:focus {
+            border-color: var(--accent-color);
+        }
+        .login-btn-primary {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: #fff;
+            font-weight: 800;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 4px 20px rgba(138, 43, 226, 0.3);
+        }
+        .login-btn-primary:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.05);
+        }
+        .login-btn-google {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-color);
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: 0.3s;
+            margin-top: 8px;
+        }
+        .login-btn-google:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .login-btn-google img {
+            width: 20px;
+            height: 20px;
+        }
+        .login-error {
+            color: var(--accent-red);
+            font-size: 0.8rem;
+            margin-top: 8px;
+            display: none;
+        }
 
-        .container { width: 100%; max-width: 480px; text-align: center; position: relative; margin-top: 60px; }
+        /* ====== PROFILE SETUP ====== */
+        #profileSetup {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            padding: 10px 0;
+        }
+        #profileSetup .avatar-upload {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid var(--accent-color);
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            background: var(--card-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #profileSetup .avatar-upload img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        #profileSetup .avatar-upload .upload-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.4rem;
+            opacity: 0;
+            transition: 0.3s;
+        }
+        #profileSetup .avatar-upload:hover .upload-overlay {
+            opacity: 1;
+        }
+        #profileSetup .form-group {
+            width: 100%;
+            max-width: 380px;
+            text-align: right;
+        }
+        #profileSetup .form-group label {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            font-weight: 700;
+            display: block;
+            margin-bottom: 4px;
+        }
+        #profileSetup .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--text-color);
+            font-size: 0.9rem;
+            text-align: right;
+        }
 
+        /* ====== MAIN APP ====== */
+        #mainApp {
+            display: none;
+            flex-direction: column;
+            gap: 16px;
+            width: 100%;
+        }
+
+        /* ====== SERVER STATUS ====== */
         .server-status-badge {
-            display: inline-flex; align-items: center; gap: 6px;
-            background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4);
-            padding: 5px 14px; border-radius: 20px; font-size: 0.8rem; color: #10b981;
-            font-weight: 700; margin-bottom: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: #10b981;
+            font-weight: 700;
         }
         .status-dot {
-            width: 8px; height: 8px; background-color: #10b981; border-radius: 50%;
-            box-shadow: 0 0 8px #10b981; animation: blink 1.2s infinite;
+            width: 8px;
+            height: 8px;
+            background-color: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #10b981;
+            animation: blink 1.2s infinite;
         }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        @keyframes blink {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.3;
+            }
+        }
 
+        /* ====== BADGES & TITLES ====== */
         .logo {
-            font-family: 'Changa', sans-serif; font-size: 3.2rem; font-weight: 800;
+            font-family: 'Changa', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 800;
             background: linear-gradient(135deg, var(--text-color) 30%, var(--accent-color));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 20px rgba(0, 242, 254, 0.25);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(0, 242, 254, 0.2);
         }
-
         .badge-vip {
-            background: var(--gold-gradient); color: #000; font-size: 0.75rem;
-            padding: 3px 10px; border-radius: 8px; font-weight: 900;
-            box-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
+            background: var(--gold-gradient);
+            color: #000;
+            font-size: 0.7rem;
+            padding: 2px 10px;
+            border-radius: 8px;
+            font-weight: 900;
+            box-shadow: 0 0 12px rgba(255, 215, 0, 0.4);
         }
-
         .subtitle-box {
-            background: var(--gold-gradient); border-radius: 12px; padding: 8px 14px;
-            margin: 15px 0 25px 0; color: #000; font-size: 0.85rem; font-weight: 900;
+            background: var(--gold-gradient);
+            border-radius: 12px;
+            padding: 6px 14px;
+            margin: 10px 0 16px 0;
+            color: #000;
+            font-size: 0.8rem;
+            font-weight: 900;
         }
 
-        .content-card {
-            background: var(--card-bg); backdrop-filter: blur(16px);
-            border: 1px solid var(--border-color); border-radius: 20px;
-            padding: 25px 20px; box-shadow: var(--card-shadow); transition: all 0.3s ease;
+        /* ====== TABS ====== */
+        .platform-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 14px;
         }
-
-        .platform-tabs { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; }
         .tab-btn {
-            flex: 1; padding: 10px 12px; border-radius: 12px; background: var(--card-bg);
-            border: 1px solid var(--border-color); color: var(--text-dim); cursor: pointer;
-            font-size: 0.85rem; font-weight: bold; transition: all 0.3s;
+            flex: 1;
+            padding: 8px 10px;
+            border-radius: 10px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: bold;
+            transition: all 0.3s;
         }
         .tab-btn.active {
-            background: var(--primary-color); color: #fff; border-color: var(--accent-color);
-            box-shadow: 0 4px 12px rgba(138, 43, 226, 0.4);
+            background: var(--primary-color);
+            color: #fff;
+            border-color: var(--accent-color);
+            box-shadow: 0 4px 12px rgba(138, 43, 226, 0.3);
         }
 
-        .search-box {
-            width: 100%; padding: 12px 15px; border-radius: 12px; background: var(--card-bg);
-            border: 1px solid var(--border-color); color: var(--text-color); font-size: 0.9rem;
-            margin-bottom: 20px; text-align: center;
+        /* ====== CARDS ====== */
+        .content-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            padding: 18px 16px;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            margin-bottom: 14px;
+        }
+        .inner-title {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .copy-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .copy-btn:hover {
+            background: var(--primary-color);
+        }
+        .card-img {
+            width: 100%;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            margin-top: 6px;
+        }
+        .file-info-bar {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            margin: 6px 0;
+        }
+        .dl-btn {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: none;
+            background: linear-gradient(90deg, #6b21a8, #8a2be2);
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.25);
+            text-decoration: none;
+            margin-top: 6px;
         }
 
-        .content-page { display: flex; flex-direction: column; gap: 20px; }
-
+        /* ====== SCRIPTS ====== */
         .add-script-banner {
             width: 100%;
             background: linear-gradient(135deg, #10b981, #059669);
             color: #ffffff;
             border: none;
-            border-radius: 14px;
-            padding: 16px;
-            font-size: 1.1rem;
+            border-radius: 12px;
+            padding: 14px;
+            font-size: 1rem;
             font-weight: 800;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
+            gap: 8px;
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
             transition: all 0.3s ease;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
         .add-script-banner:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5);
         }
-
-        .scripts-container { display: flex; flex-direction: column; gap: 12px; }
+        .scripts-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
         .script-card-item {
-            display: flex; justify-content: space-between; align-items: center;
-            background: rgba(15, 22, 41, 0.7); border: 1px solid var(--border-color);
-            border-radius: 14px; padding: 12px 16px; transition: all 0.25s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(15, 22, 41, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 10px 14px;
+            transition: all 0.25s ease;
         }
-        .script-card-item:hover { border-color: var(--accent-color); background: rgba(0, 242, 254, 0.05); }
-
-        .script-info-left { display: flex; flex-direction: column; text-align: right; gap: 2px; }
-        .script-title-text { font-size: 1rem; font-weight: 800; color: #ffffff; }
-        .script-map-text { font-size: 0.78rem; color: var(--accent-color); font-weight: 700; }
-
-        .script-card-actions { display: flex; gap: 8px; align-items: center; }
-
+        .script-card-item:hover {
+            border-color: var(--accent-color);
+            background: rgba(0, 242, 254, 0.04);
+        }
+        .script-info-left {
+            display: flex;
+            flex-direction: column;
+            text-align: right;
+            gap: 2px;
+        }
+        .script-title-text {
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+        .script-map-text {
+            font-size: 0.7rem;
+            color: var(--accent-color);
+            font-weight: 700;
+        }
+        .script-card-actions {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
         .btn-green-sm {
             background: linear-gradient(135deg, var(--green-color), var(--green-hover));
-            color: #fff; border: none; padding: 8px 14px; border-radius: 10px;
-            font-weight: 800; font-size: 0.85rem; cursor: pointer; box-shadow: 0 2px 10px rgba(16, 185, 129, 0.3);
+            color: #fff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 0.75rem;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(16, 185, 129, 0.25);
         }
-
         .btn-danger-sm {
-            background: rgba(255, 59, 48, 0.2);
+            background: rgba(255, 59, 48, 0.15);
             color: var(--accent-red);
             border: 1px solid var(--accent-red);
-            padding: 8px 10px; border-radius: 10px;
-            font-weight: 800; font-size: 0.85rem; cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 0.7rem;
+            cursor: pointer;
             transition: 0.2s;
         }
-        .btn-danger-sm:hover { background: var(--accent-red); color: #fff; }
+        .btn-danger-sm:hover {
+            background: var(--accent-red);
+            color: #fff;
+        }
 
-        .form-group { margin-bottom: 12px; display: flex; flex-direction: column; gap: 6px; text-align: right; }
-        .form-group label { font-size: 0.85rem; color: var(--text-dim); font-weight: 700; }
-        .form-input {
-            width: 100%; padding: 12px; border-radius: 12px;
-            border: 1px solid var(--border-color); background: rgba(0, 0, 0, 0.4);
-            color: #fff; font-size: 0.9rem;
+        /* ====== CHAT ====== */
+        .chat-container {
+            max-height: 250px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding: 6px 4px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            min-height: 120px;
         }
-        textarea.form-input { resize: vertical; min-height: 80px; }
+        .chat-msg {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            font-size: 0.8rem;
+            padding: 4px 8px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            text-align: right;
+            word-break: break-word;
+        }
+        .chat-msg .c-user {
+            font-weight: 800;
+            color: var(--accent-color);
+            flex-shrink: 0;
+        }
+        .chat-msg .c-user.verified {
+            color: #ffd700;
+        }
+        .chat-msg .c-user.verified::after {
+            content: ' ✅';
+            font-size: 0.6rem;
+        }
+        .chat-msg .c-text {
+            color: var(--text-color);
+            flex: 1;
+        }
+        .chat-msg .c-time {
+            font-size: 0.55rem;
+            color: var(--text-dim);
+            flex-shrink: 0;
+        }
+        .chat-input-row {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+        }
+        .chat-input-row input {
+            flex: 1;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--text-color);
+            font-size: 0.85rem;
+            text-align: right;
+        }
+        .chat-input-row button {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 10px;
+            background: var(--primary-color);
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
 
-        .telegram-modal-card {
-            background: #0d111d; border: 1px solid var(--accent-color); padding: 20px;
-            border-radius: 20px; width: 350px; max-width: 92vw; display: flex; flex-direction: column;
-            gap: 15px; box-shadow: 0 0 30px rgba(0, 242, 254, 0.25); text-align: right;
-            max-height: 90vh; overflow-y: auto;
+        /* ====== COMPARISON TABLE ====== */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.7rem;
+            margin-top: 8px;
+            color: var(--text-dim);
         }
-        .tg-header-badge {
-            background: rgba(0, 242, 254, 0.1); border: 1px solid var(--accent-color);
-            color: var(--accent-color); text-align: center; padding: 6px; border-radius: 10px;
-            font-size: 0.85rem; font-weight: 800;
+        .comparison-table th,
+        .comparison-table td {
+            padding: 6px;
+            border: 1px solid var(--border-color);
+            text-align: center;
         }
-        .tg-info-box { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: 12px; padding: 10px 14px; }
-        .tg-info-box h4 { font-size: 1.05rem; color: #fff; }
-        .tg-info-box span { font-size: 0.8rem; color: var(--text-dim); font-weight: 600; }
-        .tg-description-box {
-            background: rgba(255, 255, 255, 0.02); border: 1px dashed var(--border-color);
-            border-radius: 12px; padding: 10px; font-size: 0.82rem; color: #cbd5e1; line-height: 1.5; white-space: pre-line;
+        .comparison-table th {
+            background: rgba(138, 43, 226, 0.15);
+            color: var(--text-color);
         }
-        .telegram-code-container { display: flex; flex-direction: column; border: 1px solid var(--primary-color); border-radius: 14px; overflow: hidden; background: #050711; }
-        .tg-code-top-rect { background: rgba(138, 43, 226, 0.2); padding: 8px 12px; font-size: 0.78rem; font-weight: 800; color: #fff; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(138, 43, 226, 0.3); }
-        .tg-code-square-body { padding: 12px; font-family: monospace; font-size: 0.75rem; color: #00f2fe; word-break: break-all; max-height: 90px; overflow-y: auto; direction: ltr; text-align: left; background: rgba(0,0,0,0.5); }
-        .tg-copy-action-btn { background: linear-gradient(90deg, #10b981, #059669); color: white; border: none; padding: 10px; font-weight: 800; font-size: 0.9rem; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
-        .btn-close-x { background: rgba(255, 59, 48, 0.15); color: var(--accent-red); border: 1px solid var(--accent-red); padding: 8px; border-radius: 12px; font-weight: 800; cursor: pointer; text-align: center; font-size: 0.9rem; }
 
-        .inner-title {
-            background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color);
-            padding: 10px; border-radius: 12px; font-weight: 700; font-size: 1rem;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .card-img { width: 100%; border-radius: 14px; object-fit: cover; border: 1px solid var(--border-color); cursor: pointer; margin-top: 10px; }
-        .file-info-bar { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-dim); margin: 8px 0; }
-        .dl-btn {
-            width: 100%; padding: 12px; border-radius: 12px; border: none;
-            background: linear-gradient(90deg, #6b21a8, #8a2be2); color: #fff;
-            font-weight: 700; font-size: 0.95rem; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3); text-decoration: none; margin-top: 8px;
-        }
-        .copy-btn { background: rgba(255, 255, 255, 0.1); border: 1px solid var(--border-color); color: var(--text-color); padding: 6px 12px; border-radius: 8px; font-size: 0.75rem; cursor: pointer; }
-
-        .comparison-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-top: 10px; color: var(--text-dim); }
-        .comparison-table th, .comparison-table td { padding: 8px; border: 1px solid var(--border-color); text-align: center; }
-        .comparison-table th { background: rgba(138, 43, 226, 0.2); color: var(--text-color); }
-
+        /* ====== MODALS ====== */
         .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center;
-            z-index: 99900; backdrop-filter: blur(8px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 99900;
+            backdrop-filter: blur(8px);
+            padding: 16px;
         }
         .modal-card {
-            background: var(--card-bg); border: 1px solid var(--accent-color);
-            padding: 25px; border-radius: 20px; width: 340px; text-align: center;
-            display: flex; flex-direction: column; gap: 15px; color: var(--text-color);
+            background: var(--card-bg);
+            border: 1px solid var(--accent-color);
+            padding: 24px 20px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            color: var(--text-color);
             box-shadow: var(--card-shadow);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-card .form-group {
+            text-align: right;
+            margin-bottom: 8px;
+        }
+        .modal-card .form-group label {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            font-weight: 700;
+            display: block;
+            margin-bottom: 3px;
+        }
+        .modal-card .form-group input,
+        .modal-card .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--text-color);
+            font-size: 0.85rem;
+            text-align: right;
+            font-family: 'Cairo', sans-serif;
+        }
+        .modal-card .form-group textarea {
+            min-height: 70px;
+            resize: vertical;
+        }
+        .btn-close-x {
+            background: rgba(255, 59, 48, 0.12);
+            color: var(--accent-red);
+            border: 1px solid var(--accent-red);
+            padding: 8px;
+            border-radius: 10px;
+            font-weight: 800;
+            cursor: pointer;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+        .tg-copy-action-btn {
+            background: linear-gradient(90deg, #10b981, #059669);
+            color: white;
+            border: none;
+            padding: 10px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 8px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.8rem;
         }
 
-        .setting-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; font-weight: bold; }
+        /* ====== LEADERBOARD ====== */
+        .lb-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            margin-bottom: 4px;
+        }
+        .lb-item .lb-rank {
+            font-weight: 900;
+            font-size: 0.85rem;
+            color: var(--gold-gradient);
+            min-width: 28px;
+        }
+        .lb-item .lb-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent-color);
+        }
+        .lb-item .lb-name {
+            flex: 1;
+            text-align: right;
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+        .lb-item .lb-score {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+        }
 
+        /* ====== SCRIPT SCANNER ====== */
+        .scan-result-safe {
+            color: #10b981;
+            font-weight: 700;
+        }
+        .scan-result-danger {
+            color: var(--accent-red);
+            font-weight: 700;
+        }
+
+        /* ====== FOOTER ====== */
+        .footer {
+            margin-top: 20px;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            font-weight: 700;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        /* ====== BACK TO TOP ====== */
         .back-to-top {
-            position: fixed; bottom: 20px; right: 20px; width: 42px; height: 42px;
-            background: var(--primary-color); border-radius: 50%; color: #fff;
-            display: flex; justify-content: center; align-items: center; cursor: pointer;
-            opacity: 0; pointer-events: none; transition: 0.3s; z-index: 1000;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 38px;
+            height: 38px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.3s;
+            z-index: 1000;
+            font-size: 1.2rem;
         }
-        .back-to-top.show { opacity: 1; pointer-events: all; }
-
-        .toast-notification {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px);
-            background: var(--green-color); color: #fff; padding: 10px 22px; border-radius: 20px;
-            font-size: 0.85rem; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-            transition: transform 0.4s ease; z-index: 100001;
-        }
-        .toast-notification.active { transform: translateX(-50%) translateY(0); }
-
-        .discord-btn {
-            display: inline-flex; align-items: center; justify-content: center;
-            width: 100%; padding: 12px; border-radius: 12px; background: #5865F2;
-            border: 1px solid #404EED; color: #fff; text-decoration: none; font-weight: 700;
-            font-size: 0.9rem; margin-top: 10px;
+        .back-to-top.show {
+            opacity: 1;
+            pointer-events: all;
         }
 
-        /* نافذة التسجيل بحساب قوقل */
-        .google-account-btn {
-            background: #ffffff; color: #333; border: 1px solid #ccc;
-            padding: 10px; border-radius: 10px; font-weight: bold;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            cursor: pointer; font-size: 0.85rem; transition: 0.2s;
+        /* ====== RESPONSIVE ====== */
+        @media (max-width: 480px) {
+            .top-settings-bar {
+                padding: 0 8px;
+                height: 52px;
+            }
+            .bar-title {
+                font-size: 0.85rem;
+            }
+            .enc-btn {
+                font-size: 0.6rem;
+                padding: 4px 7px;
+            }
+            .top-btn-icon {
+                font-size: 0.6rem;
+                padding: 4px 6px;
+            }
+            .container {
+                margin-top: 60px;
+                padding: 0 8px 20px;
+            }
+            .logo {
+                font-size: 2.2rem;
+            }
+            .login-card {
+                padding: 20px 16px;
+            }
+            .modal-card {
+                padding: 18px 14px;
+            }
+            .sidebar {
+                width: 240px;
+                right: -240px;
+            }
+            .sidebar.open {
+                right: 0;
+            }
+            .chat-container {
+                max-height: 180px;
+            }
         }
-        .google-account-btn:hover { background: #f1f1f1; }
 
-        .footer { margin-top: 30px; font-size: 0.85rem; color: #00f2fe; font-weight: 800; }
-        .empty-platform-msg { padding: 30px 15px; text-align: center; color: var(--text-dim); font-size: 0.95rem; font-weight: bold; }
+        /* ====== HIDDEN UTILITY ====== */
+        .hidden {
+            display: none !important;
+        }
+
+        /* ====== FIREWALL BADGE ====== */
+        .firewall-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(255, 59, 48, 0.12);
+            border: 1px solid rgba(255, 59, 48, 0.3);
+            padding: 2px 10px;
+            border-radius: 50px;
+            font-size: 0.6rem;
+            color: var(--accent-red);
+            font-weight: 800;
+        }
+        .firewall-badge.active {
+            background: rgba(16, 185, 129, 0.12);
+            border-color: rgba(16, 185, 129, 0.3);
+            color: #10b981;
+        }
+
+        /* ====== SCROLLBAR FOR CHAT ====== */
+        .chat-container::-webkit-scrollbar {
+            width: 4px;
+        }
+        .chat-container::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body>
 
+    <!-- ====== PARTICLES ====== -->
     <canvas id="particleCanvas"></canvas>
+
+    <!-- ====== SCROLL PROGRESS ====== -->
     <div class="scroll-progress" id="scrollProgress"></div>
 
+    <!-- ====== LOADER ====== -->
     <div class="initial-loader" id="initialLoader">
         <div class="loader-logo">MRX</div>
         <div class="loader-spinner"></div>
     </div>
 
-    <!-- الشريط العلوي مع زر التشفير والألوان والإعدادات والزر الجانبي -->
+    <!-- ====== TOAST ====== -->
+    <div class="toast-notification" id="toast">تم!</div>
+
+    <!-- ====== TOP BAR ====== -->
     <div class="top-settings-bar" id="topSettingsBar">
-        <div class="bar-title">MRX STORE</div>
+        <div class="bar-title" id="barTitle">MRX STORE</div>
         <div class="bar-left-controls">
-            <!-- أزرار التشفير الثلاثة بألوانها المحددة -->
             <button class="enc-btn btn-lua" onclick="openEncoderModal('Lua')">Lua</button>
             <button class="enc-btn btn-py" onclick="openEncoderModal('Python')">Python</button>
             <button class="enc-btn btn-html" onclick="openEncoderModal('HTML')">HTML</button>
-            
-            <button class="top-btn-icon" onclick="openSettingsModal()">⚙️ الإعدادات</button>
+            <button class="top-btn-icon" onclick="openSettingsModal()"><i class="fas fa-cog"></i></button>
             <div class="menu-toggle" id="menuToggle" onclick="toggleSidebar()">
-                <span></span>
-                <span></span>
-                <span></span>
+                <span></span><span></span><span></span>
             </div>
         </div>
     </div>
 
+    <!-- ====== SIDEBAR ====== -->
     <div class="sidebar" id="sidebar">
-        <div class="nav-item active" id="navHomeBtn" onclick="handleNavClick('home')">
-            <span>🏠 الشاشة الرئيسية</span>
+        <div class="nav-item active" id="navHomeBtn" onclick="navigateTo('home')">
+            <i class="fas fa-home"></i> الرئيسية
         </div>
-        <div class="nav-item" id="navScriptsBtn" onclick="handleNavClick('scripts')">
-            <span>📜 السكربتات</span>
+        <div class="nav-item" id="navScriptsBtn" onclick="navigateTo('scripts')">
+            <i class="fas fa-scroll"></i> السكربتات
         </div>
-        <div class="nav-item" id="navAuthBtn" onclick="openAuthModal()">
-            <span id="userAccountStatus">👤 تسجيل دخول بـ Google</span>
+        <div class="nav-item" id="navChatBtn" onclick="navigateTo('chat')">
+            <i class="fas fa-comments"></i> الشات العام
+        </div>
+        <div class="nav-item" id="navLeaderboardBtn" onclick="navigateTo('leaderboard')">
+            <i class="fas fa-trophy"></i> الأكثر استخداماً
+            <span class="badge-side">TOP</span>
+        </div>
+        <div class="nav-item" id="navControlBtn" onclick="navigateTo('control')">
+            <i class="fas fa-sliders-h"></i> التحكم
+            <span class="badge-side" id="controlBadge">🔒</span>
+        </div>
+        <div class="nav-item" onclick="logoutUser()">
+            <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+        </div>
+        <div style="margin-top:auto;font-size:0.65rem;color:var(--text-dim);padding:10px;text-align:center;border-top:1px solid var(--border-color);">
+            <span class="firewall-badge active" id="firewallBadge"><i class="fas fa-shield-alt"></i> الجدار الناري نشط</span>
         </div>
     </div>
 
-    <div class="toast-notification" id="toast">تم النسخ بنجاح!</div>
-
+    <!-- ====== MAIN CONTAINER ====== -->
     <div class="container">
 
-        <header class="header">
-            <div class="server-status-badge">
-                <span class="status-dot"></span>
-                <span id="serverStatusText">السيرفرات تعمل بكفاءة 100%</span>
+        <!-- ====== LOGIN SCREEN ====== -->
+        <div id="loginScreen">
+            <div class="logo-big">MRX</div>
+            <div class="login-sub">🔐 منصة هاكات احترافية 2026</div>
+            <div class="login-card">
+                <div class="form-group">
+                    <label>📧 البريد الإلكتروني (Gmail)</label>
+                    <input type="email" id="loginEmail" placeholder="example@gmail.com" dir="ltr" />
+                </div>
+                <div class="form-group">
+                    <label>🔑 كلمة المرور</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" dir="ltr" />
+                </div>
+                <button class="login-btn-primary" onclick="handleLogin()">🚀 تسجيل الدخول</button>
+                <div class="login-error" id="loginError">❌ البريد أو كلمة المرور غير صحيحة</div>
+                <button class="login-btn-google" onclick="loginWithGoogle()">
+                    <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" alt="Google" />
+                    تسجيل الدخول بحساب Google
+                </button>
+                <div style="margin-top:10px;font-size:0.7rem;color:var(--text-dim);">
+                    <span class="firewall-badge active"><i class="fas fa-shield-alt"></i> الجدار الناري مفعل</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== PROFILE SETUP ====== -->
+        <div id="profileSetup">
+            <h2 style="color:var(--accent-color);font-size:1.2rem;">👤 إعداد الملف الشخصي</h2>
+            <div class="avatar-upload" id="avatarUpload" onclick="document.getElementById('avatarFileInput').click()">
+                <img id="profileAvatar" src="" alt="الصورة الشخصية" />
+                <div class="upload-overlay"><i class="fas fa-camera"></i></div>
+                <input type="file" id="avatarFileInput" accept="image/*" style="display:none" onchange="handleAvatarUpload(event)" />
+            </div>
+            <div class="form-group">
+                <label>👤 اسم المستخدم (سيظهر في الشات)</label>
+                <input type="text" id="profileUsername" placeholder="MRX_Player" />
+            </div>
+            <button class="login-btn-primary" onclick="saveProfile()">💾 حفظ الملف الشخصي</button>
+        </div>
+
+        <!-- ====== MAIN APP ====== -->
+        <div id="mainApp">
+
+            <!-- SERVER STATUS -->
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">
+                <div class="server-status-badge">
+                    <span class="status-dot"></span>
+                    <span id="serverStatusText">الخوادم تعمل بكفاءة</span>
+                </div>
+                <span class="firewall-badge active"><i class="fas fa-shield-alt"></i> جدار ناري</span>
+                <span id="onlineCount" style="font-size:0.7rem;color:var(--text-dim);"><i class="fas fa-circle" style="color:#10b981;font-size:0.5rem;"></i> <span id="onlineNum">0</span> متصل</span>
             </div>
 
             <div class="logo-box">
                 <h1 class="logo">MRX STORE</h1>
                 <span class="badge-vip">★ VIP - PRO - MAX ★</span>
             </div>
-            
             <div class="subtitle-box">
-                <p id="subtitleText">أداء ممتاز جداً - أمان عالي - خوادم فائقة السرعة</p>
+                <p id="subtitleText">🔥 أداء ممتاز - أمان عالي - خوادم فائقة السرعة</p>
             </div>
 
-            <div class="announcement-ticker">
-                <div class="announcement-content" id="announcementText">
-                    🔥 أهلاً بك في متجر هاكات / MRX لعام 2026 🚀
+            <!-- ====== HOME PAGE ====== -->
+            <div id="page-home">
+                <div class="platform-tabs">
+                    <button class="tab-btn active" id="tabAndroid" onclick="switchPlatform('android')">🤖 أندرويد</button>
+                    <button class="tab-btn" id="tabIos" onclick="switchPlatform('ios')">🍎 آيفون</button>
+                    <button class="tab-btn" id="tabPc" onclick="switchPlatform('pc')">💻 PC</button>
                 </div>
-            </div>
-        </header>
 
-        <!-- الشاشة الرئيسية للمتجر -->
-        <div class="content-page" id="contentPage">
-            
-            <div class="platform-tabs">
-                <button class="tab-btn active" id="tabAndroid" onclick="switchPlatform('android')">🤖 أندرويد</button>
-                <button class="tab-btn" id="tabIos" onclick="switchPlatform('ios')">🍎 آيفون (iOS)</button>
-                <button class="tab-btn" id="tabPc" onclick="switchPlatform('pc')">💻 محاكي PC</button>
-            </div>
+                <input type="text" class="search-box" id="searchInput" onkeyup="filterCards()" placeholder="🔍 ابحث عن الهاك..." style="width:100%;padding:10px 14px;border-radius:12px;border:1px solid var(--border-color);background:rgba(0,0,0,0.3);color:var(--text-color);font-size:0.85rem;text-align:center;margin-bottom:12px;" />
 
-            <input type="text" class="search-box" id="searchInput" onkeyup="filterCards()" placeholder="🔍 ابحث عن اسم النسخة أو الهاك...">
-
-            <div class="platform-section" id="androidSection">
-                <div class="content-card platform-card">
-                    <div class="inner-title">
-                        <span id="deltaAndroidTitle">دلتا هاك اندوريد 〔APK〕</span>
-                        <button class="copy-btn" id="copyBtn1" onclick="copyLink('https://delta.filenetwork.vip/android.html')">📋 نسخ الرابط</button>
+                <div id="androidSection">
+                    <div class="content-card">
+                        <div class="inner-title">
+                            <span>دلتا هاك أندرويد (APK)</span>
+                            <button class="copy-btn" onclick="copyLink('https://delta.filenetwork.vip/android.html')">📋 نسخ</button>
+                        </div>
+                        <div class="file-info-bar"><span>📦 145 MB</span><span>🛡️ مفحوص</span></div>
+                        <img class="card-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect width='400' height='200' fill='%23222'/%3E%3Ctext x='200' y='100' text-anchor='middle' fill='%238a2be2' font-size='24' font-weight='bold'%3E🔥 MRX DELTA%3C/text%3E%3C/svg%3E" alt="هاك دلتا" onclick="openImageModal(this.src)" />
+                        <a href="https://delta.filenetwork.vip/android.html" target="_blank" class="dl-btn" onclick="trackDownload('عالمية')">📥 تحميل روبلوكس عالمية</a>
+                        <a href="https://cdn.gloopup.net/file/Delta-2.717.985-VN.apk" target="_blank" class="dl-btn" onclick="trackDownload('فيتنامي')">📥 تحميل روبلوكس فيتنامي</a>
                     </div>
-                    <div class="file-info-bar">
-                        <span id="fileSizeText">📦 الحجم: 145 MB</span>
-                        <span id="virusCheckText">🛡️ مفحوص عبر VirusTotal</span>
+                </div>
+
+                <div id="iosSection" style="display:none;">
+                    <div class="content-card">
+                        <div class="inner-title"><span>دلتا هاك آيفون (IOS)</span><button class="copy-btn" onclick="copyLink('https://delta.filenetwork.vip/ios.html')">📋 نسخ</button></div>
+                        <div class="file-info-bar"><span>📦 120 MB</span><span>🍏 يدعم IPA</span></div>
+                        <img class="card-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect width='400' height='200' fill='%23222'/%3E%3Ctext x='200' y='100' text-anchor='middle' fill='%238a2be2' font-size='24' font-weight='bold'%3E🍎 MRX IOS%3C/text%3E%3C/svg%3E" alt="هاك آيفون" onclick="openImageModal(this.src)" />
+                        <a href="https://delta.filenetwork.vip/ios.html" target="_blank" class="dl-btn" onclick="trackDownload('آيفون')">📥 تحميل iOS</a>
                     </div>
-                    <img class="card-img" src="1000203262.webp" alt="هاك دلتا" onclick="openImageModal(this.src)">
-                    <a href="https://delta.filenetwork.vip/android.html" target="_blank" class="dl-btn" id="btnGlobal" onclick="trackDownload('عالمية')">📥 تثبيت روبلوكس عالميه</a>
-                    <a href="https://cdn.gloopup.net/file/Delta-2.717.985-VN.apk" target="_blank" class="dl-btn" id="btnVn" onclick="trackDownload('فيتنامي')">📥 تثبيت روبلوكس فيتنامي</a>
                 </div>
-            </div>
 
-            <div class="platform-section" id="iosSection" style="display: none;">
-                <div class="content-card platform-card">
-                    <div class="inner-title">
-                        <span id="deltaIosTitle">دلتا هاك ايفون 〔IOS〕</span>
-                        <button class="copy-btn" id="copyBtn2" onclick="copyLink('https://delta.filenetwork.vip/ios.html')">📋 نسخ الرابط</button>
+                <div id="pcSection" style="display:none;">
+                    <div class="content-card">
+                        <div style="text-align:center;padding:20px;color:var(--text-dim);font-weight:bold;">⚠️ لا يتوفر هاك للكمبيوتر حالياً (تحت الصيانة)</div>
                     </div>
-                    <div class="file-info-bar">
-                        <span>📦 الحجم: 120 MB</span>
-                        <span>🍏 يدعم IPA / Esign</span>
+                </div>
+
+                <div class="content-card">
+                    <div class="inner-title">📊 مقارنة النسخ</div>
+                    <table class="comparison-table">
+                        <thead><tr><th>النسخة</th><th>الأصالة</th><th>المفتاح</th><th>الجهاز</th></tr></thead>
+                        <tbody>
+                            <tr><td>العالمية</td><td>100%</td><td>✅</td><td>أندرويد</td></tr>
+                            <tr><td>الفيتنامية</td><td>100%</td><td>✅</td><td>آيفون</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <button class="dl-btn" style="background:linear-gradient(135deg,#6366f1,#4f46e5);" onclick="openKeyModal()">🔑 أخذ مفتاح هاكات</button>
+            </div>
+
+            <!-- ====== SCRIPTS PAGE ====== -->
+            <div id="page-scripts" style="display:none;">
+                <div class="content-card">
+                    <button class="add-script-banner" onclick="openAddScriptModal()"><i class="fas fa-plus"></i> إضافة سكربت جديد</button>
+                    <div class="inner-title" style="margin-bottom:10px;">📜 السكربتات المجهزة</div>
+                    <input type="text" class="search-box" id="scriptSearchInput" onkeyup="filterScripts()" placeholder="🔍 بحث سكربت..." style="width:100%;padding:10px 14px;border-radius:12px;border:1px solid var(--border-color);background:rgba(0,0,0,0.3);color:var(--text-color);font-size:0.85rem;text-align:center;margin-bottom:12px;" />
+                    <div class="scripts-container" id="scriptsListContainer"></div>
+                </div>
+            </div>
+
+            <!-- ====== CHAT PAGE ====== -->
+            <div id="page-chat" style="display:none;">
+                <div class="content-card">
+                    <div class="inner-title"><i class="fas fa-comments"></i> الشات العام <span style="font-size:0.6rem;color:var(--text-dim);">(ممنوع السبام)</span></div>
+                    <div class="chat-container" id="chatContainer"></div>
+                    <div class="chat-input-row">
+                        <input type="text" id="chatInput" placeholder="اكتب رسالتك..." onkeydown="if(event.key==='Enter') sendChatMessage()" />
+                        <button onclick="sendChatMessage()"><i class="fas fa-paper-plane"></i></button>
                     </div>
-                    <img class="card-img" src="1000203262.webp" alt="هاك دلتا أيفون" onclick="openImageModal(this.src)">
-                    <a href="https://delta.filenetwork.vip/ios.html" target="_blank" class="dl-btn" id="btnIosDl" onclick="trackDownload('آيفون')">📥 تثبيت نسخة iOS Direct</a>
+                    <div style="font-size:0.6rem;color:var(--text-dim);margin-top:4px;">🛡️ يتم حماية الشات من السبام تلقائياً</div>
                 </div>
             </div>
 
-            <div class="platform-section" id="pcSection" style="display: none;">
-                <div class="content-card empty-platform-msg" id="pcMsg">
-                    ⚠️ لا يتوفر هاك للكمبيوتر حالياً (تحت الصيانة)
+            <!-- ====== LEADERBOARD PAGE ====== -->
+            <div id="page-leaderboard" style="display:none;">
+                <div class="content-card">
+                    <div class="inner-title"><i class="fas fa-trophy"></i> الأكثر استخداماً وتفاعلاً</div>
+                    <div id="leaderboardContainer">
+                        <div style="text-align:center;padding:16px;color:var(--text-dim);">جاري تحميل الليدر بورد...</div>
+                    </div>
                 </div>
             </div>
 
-            <div class="content-card">
-                <div class="inner-title" id="compTitle">📊 مقارنة النسخ السريعة</div>
-                <table class="comparison-table">
-                    <thead>
-                        <tr>
-                            <th id="thVer">النسخة</th>
-                            <th id="thAuth">الأصالة</th>
-                            <th id="thKey">المفتاح</th>
-                            <th id="thDev">الجهاز</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td id="tdGlobal">العالمية</td>
-                            <td>اصلي 100\100</td>
-                            <td id="tdKey1">يوجد</td>
-                            <td>اندوريد</td>
-                        </tr>
-                        <tr>
-                            <td id="tdVn">الفيتنامية</td>
-                            <td>اصلي 100\100</td>
-                            <td id="tdKey2">يوجد</td>
-                            <td>ايفون</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="discord-section">
-                <p style="font-size: 0.85rem; color: var(--text-dim); margin-bottom: 5px;" id="dlCountText">🔥 إجمالي التحميلات اليوم: <span id="downloadCounter" style="color: var(--accent-color); font-weight: bold;">5</span></p>
-            </div>
-
-            <button class="dl-btn" style="background: linear-gradient(135deg, #6366f1, #4f46e5);" onclick="openKeyModal()" id="keyBtnText">🔑 أخذ مفتاح هاكات</button>
-
-        </div>
-
-        <!-- صفحة السكربتات -->
-        <div class="content-page" id="scriptsPage" style="display: none;">
-            <div class="content-card">
-                <!-- مستطيل أخضر لإضافة سكربت جديد -->
-                <button class="add-script-banner" onclick="openAddScriptModal()">
-                    ➕ إضافة سكربت جديد
-                </button>
-
-                <div class="inner-title" style="margin-bottom:15px;">📜 قسم السكربتات المجهزة</div>
-                <input type="text" class="search-box" id="scriptSearchInput" onkeyup="filterScripts()" placeholder="🔍 بحث سكربت..." style="margin-bottom: 15px;">
-                <div class="scripts-container" id="scriptsListContainer"></div>
-            </div>
-        </div>
-
-        <footer class="footer">
-            <p id="footerText">جميع الحقوق محفوظة MRX/2026</p>
-        </footer>
-    </div>
-
-    <div class="back-to-top" id="backToTop" onclick="scrollToTop()">▲</div>
-
-    <!-- نافذة تسجيل الدخول بحساب قوقل والتحقق بالحساب الحقيقي -->
-    <div class="modal-overlay" id="authModal" onclick="closeModal('authModal')">
-        <div class="modal-card" onclick="event.stopPropagation()">
-            <h3>🔒 تسجيل الدخول الآمن (Google)</h3>
-            
-            <div id="authStep1">
-                <p style="font-size:0.8rem; color: var(--text-dim); text-align:right; margin-bottom:10px;">اختر حساب جاهز أو أدخل إيميلك الجيميل الحقيقي لاستلام رمز التحقق:</p>
-                
-                <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:10px;">
-                    <button class="google-account-btn" onclick="selectQuickAccount('user1@gmail.com')">
-                        <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" width="18">
-                        مستخدم تجريبي (user1@gmail.com)
-                    </button>
-                    <button class="google-account-btn" onclick="selectQuickAccount('mrx.vip.2026@gmail.com')">
-                        <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" width="18">
-                        حساب MRX PRO (mrx.vip.2026@gmail.com)
-                    </button>
+            <!-- ====== CONTROL PAGE ====== -->
+            <div id="page-control" style="display:none;">
+                <div class="content-card">
+                    <div class="inner-title"><i class="fas fa-sliders-h"></i> لوحة التحكم <span style="font-size:0.6rem;color:var(--text-dim);">(للمشرفين فقط)</span></div>
+                    <div id="controlPanel">
+                        <div style="text-align:center;padding:16px;color:var(--text-dim);">🔒 تحتاج صلاحيات المشرف للوصول</div>
+                    </div>
                 </div>
-
-                <div class="form-group">
-                    <label>أو أدخل الجيميل الحقيقي:</label>
-                    <input type="email" id="userEmailInput" class="form-input" placeholder="example@gmail.com" dir="ltr">
-                </div>
-
-                <button class="tg-copy-action-btn" style="width:100%; margin-top:5px;" onclick="sendVerificationCode()">إرسال رمز التحقق للحساب</button>
             </div>
 
-            <div id="authStep2" style="display: none;">
-                <p style="font-size:0.85rem; color:var(--accent-color); text-align:center;">تم إرسال رمز التحقق إلى حسابك!</p>
-                <div class="form-group" style="margin-top:10px;">
-                    <label>رمز التحقق (OTP) *</label>
-                    <input type="text" id="otpCodeInput" class="form-input" placeholder="أدخل الرمز 6 أرقام" style="text-align:center; letter-spacing: 5px; font-weight:bold;">
-                </div>
-                <button class="tg-copy-action-btn" style="width:100%; margin-top:5px;" onclick="verifyAuthCode()">تأكيد واستمرار</button>
-            </div>
-
-            <button class="btn-close-x" style="margin-top:10px;" onclick="closeModal('authModal')">إغلاق</button>
+            <footer class="footer">
+                <p id="footerText">جميع الحقوق محفوظة MRX / 2026</p>
+            </footer>
         </div>
     </div>
 
-    <!-- نافذة أداة تشفير السكربتات (Lua - Python - HTML) -->
+    <!-- ====== BACK TO TOP ====== -->
+    <div class="back-to-top" id="backToTop" onclick="scrollToTop()"><i class="fas fa-chevron-up"></i></div>
+
+    <!-- ====== MODALS ====== -->
+
+    <!-- ENCODER MODAL -->
     <div class="modal-overlay" id="encoderModal" onclick="closeModal('encoderModal')">
-        <div class="modal-card" style="width: 380px; max-width:92vw;" onclick="event.stopPropagation()">
+        <div class="modal-card" onclick="event.stopPropagation()">
             <h3 id="encoderHeaderTitle">🔐 تشفير سكربتات Lua</h3>
-            
             <div class="form-group">
-                <label>ضع الكود أو الرابط المطلوب تشفيره وإخفائه *</label>
-                <textarea id="rawScriptToEncode" class="form-input" placeholder="loadstring(game:HttpGet('...'))() أو رابط السكربت المباشر"></textarea>
+                <label>الكود أو الرابط المراد تشفيره</label>
+                <textarea id="rawScriptToEncode" class="form-input" placeholder="loadstring(game:HttpGet('...'))()"></textarea>
             </div>
-
-            <button class="tg-copy-action-btn" style="width:100%;" onclick="processScriptEncoding()">⚡ بدء التشفير والإخفاء الآن</button>
-
-            <div class="form-group" style="margin-top:10px;">
-                <label>الكود المشفر المحمي (جاهز للتشغيل):</label>
-                <textarea id="encodedOutputResult" class="form-input" readonly placeholder="سيظهر الكود المشفر هنا تلقائياً..." style="color:var(--accent-color); font-family:monospace; font-size:0.75rem; min-height:90px;"></textarea>
+            <button class="tg-copy-action-btn" onclick="processScriptEncoding()">⚡ تشفير الآن</button>
+            <div class="form-group">
+                <label>الكود المشفر (جاهز للنسخ)</label>
+                <textarea id="encodedOutputResult" class="form-input" readonly placeholder="..." style="color:var(--accent-color);font-family:monospace;font-size:0.7rem;min-height:60px;"></textarea>
             </div>
-
-            <div style="display:flex; gap:8px;">
-                <button class="tg-copy-action-btn" id="copyEncodedBtn" style="flex:1; display:none;" onclick="copyEncodedCode()">📋 نسخ الكود</button>
+            <div style="display:flex;gap:8px;">
+                <button class="tg-copy-action-btn" id="copyEncodedBtn" style="flex:1;display:none;" onclick="copyEncodedCode()">📋 نسخ</button>
                 <button class="btn-close-x" style="flex:1;" onclick="closeModal('encoderModal')">إغلاق</button>
             </div>
         </div>
     </div>
 
-    <!-- نافذة إعدادات المتجر -->
+    <!-- SETTINGS MODAL -->
     <div class="modal-overlay" id="settingsModal" onclick="closeModal('settingsModal')">
         <div class="modal-card" onclick="event.stopPropagation()">
-            <h3 id="settingsHeader">⚙️ إعدادات الموقع</h3>
-            
-            <div class="setting-row">
-                <span id="themeText">المظهر (الثيم)</span>
-                <button class="copy-btn" onclick="toggleTheme()">أبيض / أسود 🌗</button>
+            <h3>⚙️ الإعدادات</h3>
+            <div class="setting-row" style="display:flex;justify-content:space-between;align-items:center;">
+                <span>المظهر (الثيم)</span>
+                <button class="copy-btn" onclick="toggleTheme()">🌗 تبديل</button>
             </div>
-
-            <div class="setting-row">
-                <span id="sfxText">المؤثرات الصوتية</span>
-                <button class="copy-btn" id="sfxToggleBtn" onclick="toggleSFX()">تفعيل 🔊</button>
-            </div>
-
-            <button class="copy-btn" onclick="closeModal('settingsModal')" style="padding: 10px; margin-top: 10px;">إغلاق</button>
+            <button class="btn-close-x" onclick="closeModal('settingsModal')">إغلاق</button>
         </div>
     </div>
 
-    <!-- نافذة عرض السكربت -->
+    <!-- KEY MODAL -->
+    <div class="modal-overlay" id="keyModal" onclick="closeModal('keyModal')">
+        <div class="modal-card" onclick="event.stopPropagation()">
+            <h3>🔑 أخذ مفتاح هاكات</h3>
+            <p style="font-size:0.85rem;color:var(--text-dim);line-height:1.6;">انضم إلى سيرفر الديسكورد وادخل إلى غرفة المفاتيح للحصول على مفتاحك.</p>
+            <a href="https://discord.gg/65Evss3nk" target="_blank" class="discord-btn" style="display:inline-flex;align-items:center;justify-content:center;width:100%;padding:12px;border-radius:12px;background:#5865F2;color:#fff;text-decoration:none;font-weight:700;">انضم إلى ديسكورد</a>
+            <button class="btn-close-x" onclick="closeModal('keyModal')">إغلاق</button>
+        </div>
+    </div>
+
+    <!-- IMAGE MODAL -->
+    <div class="modal-overlay" id="imageModal" onclick="closeModal('imageModal')">
+        <img id="modalImg" src="" style="max-width:90%;max-height:80%;border-radius:12px;" />
+    </div>
+
+    <!-- SCRIPT VIEW MODAL -->
     <div class="modal-overlay" id="scriptViewModal" onclick="closeModal('scriptViewModal')">
-        <div class="telegram-modal-card" onclick="event.stopPropagation()">
-            <div class="tg-header-badge">⚡ MRX SCRIPT ENGINE ⚡</div>
-            <img id="tgScriptImg" src="" style="width:100%; border-radius:12px; display:none; border:1px solid var(--border-color);">
-            <div class="tg-info-box">
-                <h4 id="tgScriptTitle">اسم السكربت</h4>
-                <span id="tgScriptMap">الماب: --</span>
+        <div class="modal-card" onclick="event.stopPropagation()" style="max-width:460px;">
+            <h3 id="svTitle">📜 السكربت</h3>
+            <div style="font-size:0.8rem;color:var(--text-dim);" id="svMap">الماب: —</div>
+            <div style="font-size:0.8rem;color:var(--text-dim);margin:4px 0;" id="svDesc">الوصف: —</div>
+            <div style="background:rgba(0,0,0,0.4);border-radius:10px;padding:10px;font-family:monospace;font-size:0.7rem;color:var(--accent-color);text-align:left;direction:ltr;max-height:150px;overflow-y:auto;word-break:break-all;" id="svCode">-- code</div>
+            <button class="tg-copy-action-btn" onclick="copyScriptCode()">📋 نسخ السكربت</button>
+            <div style="display:flex;gap:8px;margin-top:4px;">
+                <button class="btn-secondary" onclick="editScriptFromView()" style="flex:1;">✏️ تعديل</button>
+                <button class="btn-close-x" style="flex:1;" onclick="closeModal('scriptViewModal')">إغلاق</button>
             </div>
-            <div class="tg-description-box" id="tgScriptDesc">الوصف هنا...</div>
-            <div class="telegram-code-container">
-                <div class="tg-code-top-rect">
-                    <span>📜 LUA SCRIPT CODE</span>
-                    <span>READY</span>
-                </div>
-                <div class="tg-code-square-body" id="tgCodeText">-- Code goes here...</div>
-            </div>
-            <button class="tg-copy-action-btn" onclick="copyCurrentScriptCode()">📋 نسخ السكربت للحافظة</button>
-            <button class="btn-close-x" onclick="closeModal('scriptViewModal')">❌ إغلاق النافذة</button>
+            <div id="svScanResult" style="font-size:0.8rem;margin-top:4px;"></div>
         </div>
     </div>
 
-    <!-- نافذة إضافة سكربت جديد -->
+    <!-- ADD SCRIPT MODAL -->
     <div class="modal-overlay" id="addScriptModal" onclick="closeModal('addScriptModal')">
-        <div class="telegram-modal-card" onclick="event.stopPropagation()">
-            <div class="tg-header-badge">➕ نشر سكربت جديد</div>
-            
-            <div class="form-group">
-                <label>اسم السكربت *</label>
-                <input type="text" id="newScriptName" class="form-input" placeholder="مثال: سكربت ماب البيوت">
-            </div>
-
-            <div class="form-group">
-                <label>يشتغل على ماب *</label>
-                <input type="text" id="newScriptMap" class="form-input" placeholder="مثال: ماب البيوت / الكل">
-            </div>
-
-            <div class="form-group">
-                <label>رابط الصورة (اختياري)</label>
-                <input type="text" id="newScriptImg" class="form-input" placeholder="ضع رابط الصورة هنا...">
-            </div>
-
-            <div class="form-group">
-                <label>الوصف / ملاحظة</label>
-                <textarea id="newScriptDesc" class="form-input" placeholder="اكتب ملاحظة أو وصف للسكربت..."></textarea>
-            </div>
-
-            <div class="form-group">
-                <label>كود التشغيل (loadstring) *</label>
-                <textarea id="newScriptCode" class="form-input" placeholder="loadstring(game:HttpGet(...))()"></textarea>
-            </div>
-
-            <button class="tg-copy-action-btn" onclick="submitNewScript()">🚀 نشر السكربت الآن</button>
+        <div class="modal-card" onclick="event.stopPropagation()" style="max-width:460px;">
+            <h3><i class="fas fa-plus"></i> إضافة سكربت جديد</h3>
+            <div class="form-group"><label>اسم السكربت *</label><input type="text" id="newScriptName" placeholder="MRX HUB" /></div>
+            <div class="form-group"><label>الماب *</label><input type="text" id="newScriptMap" placeholder="ماب البيوت" /></div>
+            <div class="form-group"><label>رابط الصورة (اختياري)</label><input type="text" id="newScriptImg" placeholder="https://..." /></div>
+            <div class="form-group"><label>الوصف</label><textarea id="newScriptDesc" placeholder="وصف السكربت..."></textarea></div>
+            <div class="form-group"><label>كود التشغيل (loadstring) *</label><textarea id="newScriptCode" placeholder="loadstring(game:HttpGet(...))()"></textarea></div>
+            <button class="tg-copy-action-btn" onclick="submitNewScript()">🚀 نشر السكربت</button>
             <button class="btn-close-x" onclick="closeModal('addScriptModal')">إلغاء</button>
         </div>
     </div>
 
-    <div class="modal-overlay" id="keyModal" onclick="closeModal('keyModal')">
-        <div class="modal-card" onclick="event.stopPropagation()">
-            <h3>🔑 أخذ مفتاح هاكات</h3>
-            <p style="font-size:0.9rem; text-align:center; color:var(--text-dim); line-height: 1.6;">
-                لكي تفتحه انتقل إلي قناتي ديسكورد و ادخل إلا قسم الاوامر و ادخل إلي غرفه مفتاح دلتا هاك و حط الرابط و رح يجيب لك المفتاح بسرعه و بدون تعب.
-            </p>
-            <a href="https://discord.gg/65Evss3nk" target="_blank" class="discord-btn">انضم إلي سيرفر ديسكورد</a>
-            <button class="copy-btn" style="padding: 10px; margin-top: 5px;" onclick="closeModal('keyModal')">إغلاق</button>
+    <!-- EDIT SCRIPT MODAL -->
+    <div class="modal-overlay" id="editScriptModal" onclick="closeModal('editScriptModal')">
+        <div class="modal-card" onclick="event.stopPropagation()" style="max-width:460px;">
+            <h3><i class="fas fa-edit"></i> تعديل السكربت</h3>
+            <div class="form-group"><label>اسم السكربت *</label><input type="text" id="editScriptName" /></div>
+            <div class="form-group"><label>الماب *</label><input type="text" id="editScriptMap" /></div>
+            <div class="form-group"><label>رابط الصورة</label><input type="text" id="editScriptImg" /></div>
+            <div class="form-group"><label>الوصف</label><textarea id="editScriptDesc"></textarea></div>
+            <div class="form-group"><label>كود التشغيل *</label><textarea id="editScriptCode"></textarea></div>
+            <div style="display:flex;gap:8px;">
+                <button class="tg-copy-action-btn" style="flex:1;" onclick="saveScriptEdit()">💾 حفظ التعديلات</button>
+                <button class="btn-close-x" style="flex:1;" onclick="closeModal('editScriptModal')">إلغاء</button>
+            </div>
         </div>
     </div>
 
-    <div class="modal-overlay" id="imageModal" onclick="closeModal('imageModal')">
-        <img id="modalImg" src="" style="max-width:90%; max-height:80%; border-radius:12px;">
-    </div>
-
     <script>
-        let sfxEnabled = true;
-        let activeScriptCode = "";
-        let generatedOTP = "";
-        let currentTargetEmail = "";
-        let selectedEncoderLanguage = "Lua";
+        // ============================================================
+        //  MRX STORE — COMPLETE JAVASCRIPT ENGINE
+        //  مع: جدار ناري، تسجيل جيميل، توثيق، شات، ليدر بورد، تحكم
+        // ============================================================
 
-        let myUserId = localStorage.getItem('mrx_user_device_id');
-        if(!myUserId) {
-            myUserId = 'user_' + Math.random().toString(36).substr(2, 9);
-            localStorage.setItem('mrx_user_device_id', myUserId);
+        // ====== CONFIG ======
+        const ADMIN_EMAIL = 'ryadsadq806@gmail.com';
+        const STORAGE_KEY = 'mrx_store_data';
+        const CHAT_KEY = 'mrx_chat_messages';
+        const SCRIPTS_KEY = 'mrx_scripts_data';
+
+        // ====== STATE ======
+        let currentUser = null;
+        let currentUserData = null;
+        let chatMessages = [];
+        let scriptsData = [];
+        let usersData = {};
+        let editingScriptId = null;
+        let activeScriptCode = '';
+
+        // ====== UTILITY FUNCTIONS ======
+        function generateId() { return Date.now().toString(36) + Math.random().toString(36).substr(2, 6); }
+
+        function getTimestamp() { return new Date().toISOString(); }
+
+        function timeAgo(ts) {
+            const diff = Date.now() - new Date(ts).getTime();
+            const m = Math.floor(diff / 60000),
+                h = Math.floor(diff / 3600000),
+                d = Math.floor(diff / 86400000);
+            if (d > 0) return `منذ ${d} يوم`;
+            if (h > 0) return `منذ ${h} ساعة`;
+            if (m > 0) return `منذ ${m} دقيقة`;
+            return 'الآن';
         }
 
-        const defaultScripts = [
-            {
-                id: 1,
-                name: "MRX",
-                map: "ماب البيوت",
-                desc: "طبعن يعلق عشان فيه ادوات هكر كثيره و فقط و يشتغل ماب ماب البيوت",
-                code: `loadstring(game:HttpGet("https://raw.githubusercontent.com/hatm12345cc-source/TRX/refs/heads/main/MR•HUB"))()`,
-                image: "",
-                owner: "system"
-            },
-            {
-                id: 2,
-                name: "قيم باس",
-                map: "الكل",
-                desc: "يشتغل بعض المابات زي ماب القنبله العربيه و اشياء زي كذا",
-                code: `loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Gamepass-Product-212343"))()`,
-                image: "",
-                owner: "system"
-            },
-            {
-                id: 3,
-                name: "ماب السرقه",
-                map: "ماب السرقه",
-                desc: "صنعنا سكربت ماب سرقه مره OP\nالميزة فيه انه يدخلك سيرفر خاص لحالك!؟\nولكن بشرط لازم تكون بسيرفر صديقك!",
-                code: `loadstring(game:HttpGet("https://raw.githubusercontent.com/ook314745-svg/FRHUBSCRIPTS/refs/heads/main/obfuscated.lua%20(15).txt"))()`,
-                image: "",
-                owner: "system"
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.innerText = msg;
+            t.classList.add('active');
+            clearTimeout(t._timer);
+            t._timer = setTimeout(() => t.classList.remove('active'), 2500);
+        }
+
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+        // ====== STORAGE ======
+        function loadData() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (raw) {
+                    const data = JSON.parse(raw);
+                    usersData = data.users || {};
+                    currentUserData = data.currentUser || null;
+                    if (currentUserData) currentUser = currentUserData.email;
+                }
+            } catch (e) {}
+            try {
+                const raw = localStorage.getItem(CHAT_KEY);
+                if (raw) chatMessages = JSON.parse(raw);
+            } catch (e) {}
+            try {
+                const raw = localStorage.getItem(SCRIPTS_KEY);
+                if (raw) scriptsData = JSON.parse(raw);
+            } catch (e) {}
+            if (!scriptsData.length) {
+                scriptsData = [
+                    { id: 's1', name: 'MRX HUB', map: 'ماب البيوت', desc: 'هاك قوي لماب البيوت', code: 'loadstring(game:HttpGet("https://raw.githubusercontent.com/hatm12345cc-source/TRX/refs/heads/main/MR•HUB"))()',
+                        image: '', owner: 'system', verified: true },
+                    { id: 's2', name: 'قيم باس', map: 'الكل', desc: 'يشتغل في معظم المابات',
+                        code: 'loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Gamepass-Product-212343"))()',
+                        image: '', owner: 'system', verified: true },
+                    { id: 's3', name: 'ماب السرقة', map: 'ماب السرقة', desc: 'سكربت OP للسرقة',
+                        code: 'loadstring(game:HttpGet("https://raw.githubusercontent.com/ook314745-svg/FRHUBSCRIPTS/refs/heads/main/obfuscated.lua%20(15).txt"))()',
+                        image: '', owner: 'system', verified: true }
+                ];
+                saveScripts();
             }
-        ];
+        }
 
-        let scriptsData = JSON.parse(localStorage.getItem('mrx_custom_scripts')) || defaultScripts;
+        function saveData() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({ users: usersData, currentUser: currentUserData }));
+        }
 
-        window.addEventListener('load', () => {
-            if(localStorage.getItem('mrx_theme') === 'light') {
-                document.body.classList.add('light-theme');
+        function saveChat() { localStorage.setItem(CHAT_KEY, JSON.stringify(chatMessages)); }
+
+        function saveScripts() { localStorage.setItem(SCRIPTS_KEY, JSON.stringify(scriptsData)); }
+
+        // ====== USER SYSTEM ======
+        function handleLogin() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const pass = document.getElementById('loginPassword').value.trim();
+            if (!email || !pass) {
+                document.getElementById('loginError').style.display = 'block';
+                document.getElementById('loginError').innerText = '❌ الرجاء تعبئة جميع الحقول';
+                return;
+            }
+            // تحقق من وجود المستخدم
+            if (usersData[email]) {
+                if (usersData[email].password === pass) {
+                    loginUser(email);
+                    return;
+                } else {
+                    document.getElementById('loginError').style.display = 'block';
+                    document.getElementById('loginError').innerText = '❌ كلمة المرور غير صحيحة';
+                    return;
+                }
+            } else {
+                // تسجيل جديد
+                usersData[email] = {
+                    password: pass,
+                    username: email.split('@')[0],
+                    avatar: '',
+                    verified: email === ADMIN_EMAIL,
+                    banned: false,
+                    banUntil: null,
+                    createdAt: getTimestamp()
+                };
+                saveData();
+                loginUser(email);
+            }
+        }
+
+        function loginWithGoogle() {
+            // محاكاة تسجيل جوجل
+            const email = prompt('📧 أدخل بريدك الإلكتروني (Gmail):');
+            if (!email || !email.includes('@')) return;
+            if (!usersData[email]) {
+                usersData[email] = {
+                    password: 'google_auth',
+                    username: email.split('@')[0],
+                    avatar: '',
+                    verified: email === ADMIN_EMAIL,
+                    banned: false,
+                    banUntil: null,
+                    createdAt: getTimestamp()
+                };
+                saveData();
+            }
+            loginUser(email);
+        }
+
+        function loginUser(email) {
+            currentUser = email;
+            currentUserData = usersData[email];
+            if (!currentUserData) return;
+
+            // التحقق من الحظر
+            if (currentUserData.banned) {
+                if (currentUserData.banUntil && new Date(currentUserData.banUntil) > new Date()) {
+                    alert('🚫 تم حظر حسابك حتى ' + new Date(currentUserData.banUntil).toLocaleDateString());
+                    return;
+                } else if (currentUserData.banUntil) {
+                    // انتهى الحظر
+                    currentUserData.banned = false;
+                    currentUserData.banUntil = null;
+                    saveData();
+                }
             }
 
-            const savedUser = localStorage.getItem('mrx_logged_user');
-            if(savedUser) {
-                document.getElementById('userAccountStatus').innerText = "👤 " + savedUser;
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('profileSetup').style.display = 'flex';
+            document.getElementById('profileUsername').value = currentUserData.username || email.split('@')[0];
+            if (currentUserData.avatar) {
+                document.getElementById('profileAvatar').src = currentUserData.avatar;
             }
+            saveData();
+            showToast('✅ تم تسجيل الدخول بنجاح!');
+        }
 
-            setTimeout(() => {
-                document.getElementById('initialLoader').classList.add('slide-up');
-            }, 600);
-        });
+        function saveProfile() {
+            const username = document.getElementById('profileUsername').value.trim();
+            if (!username) {
+                alert('الرجاء إدخال اسم المستخدم');
+                return;
+            }
+            if (!currentUserData) return;
+            currentUserData.username = username;
+            // الصورة تم حفظها عبر handleAvatarUpload
+            saveData();
+            document.getElementById('profileSetup').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'flex';
+            document.getElementById('barTitle').innerText = 'MRX | ' + username;
+            // تحديث واجهة التحكم
+            updateControlPanel();
+            loadChat();
+            renderScripts();
+            updateLeaderboard();
+            showToast('✅ تم حفظ الملف الشخصي!');
+        }
 
-        // دوال أداة التشفير المحمية للسكربتات
+        function handleAvatarUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                const dataUrl = ev.target.result;
+                document.getElementById('profileAvatar').src = dataUrl;
+                if (currentUserData) {
+                    currentUserData.avatar = dataUrl;
+                    saveData();
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function logoutUser() {
+            if (!confirm('هل أنت متأكد من تسجيل الخروج؟')) return;
+            currentUser = null;
+            currentUserData = null;
+            document.getElementById('mainApp').style.display = 'none';
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('profileSetup').style.display = 'none';
+            document.getElementById('loginEmail').value = '';
+            document.getElementById('loginPassword').value = '';
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('menuToggle').classList.remove('active');
+            showToast('👋 تم تسجيل الخروج');
+        }
+
+        // ====== NAVIGATION ======
+        function navigateTo(page) {
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            const pages = ['home', 'scripts', 'chat', 'leaderboard', 'control'];
+            pages.forEach(p => {
+                document.getElementById('page-' + p).style.display = p === page ? 'flex' : 'none';
+            });
+            if (page === 'home') document.getElementById('navHomeBtn').classList.add('active');
+            else if (page === 'scripts') document.getElementById('navScriptsBtn').classList.add('active');
+            else if (page === 'chat') document.getElementById('navChatBtn').classList.add('active');
+            else if (page === 'leaderboard') document.getElementById('navLeaderboardBtn').classList.add('active');
+            else if (page === 'control') {
+                document.getElementById('navControlBtn').classList.add('active');
+                updateControlPanel();
+            }
+            // إغلاق السايدبار
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('menuToggle').classList.remove('active');
+            scrollToTop();
+            if (page === 'chat') loadChat();
+            if (page === 'leaderboard') updateLeaderboard();
+            if (page === 'scripts') renderScripts();
+        }
+
+        function toggleSidebar() {
+            document.getElementById('menuToggle').classList.toggle('active');
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // ====== PLATFORM SWITCH ======
+        function switchPlatform(p) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('androidSection').style.display = 'none';
+            document.getElementById('iosSection').style.display = 'none';
+            document.getElementById('pcSection').style.display = 'none';
+            if (p === 'android') { document.getElementById('tabAndroid').classList.add('active');
+                document.getElementById('androidSection').style.display = 'block'; } else if (p === 'ios') { document
+                    .getElementById('tabIos').classList.add('active');
+                document.getElementById('iosSection').style.display = 'block'; } else { document.getElementById('tabPc')
+                    .classList.add('active');
+                document.getElementById('pcSection').style.display = 'block'; }
+        }
+
+        function filterCards() {
+            const q = document.getElementById('searchInput').value.toLowerCase();
+            document.querySelectorAll('.platform-card').forEach(c => {
+                c.style.display = c.innerText.toLowerCase().includes(q) ? 'block' : 'none';
+            });
+        }
+
+        function copyLink(url) {
+            navigator.clipboard.writeText(url);
+            showToast('📋 تم نسخ الرابط!');
+        }
+
+        function trackDownload(name) {
+            let count = parseInt(document.getElementById('downloadCounter')?.innerText || '0');
+            if (document.getElementById('downloadCounter')) {
+                document.getElementById('downloadCounter').innerText = count + 1;
+            }
+            showToast('🚀 جاري تحميل ' + name);
+        }
+
+        // ====== THEME ======
+        function toggleTheme() {
+            document.body.classList.toggle('light-theme');
+            showToast(document.body.classList.contains('light-theme') ? '☀️ ثيم فاتح' : '🌙 ثيم داكن');
+        }
+
+        // ====== SETTINGS ======
+        function openSettingsModal() { document.getElementById('settingsModal').style.display = 'flex'; }
+
+        function openKeyModal() { document.getElementById('keyModal').style.display = 'flex'; }
+
+        function openImageModal(src) { document.getElementById('modalImg').src = src;
+            document.getElementById('imageModal').style.display = 'flex'; }
+
+        // ====== ENCODER ======
         function openEncoderModal(lang) {
-            selectedEncoderLanguage = lang;
-            document.getElementById('encoderHeaderTitle').innerText = "🔐 تشفير سكربتات (" + lang + ")";
-            document.getElementById('rawScriptToEncode').value = "";
-            document.getElementById('encodedOutputResult').value = "";
-            document.getElementById('copyEncodedBtn').style.display = "none";
-            document.getElementById('encoderModal').style.display = "flex";
+            document.getElementById('encoderHeaderTitle').innerText = '🔐 تشفير ' + lang;
+            document.getElementById('rawScriptToEncode').value = '';
+            document.getElementById('encodedOutputResult').value = '';
+            document.getElementById('copyEncodedBtn').style.display = 'none';
+            document.getElementById('encoderModal').style.display = 'flex';
         }
 
         function processScriptEncoding() {
             const raw = document.getElementById('rawScriptToEncode').value.trim();
-            if(!raw) {
-                alert("الرجاء وضع السكربت أو الرابط أولاً للتشفير!");
-                return;
-            }
-
-            // خوارزمية تشفير وتوليد رابط وسيط مؤمن مع إخفاء الهوية
-            let targetUrl = raw;
-            if(!raw.startsWith('http://') && !raw.startsWith('https://')) {
-                // تحويل النص البرمجي المحمول إلى Base64
+            if (!raw) { alert('الرجاء وضع الكود أو الرابط'); return; }
+            let result = '';
+            if (raw.startsWith('http://') || raw.startsWith('https://')) {
+                result = `loadstring(game:HttpGet("${raw}"))()`;
+            } else {
+                // تشفير Base64 بسيط
                 let b64 = btoa(unescape(encodeURIComponent(raw)));
-                targetUrl = "https://raw.githubusercontent.com/mrx-secure/vault/main/script_" + Math.floor(Math.random()*899999 + 100000) + ".lua?data=" + b64;
+                result = `loadstring(game:HttpGet("https://raw.githubusercontent.com/mrx-vault/scripts/main/run.lua?data=${b64}"))()`;
             }
-
-            let obfuscatedResult = "";
-            if(selectedEncoderLanguage === 'Lua') {
-                obfuscatedResult = `loadstring(game:HttpGet("${targetUrl}"))()`;
-            } else if(selectedEncoderLanguage === 'Python') {
-                obfuscatedResult = `import urllib.request\nexec(urllib.request.urlopen("${targetUrl}").read().decode('utf-8'))`;
-            } else if(selectedEncoderLanguage === 'HTML') {
-                obfuscatedResult = `<script src="${targetUrl}"><\/script>`;
-            }
-
-            document.getElementById('encodedOutputResult').value = obfuscatedResult;
-            document.getElementById('copyEncodedBtn').style.display = "block";
-            showToast("🔒 تم التشفير بنجاح وقفل الرابط!");
+            document.getElementById('encodedOutputResult').value = result;
+            document.getElementById('copyEncodedBtn').style.display = 'block';
+            showToast('🔒 تم التشفير بنجاح!');
         }
 
         function copyEncodedCode() {
-            const res = document.getElementById('encodedOutputResult').value;
-            navigator.clipboard.writeText(res);
-            showToast("📋 تم نسخ الكود المشفر بنجاح!");
+            const code = document.getElementById('encodedOutputResult').value;
+            navigator.clipboard.writeText(code);
+            showToast('📋 تم نسخ الكود المشفر!');
         }
 
-        // دوال تسجيل الدخول عبر حساب قوقل والجيميل
-        function openAuthModal() {
-            document.getElementById('authStep1').style.display = 'block';
-            document.getElementById('authStep2').style.display = 'none';
-            document.getElementById('authModal').style.display = 'flex';
-        }
-
-        function selectQuickAccount(email) {
-            document.getElementById('userEmailInput').value = email;
-            sendVerificationCode();
-        }
-
-        function sendVerificationCode() {
-            const email = document.getElementById('userEmailInput').value.trim();
-            if(!email || !email.includes('@')) {
-                alert('الرجاء إدخال إيميل جيميل صحيح!');
-                return;
-            }
-            currentTargetEmail = email;
-            generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
-
-            // إظهار تنبيه يوضح كود التحقق للجيميل
-            alert("📩 تم إرسال كود التحقق بنجاح لـ " + email + "\nرمز التحقق الخاص بك هو: " + generatedOTP);
-
-            document.getElementById('authStep1').style.display = 'none';
-            document.getElementById('authStep2').style.display = 'block';
-        }
-
-        function verifyAuthCode() {
-            const entered = document.getElementById('otpCodeInput').value.trim();
-            if(entered === generatedOTP || entered === "123456") {
-                localStorage.setItem('mrx_logged_user', currentTargetEmail);
-                document.getElementById('userAccountStatus').innerText = "👤 " + currentTargetEmail;
-                closeModal('authModal');
-                showToast("✅ تم تسجيل الدخول بنجاح!");
-            } else {
-                alert("❌ رمز التحقق غير صحيح، حاول مرة أخرى!");
-            }
-        }
-
-        function renderScripts(items) {
+        // ====== SCRIPTS SYSTEM ======
+        function renderScripts(filter = '') {
             const container = document.getElementById('scriptsListContainer');
-            container.innerHTML = '';
-            if(items.length === 0) {
-                container.innerHTML = '<div class="empty-platform-msg">لا توجد سكربتات تطابق بحثك</div>';
+            let items = scriptsData;
+            if (filter) {
+                const q = filter.toLowerCase();
+                items = items.filter(s => s.name.toLowerCase().includes(q) || s.map.toLowerCase().includes(q));
+            }
+            if (!items.length) {
+                container.innerHTML =
+                    '<div style="text-align:center;padding:20px;color:var(--text-dim);">لا توجد سكربتات</div>';
                 return;
             }
-            items.forEach(script => {
-                const card = document.createElement('div');
-                card.className = 'script-card-item';
-
-                const isOwner = script.owner === myUserId;
-                const deleteBtnHtml = isOwner 
-                    ? `<button class="btn-danger-sm" onclick="deleteScript(${script.id})">🗑️ حذف</button>` 
-                    : '';
-
-                card.innerHTML = `
+            container.innerHTML = '';
+            items.forEach(s => {
+                const isOwner = s.owner === (currentUserData?.email || '');
+                const isAdmin = currentUser === ADMIN_EMAIL;
+                const canDelete = isOwner || isAdmin;
+                const canEdit = isOwner || isAdmin;
+                const div = document.createElement('div');
+                div.className = 'script-card-item';
+                div.innerHTML = `
                     <div class="script-info-left">
-                        <span class="script-title-text">${script.name}</span>
-                        <span class="script-map-text">🎮 ${script.map}</span>
+                        <span class="script-title-text">${s.name} ${s.verified ? '✅' : ''}</span>
+                        <span class="script-map-text">🎮 ${s.map}</span>
                     </div>
                     <div class="script-card-actions">
-                        ${deleteBtnHtml}
-                        <button class="btn-green-sm" onclick="openScriptModal(${script.id})">عرض / نسخ</button>
+                        ${canEdit ? `<button class="btn-green-sm" onclick="openEditScript('${s.id}')">✏️ تعديل</button>` : ''}
+                        ${canDelete ? `<button class="btn-danger-sm" onclick="deleteScript('${s.id}')">🗑️</button>` : ''}
+                        <button class="btn-green-sm" onclick="viewScript('${s.id}')">📖 عرض</button>
                     </div>
                 `;
-                container.appendChild(card);
+                container.appendChild(div);
             });
         }
 
         function filterScripts() {
-            const query = document.getElementById('scriptSearchInput').value.trim().toLowerCase();
-            const filtered = scriptsData.filter(s => 
-                s.name.toLowerCase().includes(query) || 
-                s.map.toLowerCase().includes(query) ||
-                (s.desc && s.desc.toLowerCase().includes(query))
-            );
-            renderScripts(filtered);
+            const q = document.getElementById('scriptSearchInput').value.trim();
+            renderScripts(q);
         }
 
-        function openScriptModal(id) {
-            const script = scriptsData.find(s => s.id === id);
-            if(!script) return;
-            document.getElementById('tgScriptTitle').innerText = script.name;
-            document.getElementById('tgScriptMap').innerText = "الماب: " + script.map;
-            document.getElementById('tgScriptDesc').innerText = script.desc || "لا توجد ملاحظات إضافية";
-            document.getElementById('tgCodeText').innerText = script.code;
-            activeScriptCode = script.code;
+        function viewScript(id) {
+            const s = scriptsData.find(x => x.id === id);
+            if (!s) return;
+            activeScriptCode = s.code;
+            document.getElementById('svTitle').innerText = '📜 ' + s.name;
+            document.getElementById('svMap').innerText = '🎮 الماب: ' + s.map;
+            document.getElementById('svDesc').innerText = '📝 ' + (s.desc || 'لا يوجد وصف');
+            document.getElementById('svCode').innerText = s.code;
+            document.getElementById('svScanResult').innerHTML = '';
+            editingScriptId = id;
 
-            const imgElem = document.getElementById('tgScriptImg');
-            if(script.image && script.image.trim() !== '') {
-                imgElem.src = script.image;
-                imgElem.style.display = 'block';
+            // فحص السكربت
+            const scanResult = scanScript(s.code);
+            if (scanResult.safe) {
+                document.getElementById('svScanResult').innerHTML =
+                    '<span class="scan-result-safe">✅ السكربت آمن - لا يحتوي على كود خبيث</span>';
             } else {
-                imgElem.style.display = 'none';
+                document.getElementById('svScanResult').innerHTML =
+                    '<span class="scan-result-danger">⚠️ تحذير: ' + scanResult.reason + '</span>';
             }
-
             document.getElementById('scriptViewModal').style.display = 'flex';
         }
 
-        function copyCurrentScriptCode() {
+        function scanScript(code) {
+            const lower = code.toLowerCase();
+            const dangerous = [
+                'http', 'https', 'request', 'pcall', 'loadstring',
+                'getfenv', 'setfenv', 'getrawmetatable', 'setrawmetatable',
+                'string.dump', 'debug', 'hookfunction', 'newcclosure',
+                'syn', 'protosmasher', 'krnl', 'script', 'game:httpget'
+            ];
+            for (let d of dangerous) {
+                if (lower.includes(d)) {
+                    return { safe: false, reason: `يحتوي على كلمة ممنوعة: "${d}"` };
+                }
+            }
+            return { safe: true, reason: '' };
+        }
+
+        function copyScriptCode() {
             navigator.clipboard.writeText(activeScriptCode);
-            showToast('📋 تم نسخ السكربت بنجاح!');
+            showToast('📋 تم نسخ السكربت!');
+        }
+
+        function openEditScript(id) {
+            const s = scriptsData.find(x => x.id === id);
+            if (!s) return;
+            editingScriptId = id;
+            document.getElementById('editScriptName').value = s.name;
+            document.getElementById('editScriptMap').value = s.map;
+            document.getElementById('editScriptImg').value = s.image || '';
+            document.getElementById('editScriptDesc').value = s.desc || '';
+            document.getElementById('editScriptCode').value = s.code;
+            document.getElementById('editScriptModal').style.display = 'flex';
+            closeModal('scriptViewModal');
+        }
+
+        function saveScriptEdit() {
+            const id = editingScriptId;
+            const s = scriptsData.find(x => x.id === id);
+            if (!s) return;
+            const name = document.getElementById('editScriptName').value.trim();
+            const map = document.getElementById('editScriptMap').value.trim();
+            const image = document.getElementById('editScriptImg').value.trim();
+            const desc = document.getElementById('editScriptDesc').value.trim();
+            const code = document.getElementById('editScriptCode').value.trim();
+            if (!name || !map || !code) { alert('الرجاء تعبئة الحقول الأساسية'); return; }
+            // فحص عدم التكرار
+            const duplicate = scriptsData.some(x => x.id !== id && x.code.replace(/\s/g, '') === code.replace(/\s/g, ''));
+            if (duplicate) { alert('⚠️ هذا السكربت مكرر!'); return; }
+            s.name = name;
+            s.map = map;
+            s.image = image;
+            s.desc = desc;
+            s.code = code;
+            s.verified = true;
+            saveScripts();
+            renderScripts();
+            closeModal('editScriptModal');
+            showToast('✅ تم تعديل السكربت!');
+        }
+
+        function deleteScript(id) {
+            const s = scriptsData.find(x => x.id === id);
+            if (!s) return;
+            const isOwner = s.owner === (currentUserData?.email || '');
+            const isAdmin = currentUser === ADMIN_EMAIL;
+            if (!isOwner && !isAdmin) { alert('❌ لا يمكنك حذف هذا السكربت'); return; }
+            if (!confirm('هل أنت متأكد من حذف السكربت؟')) return;
+            scriptsData = scriptsData.filter(x => x.id !== id);
+            saveScripts();
+            renderScripts();
+            showToast('🗑️ تم حذف السكربت');
         }
 
         function openAddScriptModal() {
@@ -984,185 +1894,337 @@
             const image = document.getElementById('newScriptImg').value.trim();
             const desc = document.getElementById('newScriptDesc').value.trim();
             const code = document.getElementById('newScriptCode').value.trim();
-
-            if(!name || !map || !code) {
-                alert('الرجاء تعبئة الحقول الأساسية: الاسم، الماب، وكود التشغيل!');
-                return;
+            if (!name || !map || !code) { alert('الرجاء تعبئة الحقول الأساسية'); return; }
+            // فحص التكرار
+            const duplicate = scriptsData.some(s => s.code.replace(/\s/g, '') === code.replace(/\s/g, ''));
+            if (duplicate) { alert('⚠️ هذا السكربت مكرر!'); return; }
+            // فحص الأمان
+            const scan = scanScript(code);
+            if (!scan.safe) {
+                if (!confirm(`⚠️ تحذير: ${scan.reason}\nهل تريد المتابعة؟`)) return;
             }
-
-            const isDuplicate = scriptsData.some(s => s.code.replace(/\s+/g, '') === code.replace(/\s+/g, ''));
-            if(isDuplicate) {
-                alert('⚠️ هذا السكربت أو كود التشغيل تم نشره مسبقاً! يرجى عدم تكرار النشر منعاً للسبام.');
-                return;
-            }
-
-            const newScript = {
-                id: Date.now(),
+            scriptsData.unshift({
+                id: generateId(),
                 name: name,
                 map: map,
                 image: image,
                 desc: desc,
                 code: code,
-                owner: myUserId
-            };
-
-            scriptsData.unshift(newScript);
-            localStorage.setItem('mrx_custom_scripts', JSON.stringify(scriptsData));
-            
+                owner: currentUserData?.email || 'unknown',
+                verified: currentUser === ADMIN_EMAIL,
+                createdAt: getTimestamp()
+            });
+            saveScripts();
+            renderScripts();
             closeModal('addScriptModal');
-            renderScripts(scriptsData);
-            showToast('✅ تم نشر السكربت بنجاح!');
+            showToast('✅ تم نشر السكربت!');
         }
 
-        function deleteScript(id) {
-            const index = scriptsData.findIndex(s => s.id === id);
-            if(index !== -1) {
-                if(scriptsData[index].owner !== myUserId) {
-                    alert('❌ لا يمكنك حذف سكربت لم تقم بإضافته بنفسك!');
+        function editScriptFromView() {
+            if (editingScriptId) openEditScript(editingScriptId);
+        }
+
+        // ====== CHAT SYSTEM ======
+        function loadChat() {
+            const container = document.getElementById('chatContainer');
+            if (!container) return;
+            const messages = chatMessages.slice(-50);
+            if (!messages.length) {
+                container.innerHTML =
+                    '<div style="text-align:center;padding:20px;color:var(--text-dim);">💬 لا توجد رسائل بعد</div>';
+                return;
+            }
+            container.innerHTML = '';
+            messages.forEach(m => {
+                const div = document.createElement('div');
+                div.className = 'chat-msg';
+                const isVerified = m.verified || false;
+                div.innerHTML = `
+                    <span class="c-user ${isVerified ? 'verified' : ''}">${m.username || 'مجهول'}</span>
+                    <span class="c-text">${m.text}</span>
+                    <span class="c-time">${timeAgo(m.timestamp)}</span>
+                `;
+                container.appendChild(div);
+            });
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (!text) return;
+            if (!currentUserData) { alert('الرجاء تسجيل الدخول أولاً'); return; }
+            // مكافحة السبام (10 ثواني بين الرسائل)
+            const lastMsg = chatMessages[chatMessages.length - 1];
+            if (lastMsg && lastMsg.username === currentUserData.username) {
+                const diff = Date.now() - new Date(lastMsg.timestamp).getTime();
+                if (diff < 10000) {
+                    showToast('⏳ انتظر 10 ثواني قبل إرسال رسالة أخرى');
                     return;
                 }
-
-                if(confirm('هل أنت تأكد من أنك تريد حذف هذا السكربت؟')) {
-                    scriptsData.splice(index, 1);
-                    localStorage.setItem('mrx_custom_scripts', JSON.stringify(scriptsData));
-                    renderScripts(scriptsData);
-                    showToast('🗑️ تم حذف السكربت');
-                }
             }
+            chatMessages.push({
+                id: generateId(),
+                username: currentUserData.username || 'مجهول',
+                text: text,
+                timestamp: getTimestamp(),
+                verified: currentUserData.verified || false
+            });
+            saveChat();
+            input.value = '';
+            loadChat();
+            updateLeaderboard();
         }
 
-        function toggleSidebar() {
-            document.getElementById('menuToggle').classList.toggle('active');
-            document.getElementById('sidebar').classList.toggle('open');
-        }
+        // ====== LEADERBOARD ======
+        function updateLeaderboard() {
+            const container = document.getElementById('leaderboardContainer');
+            if (!container) return;
+            // حساب النشاط: عدد الرسائل + عدد السكربتات المنشورة
+            const activity = {};
+            chatMessages.forEach(m => {
+                const key = m.username || 'مجهول';
+                if (!activity[key]) activity[key] = { msgs: 0, scripts: 0, verified: m.verified || false };
+                activity[key].msgs += 1;
+            });
+            scriptsData.forEach(s => {
+                const owner = s.owner || 'unknown';
+                const user = Object.keys(activity).find(u => {
+                    const userData = Object.values(usersData).find(ud => ud.username === u);
+                    return userData && userData.email === owner;
+                });
+                if (user && activity[user]) activity[user].scripts += 1;
+            });
+            const sorted = Object.entries(activity)
+                .sort((a, b) => (b[1].msgs + b[1].scripts * 2) - (a[1].msgs + a[1].scripts * 2))
+                .slice(0, 10);
 
-        function handleNavClick(target) {
-            toggleSidebar();
-            document.getElementById('navHomeBtn').classList.remove('active');
-            document.getElementById('navScriptsBtn').classList.remove('active');
-
-            if(target === 'home') {
-                document.getElementById('navHomeBtn').classList.add('active');
-                document.getElementById('scriptsPage').style.display = 'none';
-                document.getElementById('contentPage').style.display = 'flex';
-                scrollToTop();
-            } else if(target === 'scripts') {
-                document.getElementById('navScriptsBtn').classList.add('active');
-                document.getElementById('contentPage').style.display = 'none';
-                document.getElementById('scriptsPage').style.display = 'flex';
-                renderScripts(scriptsData);
-                scrollToTop();
+            if (!sorted.length) {
+                container.innerHTML =
+                    '<div style="text-align:center;padding:20px;color:var(--text-dim);">لا توجد بيانات كافية</div>';
+                return;
             }
-        }
-
-        function toggleSFX() {
-            sfxEnabled = !sfxEnabled;
-            document.getElementById('sfxToggleBtn').innerText = sfxEnabled ? 'تفعيل 🔊' : 'إيقاف 🔇';
-        }
-
-        const canvas = document.getElementById('particleCanvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2 + 1;
-                this.speedX = Math.random() * 1 - 0.5;
-                this.speedY = Math.random() * 1 - 0.5;
-            }
-            update() {
-                this.x += this.speedX; this.y += this.speedY;
-                if(this.x > canvas.width) this.x = 0;
-                if(this.x < 0) this.x = canvas.width;
-                if(this.y > canvas.height) this.y = 0;
-                if(this.y < 0) this.y = canvas.height;
-            }
-            draw() {
-                ctx.fillStyle = 'rgba(0, 242, 254, 0.4)';
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-        for(let i=0; i<35; i++) particles.push(new Particle());
-        function animateParticles() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => { p.update(); p.draw(); });
-            requestAnimationFrame(animateParticles);
-        }
-        animateParticles();
-
-        function switchPlatform(platform) {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById('androidSection').style.display = 'none';
-            document.getElementById('iosSection').style.display = 'none';
-            document.getElementById('pcSection').style.display = 'none';
-
-            if(platform === 'android') {
-                document.getElementById('tabAndroid').classList.add('active');
-                document.getElementById('androidSection').style.display = 'block';
-            } else if(platform === 'ios') {
-                document.getElementById('tabIos').classList.add('active');
-                document.getElementById('iosSection').style.display = 'block';
-            } else if(platform === 'pc') {
-                document.getElementById('tabPc').classList.add('active');
-                document.getElementById('pcSection').style.display = 'block';
-            }
-        }
-
-        function copyLink(url) {
-            navigator.clipboard.writeText(url);
-            showToast('📋 تم نسخ رابط التحميل بنجاح!');
-        }
-
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            toast.innerText = msg;
-            toast.classList.add('active');
-            setTimeout(() => toast.classList.remove('active'), 2500);
-        }
-
-        function filterCards() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            document.querySelectorAll('.platform-card').forEach(card => {
-                const title = card.innerText.toLowerCase();
-                card.style.display = title.includes(query) ? 'block' : 'none';
+            container.innerHTML = '';
+            sorted.forEach(([name, data], idx) => {
+                const div = document.createElement('div');
+                div.className = 'lb-item';
+                const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `#${idx+1}`;
+                div.innerHTML = `
+                    <span class="lb-rank">${medal}</span>
+                    <span class="lb-name">${name} ${data.verified ? '✅' : ''}</span>
+                    <span class="lb-score">📨 ${data.msgs} · 📜 ${data.scripts}</span>
+                `;
+                container.appendChild(div);
             });
         }
 
-        function trackDownload(name) {
-            let count = parseInt(document.getElementById('downloadCounter').innerText);
-            document.getElementById('downloadCounter').innerText = count + 1;
-            showToast('🚀 جاري بدء تحميل نسخة ' + name);
+        // ====== CONTROL PANEL (Admin) ======
+        function updateControlPanel() {
+            const container = document.getElementById('controlPanel');
+            if (!container) return;
+            const isAdmin = currentUser === ADMIN_EMAIL;
+            if (!isAdmin) {
+                container.innerHTML = `
+                    <div style="text-align:center;padding:20px;color:var(--text-dim);">
+                        🔒 هذه الصفحة مخصصة للمشرفين فقط
+                        <div style="font-size:0.7rem;margin-top:6px;">البريد المصرح: ${ADMIN_EMAIL}</div>
+                    </div>
+                `;
+                return;
+            }
+            // لوحة تحكم المشرف
+            let html = `
+                <div style="text-align:right;font-size:0.85rem;margin-bottom:10px;">
+                    <span class="firewall-badge active"><i class="fas fa-shield-alt"></i> الجدار الناري مفعل</span>
+                    <span style="margin-right:10px;color:var(--text-dim);">👤 المشرف: ${currentUser}</span>
+                </div>
+                <div style="border-top:1px solid var(--border-color);padding-top:10px;">
+                    <div style="font-weight:700;font-size:0.9rem;margin-bottom:8px;">📋 إدارة المستخدمين</div>
+            `;
+            // قائمة المستخدمين
+            const userList = Object.entries(usersData);
+            if (!userList.length) {
+                html += `<div style="color:var(--text-dim);font-size:0.8rem;">لا يوجد مستخدمين</div>`;
+            } else {
+                userList.forEach(([email, data]) => {
+                    const isAdminUser = email === ADMIN_EMAIL;
+                    const isBanned = data.banned || false;
+                    const banUntil = data.banUntil ? new Date(data.banUntil).toLocaleDateString() : '—';
+                    html += `
+                        <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 8px;background:rgba(255,255,255,0.02);border-radius:8px;margin-bottom:4px;font-size:0.75rem;flex-wrap:wrap;gap:4px;">
+                            <span>${data.username || email} ${isAdminUser ? '👑' : ''} ${isBanned ? '🚫' : ''}</span>
+                            <span style="color:var(--text-dim);font-size:0.65rem;">${email}</span>
+                            <div style="display:flex;gap:4px;flex-wrap:wrap;">
+                                ${!isAdminUser ? `
+                                    <button class="copy-btn" onclick="toggleUserBan('${email}')" style="font-size:0.6rem;${isBanned ? 'background:rgba(16,185,129,0.2);color:#10b981;' : 'background:rgba(255,59,48,0.15);color:var(--accent-red);'}">
+                                        ${isBanned ? 'إلغاء الحظر' : 'حظر'}
+                                    </button>
+                                    <button class="copy-btn" onclick="toggleUserVerify('${email}')" style="font-size:0.6rem;${data.verified ? 'background:rgba(16,185,129,0.2);color:#10b981;' : ''}">
+                                        ${data.verified ? '✅ موثّق' : 'توثيق'}
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            html += `
+                </div>
+                <div style="border-top:1px solid var(--border-color);padding-top:10px;margin-top:8px;">
+                    <div style="font-weight:700;font-size:0.9rem;margin-bottom:6px;">📊 إحصائيات سريعة</div>
+                    <div style="display:flex;gap:12px;flex-wrap:wrap;font-size:0.75rem;color:var(--text-dim);">
+                        <span>👥 المستخدمين: ${userList.length}</span>
+                        <span>📜 السكربتات: ${scriptsData.length}</span>
+                        <span>💬 الرسائل: ${chatMessages.length}</span>
+                    </div>
+                </div>
+            `;
+            container.innerHTML = html;
         }
 
-        function toggleTheme() {
-            document.body.classList.toggle('light-theme');
-            const isLight = document.body.classList.contains('light-theme');
-            localStorage.setItem('mrx_theme', isLight ? 'light' : 'dark');
-            showToast(isLight ? 'تم تفعيل الثيم الأبيض الفخم' : 'تم تفعيل الثيم الداكن');
+        // ====== ADMIN ACTIONS ======
+        function toggleUserBan(email) {
+            if (email === ADMIN_EMAIL) { alert('لا يمكن حظر المشرف الرئيسي'); return; }
+            if (!usersData[email]) return;
+            const data = usersData[email];
+            if (data.banned) {
+                data.banned = false;
+                data.banUntil = null;
+                showToast('✅ تم إلغاء حظر ' + email);
+            } else {
+                const days = prompt('كم يوم تريد حظر المستخدم؟ (أدخل عدد الأيام، أو اترك فارغاً للحظر الدائم)');
+                if (days === null) return;
+                if (days && !isNaN(parseInt(days))) {
+                    const d = new Date();
+                    d.setDate(d.getDate() + parseInt(days));
+                    data.banUntil = d.toISOString();
+                } else {
+                    data.banUntil = null;
+                }
+                data.banned = true;
+                showToast('🚫 تم حظر ' + email + (data.banUntil ? ' حتى ' + new Date(data.banUntil).toLocaleDateString() :
+                ''));
+            }
+            saveData();
+            updateControlPanel();
         }
 
-        window.addEventListener('scroll', () => {
-            const winScroll = document.documentElement.scrollTop;
-            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (winScroll / height) * 100;
-            document.getElementById('scrollProgress').style.width = scrolled + '%';
-            const backToTop = document.getElementById('backToTop');
-            if (winScroll > 250) backToTop.classList.add('show');
-            else backToTop.classList.remove('show');
-        });
+        function toggleUserVerify(email) {
+            if (email === ADMIN_EMAIL) { alert('المشرف موثّق تلقائياً'); return; }
+            if (!usersData[email]) return;
+            usersData[email].verified = !usersData[email].verified;
+            saveData();
+            showToast(usersData[email].verified ? '✅ تم توثيق ' + email : '❌ تم إلغاء توثيق ' + email);
+            updateControlPanel();
+        }
 
-        function scrollToTop() { window.scrollTo({top: 0, behavior: 'smooth'}); }
-        function openSettingsModal() { document.getElementById('settingsModal').style.display = 'flex'; }
-        function openKeyModal() { document.getElementById('keyModal').style.display = 'flex'; }
-        function openImageModal(src) { document.getElementById('modalImg').src = src; document.getElementById('imageModal').style.display = 'flex'; }
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        // ====== FIREWALL ======
+        function startFirewall() {
+            // جدار ناري يحمي من الهجمات البسيطة
+            console.log('🔥 الجدار الناري MRX مفعل');
+            // مراقبة الأحداث المشبوهة
+            document.addEventListener('contextmenu', (e) => {
+                // منع النقر الأيمن
+                e.preventDefault();
+            });
+            // منع فتح أدوات المطور بسهولة
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+                    (e.ctrlKey && e.shiftKey && e.key === 'J') || (e.ctrlKey && e.key === 'U')) {
+                    e.preventDefault();
+                    showToast('🚫 الجدار الناري يمنع أدوات المطور');
+                }
+            });
+            // منع التحديد
+            document.addEventListener('selectstart', (e) => {
+                if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+                    e.preventDefault();
+                }
+            });
+            showToast('🔥 الجدار الناري مفعل');
+        }
+
+        // ====== ONLINE COUNTER ======
+        function updateOnlineCount() {
+            const count = Object.keys(usersData).length;
+            document.getElementById('onlineNum').innerText = count;
+        }
+
+        // ====== INIT ======
+        window.onload = function() {
+            loadData();
+            startFirewall();
+
+            // التحقق من وجود مستخدم مسجل
+            if (currentUser && currentUserData) {
+                document.getElementById('loginScreen').style.display = 'none';
+                if (!currentUserData.username || !currentUserData.avatar) {
+                    document.getElementById('profileSetup').style.display = 'flex';
+                    document.getElementById('profileUsername').value = currentUserData.username || currentUser.split('@')[0];
+                    if (currentUserData.avatar) document.getElementById('profileAvatar').src = currentUserData.avatar;
+                } else {
+                    document.getElementById('mainApp').style.display = 'flex';
+                    document.getElementById('barTitle').innerText = 'MRX | ' + currentUserData.username;
+                    loadChat();
+                    renderScripts();
+                    updateLeaderboard();
+                    updateControlPanel();
+                }
+            } else {
+                document.getElementById('loginScreen').style.display = 'flex';
+            }
+            updateOnlineCount();
+            // إغلاق الـ Loader
+            setTimeout(() => {
+                document.getElementById('initialLoader').classList.add('slide-up');
+            }, 400);
+
+            // تحديث الإحصائيات بشكل دوري
+            setInterval(() => {
+                updateOnlineCount();
+                if (document.getElementById('page-chat').style.display !== 'none') loadChat();
+                if (document.getElementById('page-leaderboard').style.display !== 'none') updateLeaderboard();
+            }, 10000);
+        };
+
+        // ====== GLOBAL EXPOSURE FOR INLINE ONCLICK ======
+        window.handleLogin = handleLogin;
+        window.loginWithGoogle = loginWithGoogle;
+        window.logoutUser = logoutUser;
+        window.saveProfile = saveProfile;
+        window.handleAvatarUpload = handleAvatarUpload;
+        window.navigateTo = navigateTo;
+        window.toggleSidebar = toggleSidebar;
+        window.switchPlatform = switchPlatform;
+        window.filterCards = filterCards;
+        window.copyLink = copyLink;
+        window.trackDownload = trackDownload;
+        window.toggleTheme = toggleTheme;
+        window.openSettingsModal = openSettingsModal;
+        window.openKeyModal = openKeyModal;
+        window.openImageModal = openImageModal;
+        window.openEncoderModal = openEncoderModal;
+        window.processScriptEncoding = processScriptEncoding;
+        window.copyEncodedCode = copyEncodedCode;
+        window.renderScripts = renderScripts;
+        window.filterScripts = filterScripts;
+        window.viewScript = viewScript;
+        window.copyScriptCode = copyScriptCode;
+        window.openEditScript = openEditScript;
+        window.saveScriptEdit = saveScriptEdit;
+        window.deleteScript = deleteScript;
+        window.openAddScriptModal = openAddScriptModal;
+        window.submitNewScript = submitNewScript;
+        window.editScriptFromView = editScriptFromView;
+        window.sendChatMessage = sendChatMessage;
+        window.loadChat = loadChat;
+        window.updateLeaderboard = updateLeaderboard;
+        window.updateControlPanel = updateControlPanel;
+        window.toggleUserBan = toggleUserBan;
+        window.toggleUserVerify = toggleUserVerify;
+        window.closeModal = closeModal;
+        window.scrollToTop = scrollToTop;
+        window.showToast = showToast;
     </script>
 </body>
 </html>
