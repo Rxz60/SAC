@@ -1,76 +1,228 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>مولد ونسخ روابط التحميل المباشرة</title>
-  <style>
-    body { font-family: sans-serif; background: #121212; color: #fff; padding: 20px; text-align: center; }
-    .box { border: 2px dashed #444; padding: 20px; margin: 20px auto; max-width: 550px; background: #1e1e1e; border-radius: 8px; }
-    input[type="text"] { width: 70%; padding: 8px; background: #2a2a2a; border: 1px solid #444; color: #fff; border-radius: 4px; }
-    .file-item { background: #2a2a2a; padding: 12px; margin: 10px 0; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; }
-    button { padding: 8px 14px; border-radius: 4px; border: none; cursor: pointer; font-weight: bold; }
-    .btn-copy { background: #4CAF50; color: white; margin-left: 5px; }
-    .btn-del { background: #f44336; color: white; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مركز رفع وتوليد روابط التحميل Direct Link</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent-color: #3b82f6;
+            --accent-hover: #2563eb;
+            --text-color: #f8fafc;
+            --text-secondary: #94a3b8;
+            --danger-color: #ef4444;
+            --border-color: #334155;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 650px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        h2 {
+            margin-top: 0;
+            text-align: center;
+            color: var(--text-color);
+        }
+
+        .drop-zone {
+            border: 2px dashed var(--accent-color);
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            margin-bottom: 20px;
+        }
+
+        .drop-zone:hover {
+            background-color: rgba(59, 130, 246, 0.05);
+        }
+
+        .drop-zone input {
+            display: none;
+        }
+
+        .files-list {
+            margin-top: 20px;
+        }
+
+        .file-item {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .file-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .file-name {
+            font-weight: bold;
+            word-break: break-all;
+        }
+
+        .file-size {
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        button {
+            border: none;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 13px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: opacity 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .btn-copy {
+            background-color: var(--accent-color);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-delete {
+            background-color: var(--danger-color);
+            color: white;
+        }
+    </style>
 </head>
 <body>
 
-  <h2>إضافة رابط ملف ونسخه بسهولة</h2>
+<div class="container">
+    <h2>مركز رفع الملفات ورابط التحميل المباشر</h2>
+    
+    <div class="drop-zone" onclick="document.getElementById('fileInput').click()">
+        <div>اضغط هنا لإختيار ملف لرفعه والحصول على رابط مباشر</div>
+        <input type="file" id="fileInput" onchange="handleFileUpload(this.files)">
+    </div>
 
-  <div class="box">
-    <input type="text" id="fileUrl" placeholder="ضع رابط الملف هنا (مثال: من Mega أو Gofile)">
-    <button onclick="addLink()" style="background: #008cba; color: white;">إضافة الملف</button>
-  </div>
+    <div class="files-list" id="filesList"></div>
+</div>
 
-  <div id="linksList" style="max-width: 550px; margin: 0 auto;"></div>
+<script>
+    let db;
+    const request = indexedDB.open("DirectDownloadDB", 1);
 
-  <script>
-    function displayLinks() {
-      const list = document.getElementById('linksList');
-      list.innerHTML = '';
-      const stored = JSON.parse(localStorage.getItem('my_direct_links') || '[]');
-      
-      stored.forEach((item, index) => {
-        const div = document.createElement('div');
-        div.className = 'file-item';
-        div.innerHTML = `
-          <span style="word-break: break-all; max-width: 60%;">${item.url}</span>
-          <div>
-            <button class="btn-copy" onclick="copyToClipboard('${item.url}')">نسخ الرابط</button>
-            <button class="btn-del" onclick="deleteLink(${index})">حذف</button>
-          </div>
-        `;
-        list.appendChild(div);
-      });
+    request.onupgradeneeded = function(e) {
+        db = e.target.result;
+        if (!db.objectStoreNames.contains("files")) {
+            db.createObjectStore("files", { keyPath: "id", autoIncrement: true });
+        }
+    };
+
+    request.onsuccess = function(e) {
+        db = e.target.result;
+        loadStoredFiles();
+    };
+
+    function handleFileUpload(files) {
+        if (!files.length) return;
+        const file = files[0];
+
+        const tx = db.transaction("files", "readwrite");
+        const store = tx.objectStore("files");
+
+        const record = {
+            name: file.name,
+            size: file.size,
+            type: file.type,
+            data: file
+        };
+
+        store.add(record);
+
+        tx.oncomplete = function() {
+            loadStoredFiles();
+        };
     }
 
-    function addLink() {
-      const input = document.getElementById('fileUrl');
-      const url = input.value.trim();
-      if (!url) return;
+    function loadStoredFiles() {
+        const listContainer = document.getElementById("filesList");
+        listContainer.innerHTML = "";
 
-      const stored = JSON.parse(localStorage.getItem('my_direct_links') || '[]');
-      stored.push({ url: url });
-      localStorage.setItem('my_direct_links', JSON.stringify(stored));
-      input.value = '';
-      displayLinks();
+        const tx = db.transaction("files", "readonly");
+        const store = tx.objectStore("files");
+        const request = store.openCursor();
+
+        request.onsuccess = function(e) {
+            const cursor = e.target.result;
+            if (cursor) {
+                const item = cursor.value;
+                const fileUrl = URL.createObjectURL(item.data);
+
+                const fileElement = document.createElement("div");
+                fileElement.className = "file-item";
+                fileElement.innerHTML = `
+                    <div class="file-info">
+                        <span class="file-name">${item.name}</span>
+                        <span class="file-size">${(item.size / (1024 * 1024)).toFixed(2)} MB</span>
+                    </div>
+                    <div class="actions">
+                        <button class="btn-copy" onclick="copyLink('${fileUrl}')">نسخ رابط التحميل المباشر</button>
+                        <button class="btn-delete" onclick="deleteFile(${item.id})">حذف</button>
+                    </div>
+                `;
+                listContainer.appendChild(fileElement);
+                cursor.continue();
+            }
+        };
     }
 
-    function copyToClipboard(text) {
-      navigator.clipboard.writeText(text).then(() => {
-        alert('تم نسخ الرابط بنجاح!');
-      });
+    function copyLink(url) {
+        navigator.clipboard.writeText(url).then(() => {
+            alert("تم نسخ رابط التحميل المباشر بنجاح!");
+        });
     }
 
-    function deleteLink(index) {
-      const stored = JSON.parse(localStorage.getItem('my_direct_links') || '[]');
-      stored.splice(index, 1);
-      localStorage.setItem('my_direct_links', JSON.stringify(stored));
-      displayLinks();
+    function deleteFile(id) {
+        const tx = db.transaction("files", "readwrite");
+        const store = tx.objectStore("files");
+        store.delete(id);
+        tx.oncomplete = function() {
+            loadStoredFiles();
+        };
     }
-
-    displayLinks();
-  </script>
+</script>
 
 </body>
 </html>
