@@ -1,14 +1,14 @@
-ث<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>نور · ويب هوك تلقائي</title>
+<title>MRX · ويب هوك مهاجم</title>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#0b0a12;--card:rgba(18,16,30,0.88);--gold:#d4a853;--gold-light:#f0d080;--primary:#8b5cf6;--accent:#00f2fe;--hi:#f0ece4;--mid:#a09988;--lo:#4a4458;--border:rgba(212,168,83,0.15);--shadow:0 20px 40px rgba(0,0,0,0.6);--tr:all 0.3s cubic-bezier(0.4,0,0.2,1)}
+:root{--bg:#0b0a12;--card:rgba(18,16,30,0.88);--gold:#d4a853;--primary:#8b5cf6;--accent:#00f2fe;--hi:#f0ece4;--mid:#a09988;--lo:#4a4458;--border:rgba(212,168,83,0.15);--shadow:0 20px 40px rgba(0,0,0,0.6)}
 body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--hi);min-height:100vh;overflow-x:hidden}
 .bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 100% 70% at 20% 10%,rgba(212,168,83,0.06) 0%,transparent 60%),radial-gradient(ellipse 80% 60% at 80% 90%,rgba(139,92,246,0.05) 0%,transparent 60%),var(--bg)}
 .stars{position:fixed;inset:0;z-index:0;pointer-events:none}
@@ -16,39 +16,45 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--hi);min-h
 @keyframes twinkle{0%,100%{opacity:0;transform:scale(0.4)}50%{opacity:var(--op,0.5);transform:scale(1)}}
 .orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(80px);animation:drift var(--dt,14s) ease infinite alternate}
 @keyframes drift{from{transform:translate(0,0) scale(1)}to{transform:translate(var(--tx,40px), var(--ty,30px)) scale(var(--sc,1.1))}}
-.container{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:20px 16px 40px}
+.container{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:20px 16px 40px}
 .header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;background:var(--card);backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:60px;padding:12px 24px;margin-bottom:28px;box-shadow:var(--shadow)}
-.header .brand{font-weight:900;font-size:1.4rem;background:linear-gradient(135deg,var(--gold),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .brand{font-weight:900;font-size:1.3rem;background:linear-gradient(135deg,var(--gold),#f0d080);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .header .brand i{color:var(--gold);margin-left:8px}
-.status-badge{display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--mid)}
-.status-dot{width:8px;height:8px;border-radius:50%;background:#4ade80;box-shadow:0 0 10px rgba(74,222,128,0.6);animation:pulse-dot 1.8s ease infinite}
+.status-dot{width:8px;height:8px;border-radius:50%;background:#4ade80;box-shadow:0 0 10px rgba(74,222,128,0.6);display:inline-block;animation:pulse-dot 1.8s ease infinite}
 @keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.8)}}
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 @media(max-width:700px){.grid-2{grid-template-columns:1fr}}
-.card{background:var(--card);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:28px;padding:24px 22px;box-shadow:var(--shadow);transition:var(--tr)}
+.card{background:var(--card);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:28px;padding:22px 20px;box-shadow:var(--shadow);transition:all 0.3s}
 .card:hover{border-color:rgba(212,168,83,0.25)}
-.card-title{font-size:1.1rem;font-weight:900;display:flex;align-items:center;gap:10px;margin-bottom:16px;color:var(--gold-light)}
+.card-title{font-size:1rem;font-weight:900;display:flex;align-items:center;gap:10px;margin-bottom:14px;color:#f0d080}
 .card-title i{color:var(--gold)}
-.webhook-log{background:rgba(0,0,0,0.3);border-radius:16px;padding:12px;max-height:200px;overflow-y:auto;font-size:.75rem;color:var(--mid);border:1px solid var(--border);margin-top:12px;direction:ltr;text-align:left;font-family:'Courier New',monospace}
-.webhook-log .log-entry{padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.03)}
-.webhook-log .log-entry .time{color:var(--gold)}
-.webhook-log .log-entry .status-ok{color:#4ade80}
-.webhook-log .log-entry .status-fail{color:#f87171}
-.call-list{display:flex;flex-direction:column;gap:8px;max-height:250px;overflow-y:auto}
-.call-item{display:flex;align-items:center;gap:12px;padding:10px 14px;background:rgba(0,0,0,0.2);border-radius:14px;border:1px solid var(--border);transition:var(--tr)}
-.call-item:hover{border-color:rgba(212,168,83,0.3)}
-.call-item .call-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(212,168,83,0.15);color:var(--gold);font-size:1rem}
-.call-item .call-info{flex:1}
-.call-item .call-info .number{font-weight:800;font-size:.9rem}
-.call-item .call-info .meta{font-size:.7rem;color:var(--mid)}
-.call-item .call-audio{color:var(--accent);cursor:pointer;font-size:.8rem}
-.call-item .call-audio:hover{color:#fff}
-.quran-display{background:rgba(0,0,0,0.3);border-radius:16px;padding:16px;border-right:4px solid var(--gold);margin:10px 0}
-.quran-display .ayah{font-size:1.2rem;line-height:1.8;color:var(--hi);font-weight:700}
-.quran-display .surah{font-size:.8rem;color:var(--gold);margin-top:6px}
-.image-preview{width:100%;max-height:200px;object-fit:cover;border-radius:14px;border:1px solid var(--border);margin-top:10px}
-.footer{text-align:center;color:var(--lo);font-size:.7rem;padding:20px 0 0;border-top:1px solid var(--border);margin-top:30px}
-.watermark{position:fixed;bottom:12px;left:16px;color:rgba(255,255,255,0.02);font-size:.6rem;letter-spacing:2px;z-index:0;pointer-events:none}
+.form-group{margin-bottom:12px;text-align:right}
+.form-group label{display:block;font-size:.8rem;font-weight:700;color:var(--mid);margin-bottom:3px}
+.form-group input{width:100%;padding:10px 14px;border-radius:14px;border:1px solid var(--border);background:rgba(0,0,0,0.3);color:var(--hi);font-size:.9rem;font-family:'Tajawal',sans-serif;transition:all 0.3s;text-align:right}
+.form-group input:focus{border-color:var(--gold);outline:none}
+.btn{padding:10px 24px;border:none;border-radius:60px;font-weight:900;font-size:.85rem;cursor:pointer;transition:all 0.3s;font-family:'Tajawal',sans-serif;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:linear-gradient(135deg,var(--gold),#b8923a);color:#0b0a12;box-shadow:0 4px 20px rgba(212,168,83,0.25)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(212,168,83,0.4)}
+.btn-danger{background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;box-shadow:0 4px 20px rgba(239,68,68,0.25)}
+.btn-danger:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(239,68,68,0.4)}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--hi)}
+.btn-outline:hover{background:rgba(255,255,255,0.04);border-color:var(--gold)}
+.log-box{background:rgba(0,0,0,0.3);border-radius:14px;padding:10px;max-height:180px;overflow-y:auto;font-size:.7rem;color:var(--mid);border:1px solid var(--border);margin-top:10px;direction:ltr;text-align:left;font-family:'Courier New',monospace}
+.log-box .entry{padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.03)}
+.log-box .entry .t{color:var(--gold)}
+.log-box .entry .ok{color:#4ade80}
+.log-box .entry .fail{color:#f87171}
+.log-box .entry .attack{color:#fbbf24}
+.attack-item{display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(0,0,0,0.2);border-radius:12px;border:1px solid var(--border);margin-bottom:6px}
+.attack-item .ip{font-weight:800;color:var(--gold)}
+.attack-item .status{font-size:.7rem;color:var(--mid)}
+.attack-item .status.done{color:#4ade80}
+.attack-item .status.running{color:#fbbf24}
+.preview-box{background:rgba(0,0,0,0.2);border-radius:14px;padding:14px;border-right:3px solid var(--gold);margin-top:8px}
+.preview-box .msg{font-size:1rem;color:var(--hi)}
+.preview-box .sub{font-size:.75rem;color:var(--mid);margin-top:4px}
+.watermark{position:fixed;bottom:12px;left:16px;color:rgba(255,255,255,0.02);font-size:.6rem;z-index:0}
+.footer{text-align:center;color:var(--lo);font-size:.65rem;padding:16px 0 0;border-top:1px solid var(--border);margin-top:24px}
 ::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--gold);border-radius:10px}
@@ -61,276 +67,244 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--hi);min-h
 <div class="orb" style="width:400px;height:400px;bottom:-80px;left:-80px;background:radial-gradient(circle,rgba(139,92,246,0.05),transparent 70%);--dt:16s;--tx:-50px;--ty:-30px;--sc:1.08"></div>
 <div class="container">
 <div class="header">
-<div class="brand"><i class="fa-solid fa-mosque"></i> نور · ويب هوك تلقائي</div>
-<div class="status-badge">
-<span class="status-dot"></span>
-<span id="statusLabel">يعمل</span>
-<span style="color:var(--mid);margin:0 4px;">|</span>
-<span id="nextSendLabel">الإرسال: <span id="nextSendTime">—</span></span>
-</div>
+<div class="brand"><i class="fa-solid fa-skull"></i> MRX · ويب هوك</div>
+<div><span class="status-dot"></span> <span style="color:var(--mid);font-size:.75rem;">يعمل</span></div>
 </div>
 <div class="grid-2">
 <div>
 <div class="card">
-<div class="card-title"><i class="fa-solid fa-clock"></i> الإرسال التلقائي</div>
-<div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
-<span style="color:var(--mid);">الحالة: <span id="autoStatus" style="color:#4ade80;">يعمل 🔄</span></span>
-<span style="color:var(--mid);">عدد الإرسالات: <span id="sentCount" style="color:var(--gold);">0</span></span>
+<div class="card-title"><i class="fa-solid fa-bullseye"></i> هجوم IP</div>
+<div class="form-group"><label>🎯 أدخل IP الهدف</label><input type="text" id="targetIp" placeholder="مثال: 192.168.1.100"></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;">
+<button class="btn btn-danger" id="attackBtn"><i class="fa-solid fa-bomb"></i> شن هجوم</button>
+<button class="btn btn-outline" id="stopAttackBtn"><i class="fa-solid fa-stop"></i> إيقاف</button>
 </div>
-<div style="font-size:.8rem;color:var(--lo);">
-<i class="fa-solid fa-info-circle"></i> يتم الإرسال كل ساعة إلى الـ Webhook المحدد في البرمجة.
+<div id="attackLog" class="log-box"><div class="entry"><span class="t">[—]</span> <span class="ok">في انتظار الأوامر</span></div></div>
+<div id="attackList" style="margin-top:8px;"></div>
 </div>
-<div id="logContainer" class="webhook-log">
-<div class="log-entry"><span class="time">[—]</span> <span class="status-ok">الانتظار...</span></div>
+<div class="card" style="margin-top:16px;">
+<div class="card-title"><i class="fa-solid fa-clock"></i> إرسال ويب هوك تلقائي</div>
+<div class="form-group"><label>⏱️ الفترة بالثواني</label><input type="number" id="intervalSec" value="5" min="1" max="60"></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;">
+<button class="btn btn-primary" id="startWebhookBtn"><i class="fa-solid fa-play"></i> بدء الإرسال</button>
+<button class="btn btn-outline" id="stopWebhookBtn"><i class="fa-solid fa-stop"></i> إيقاف</button>
 </div>
+<div style="display:flex;justify-content:space-between;font-size:.7rem;color:var(--mid);margin-top:6px;">
+<span>📨 عدد الإرسالات: <span id="sendCount" style="color:var(--gold);">0</span></span>
+<span>⏳ التالي: <span id="nextSend">—</span></span>
 </div>
-<div class="card" style="margin-top:20px;">
-<div class="card-title"><i class="fa-solid fa-phone"></i> المكالمات الهاتفية والتسجيلات</div>
-<div class="call-list" id="callList"></div>
-</div>
-<div class="card" style="margin-top:20px;">
-<div class="card-title"><i class="fa-solid fa-network-wired"></i> هجمات IP والمراقبة</div>
-<div class="call-list" id="attackList"></div>
 </div>
 </div>
 <div>
 <div class="card">
-<div class="card-title"><i class="fa-solid fa-quran"></i> آخر ما تم إرساله</div>
-<div id="previewContainer">
-<div class="quran-display">
-<div class="ayah" id="ayahText">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
-<div class="surah" id="surahText">—</div>
+<div class="card-title"><i class="fa-solid fa-receipt"></i> آخر رسالة مرسلة</div>
+<div class="preview-box">
+<div class="msg" id="lastMsg">—</div>
+<div class="sub" id="lastSub">—</div>
 </div>
-<img id="imagePreview" class="image-preview" src="https://picsum.photos/seed/1/400/200" alt="صورة">
-<div style="font-size:.8rem;color:var(--mid);margin-top:8px;" id="extraInfo"></div>
-</div>
-</div>
-<div class="card" style="margin-top:20px;">
-<div class="card-title"><i class="fa-solid fa-info-circle"></i> معلومات</div>
-<div style="font-size:.85rem;color:var(--mid);line-height:1.8;">
-<p>🔗 رابط Webhook مضمن في البرمجة (يمكنك تعديله في الكود).</p>
-<p>⏰ يتم الإرسال تلقائياً كل ساعة دون أي تدخل.</p>
-<p>📦 المحتوى: آية قرآنية + صورة عشوائية أو تذكير إيماني.</p>
+<div id="webhookLog" class="log-box"><div class="entry"><span class="t">[—]</span> <span class="ok">جاري التجهيز...</span></div></div>
 </div>
 </div>
 </div>
+<div class="footer">© MRX 2026 — ويب هوك مهاجم</div>
 </div>
-<div class="footer">© نور · ويب هوك تلقائي 2026 — جميع الحقوق محفوظة</div>
-</div>
-<div class="watermark">نور · 2026</div>
+<div class="watermark">MRX · 2026</div>
 <script>
 (function(){
+// ============================================================
+//  🎯 ضع رابط ويب هوك هنا
+// ============================================================
+const WEBHOOK_URL = "https://discord.com/api/webhooks/ضع_رابطك_هنا";
+// ============================================================
 
-const WEBHOOK_URL = "https://discord.com/api/webhooks/1545072432522723339/K01Kx-FYbVsafO6irjqFzWnXkuOGwkQa1vTBu28k2Z4T5L8VYuiWoC55-TDjYp0EVLY0";
-
-const logContainer=document.getElementById('logContainer');
-const ayahText=document.getElementById('ayahText');
-const surahText=document.getElementById('surahText');
-const imagePreview=document.getElementById('imagePreview');
-const extraInfo=document.getElementById('extraInfo');
-const autoStatus=document.getElementById('autoStatus');
-const sentCountSpan=document.getElementById('sentCount');
-const nextSendTime=document.getElementById('nextSendTime');
-const callList=document.getElementById('callList');
+const targetIp=document.getElementById('targetIp');
+const attackBtn=document.getElementById('attackBtn');
+const stopAttackBtn=document.getElementById('stopAttackBtn');
+const attackLog=document.getElementById('attackLog');
 const attackList=document.getElementById('attackList');
+const intervalSec=document.getElementById('intervalSec');
+const startWebhookBtn=document.getElementById('startWebhookBtn');
+const stopWebhookBtn=document.getElementById('stopWebhookBtn');
+const sendCountSpan=document.getElementById('sendCount');
+const nextSendSpan=document.getElementById('nextSend');
+const lastMsg=document.getElementById('lastMsg');
+const lastSub=document.getElementById('lastSub');
+const webhookLog=document.getElementById('webhookLog');
 
-let sentCount=0;
-let intervalId=null;
+let attackInterval=null;
+let webhookInterval=null;
+let sendCount=0;
+let isAttacking=false;
+let attackTargets=[];
 
-const calls=[
-{number:'+966 50 123 4567',time:'قبل 5 دقائق',duration:'3:12',audio:'تسجيل_1.mp3'},
-{number:'+966 55 987 6543',time:'قبل 23 دقيقة',duration:'1:45',audio:'تسجيل_2.mp3'},
-{number:'+966 53 111 2222',time:'قبل ساعة',duration:'5:03',audio:'تسجيل_3.mp3'},
-{number:'+966 59 444 5555',time:'قبل 3 ساعات',duration:'2:30',audio:'تسجيل_4.mp3'},
-{number:'+966 50 777 8888',time:'قبل 6 ساعات',duration:'0:59',audio:'تسجيل_5.mp3'},
-];
-
-const attacks=[
-{ip:'192.168.1.100',type:'SYN Flood',time:'قبل 2 دقيقة',status:'مصدوم'},
-{ip:'10.0.0.45',type:'DDoS',time:'قبل 18 دقيقة',status:'مراقب'},
-{ip:'172.16.0.5',type:'منفذ 445',time:'قبل ساعة',status:'محظور'},
-{ip:'192.168.0.250',type:'هجوم SQL',time:'قبل 3 ساعات',status:'تم التصدي'},
-{ip:'10.0.1.20',type:'اختراق محاولة',time:'قبل 5 ساعات',status:'محظور مؤقت'},
-];
-
-function log(msg,type='info'){
+function log(el,msg,type='info'){
 const entry=document.createElement('div');
-entry.className='log-entry';
+entry.className='entry';
 const time=new Date().toLocaleTimeString('ar-EG');
-const statusClass=type==='ok'?'status-ok':type==='fail'?'status-fail':'';
-entry.innerHTML='<span class="time">['+time+']</span> <span class="'+statusClass+'">'+msg+'</span>';
-logContainer.prepend(entry);
-if(logContainer.children.length>50)logContainer.removeChild(logContainer.lastChild);
+const cls=type==='ok'?'ok':type==='fail'?'fail':type==='attack'?'attack':'';
+entry.innerHTML='<span class="t">['+time+']</span> <span class="'+cls+'">'+msg+'</span>';
+el.prepend(entry);
+if(el.children.length>30)el.removeChild(el.lastChild);
 }
 
-function updateNextSendTime(){
+function updateNextSend(){
+if(webhookInterval){
 const now=new Date();
-const next=new Date(now.getTime()+3600000);
-nextSendTime.textContent=next.toLocaleTimeString('ar-EG');
-}
-
-async function fetchRandomAyah(){
-try{
-const res=await fetch('https://api.alquran.cloud/v1/ayah/random');
-const data=await res.json();
-if(data.code===200){
-return{text:data.data.text,surah:data.data.surah.name,number:data.data.numberInSurah,englishName:data.data.surah.englishName};
-}
-throw new Error('فشل جلب الآية');
-}catch(e){
-log('⚠️ فشل جلب الآية: '+e.message,'fail');
-return null;
-}
-}
-
-function getRandomImage(){
-const seed=Math.floor(Math.random()*1000);
-return 'https://picsum.photos/seed/'+seed+'/600/300';
-}
-
-function getRandomReminder(){
-const reminders=[
-'سبحان الله وبحمده، سبحان الله العظيم',
-'لا إله إلا الله وحده لا شريك له، له الملك وله الحمد',
-'اللهم صل على محمد وعلى آل محمد',
-'اللهم اجعلنا من أهل القرآن الذين هم أهلك وخاصتك',
-'الذكرى تنفع المؤمنين',
-'خيركم من تعلم القرآن وعلمه',
-'اللهم إني أسألك علماً نافعاً ورزقاً طيباً وعملاً متقبلاً',
-];
-return reminders[Math.floor(Math.random()*reminders.length)];
-}
-
-async function buildMessage(){
-const type=['quran','hadith','reminder'][Math.floor(Math.random()*3)];
-let content='';
-let embed={};
-if(type==='quran'){
-const ayah=await fetchRandomAyah();
-if(ayah){
-content='🕌 '+ayah.surah+' — الآية '+ayah.number;
-embed={title:'آية قرآنية',description:ayah.text,color:0xd4a853,footer:{text:'سورة '+ayah.surah+' ('+ayah.englishName+')'},image:{url:getRandomImage()}};
+const sec=parseInt(intervalSec.value)||5;
+const next=new Date(now.getTime()+sec*1000);
+nextSendSpan.textContent=next.toLocaleTimeString('ar-EG');
 }else{
-content='سبحان الله وبحمده';
-embed={title:'تذكير',description:content,color:0xd4a853};
+nextSendSpan.textContent='—';
 }
-}else if(type==='hadith'){
-const hadith=getRandomReminder();
-content='📖 حديث نبوي';
-embed={title:'حديث شريف',description:hadith,color:0x00f2fe,image:{url:getRandomImage()}};
-}else{
-const reminder=getRandomReminder();
-content='🌟 تذكير إيماني';
-embed={title:'تذكير',description:reminder,color:0x8b5cf6,image:{url:getRandomImage()}};
-}
-return{content,embed};
 }
 
-async function sendToWebhook(){
+async function sendWebhook(){
 if(!WEBHOOK_URL || WEBHOOK_URL.includes('ضع_رابطك_هنا')){
-log('❌ الرجاء تعيين WEBHOOK_URL في الكود','fail');
+log(webhookLog,'⚠️ عدل WEBHOOK_URL في الكود','fail');
 return false;
 }
+const msgs=[
+'🔥 تم شن هجوم على الهدف',
+'💀 نظام الحماية تم اختراقه',
+'⚡ تقدم الهجوم 100%',
+'🔓 تم فتح الثغرة بنجاح',
+'📡 بيانات الهدف تم سحبها',
+'🚀 هجوم ناجح بفعالية',
+];
+const randomMsg=msgs[Math.floor(Math.random()*msgs.length)];
+const payload={
+content: randomMsg + ' | MRX Webhook',
+embeds:[{
+title:'🔥 هجوم ناجح',
+description:'تم تنفيذ الهجوم على الهدف المحدد',
+color:0xd4a853,
+footer:{text:'MRX · 2026'},
+timestamp:new Date().toISOString()
+}]
+};
 try{
-const{content,embed}=await buildMessage();
-const payload={content:content,embeds:[embed]};
 const res=await fetch(WEBHOOK_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
 if(res.ok){
-log('✅ تم الإرسال بنجاح','ok');
-ayahText.textContent=embed.description||content;
-surahText.textContent=embed.footer?.text||'—';
-extraInfo.textContent=embed.title||'';
-if(embed.image?.url)imagePreview.src=embed.image.url;
-sentCount++;
-sentCountSpan.textContent=sentCount;
+sendCount++;
+sendCountSpan.textContent=sendCount;
+lastMsg.textContent=randomMsg;
+lastSub.textContent= new Date().toLocaleString('ar-EG');
+log(webhookLog,'✅ تم الإرسال ('+sendCount+')','ok');
 return true;
 }else{
-log('❌ فشل الإرسال ('+res.status+')','fail');
+log(webhookLog,'❌ فشل ('+res.status+')','fail');
 return false;
 }
 }catch(e){
-log('❌ خطأ: '+e.message,'fail');
+log(webhookLog,'❌ خطأ: '+e.message,'fail');
 return false;
 }
 }
 
-function startAutoSend(){
-if(intervalId)clearInterval(intervalId);
-autoStatus.textContent='يعمل 🔄';
-autoStatus.style.color='#4ade80';
-log('▶️ بدء الإرسال التلقائي كل ساعة','ok');
-updateNextSendTime();
-sendToWebhook();
-intervalId=setInterval(function(){
-sendToWebhook();
-updateNextSendTime();
-},3600000);
+function startWebhookLoop(){
+if(webhookInterval){clearInterval(webhookInterval);webhookInterval=null;}
+const sec=parseInt(intervalSec.value)||5;
+if(sec<1){alert('الفترة يجب أن تكون 1 ثانية على الأقل');return;}
+log(webhookLog,'▶️ بدء الإرسال كل '+sec+' ثانية','ok');
+sendWebhook();
+webhookInterval=setInterval(function(){
+sendWebhook();
+updateNextSend();
+},sec*1000);
+updateNextSend();
+startWebhookBtn.disabled=true;
+stopWebhookBtn.disabled=false;
 }
 
-function renderCalls(){
-callList.innerHTML='';
-calls.forEach(function(call){
-const item=document.createElement('div');
-item.className='call-item';
-item.innerHTML='<div class="call-icon"><i class="fa-solid fa-phone"></i></div><div class="call-info"><div class="number">'+call.number+'</div><div class="meta">'+call.time+' · '+call.duration+'</div></div><div class="call-audio" onclick="alert(\'تشغيل تسجيل: '+call.audio+'\')"><i class="fa-solid fa-play"></i> استماع</div>';
-callList.appendChild(item);
-});
+function stopWebhookLoop(){
+if(webhookInterval){clearInterval(webhookInterval);webhookInterval=null;}
+log(webhookLog,'⏹ توقف الإرسال','info');
+nextSendSpan.textContent='—';
+startWebhookBtn.disabled=false;
+stopWebhookBtn.disabled=true;
 }
 
-function renderAttacks(){
+function attackIP(ip){
+if(!ip){log(attackLog,'❌ أدخل IP أولاً','fail');return;}
+if(isAttacking){log(attackLog,'⚠️ هجوم قيد التنفيذ','fail');return;}
+if(attackInterval){clearInterval(attackInterval);attackInterval=null;}
+isAttacking=true;
+attackBtn.disabled=true;
+stopAttackBtn.disabled=false;
+const target={ip:ip,start:Date.now(),status:'running'};
+attackTargets.unshift(target);
+renderAttackList();
+log(attackLog,'🔥 بدء الهجوم على '+ip,'attack');
+let counter=0;
+attackInterval=setInterval(function(){
+counter++;
+const statuses=['🔍 فحص المنافذ...','📡 إرسال حزم SYN...','⚡ اختراق جدار الحماية...','💀 اختراق قاعدة البيانات...','✅ هجوم ناجح 100%'];
+const st=statuses[counter%statuses.length];
+log(attackLog,'['+counter+'] '+ip+' → '+st,'attack');
+if(counter>=20){
+clearInterval(attackInterval);
+attackInterval=null;
+isAttacking=false;
+attackBtn.disabled=false;
+stopAttackBtn.disabled=true;
+target.status='done';
+target.end=Date.now();
+renderAttackList();
+log(attackLog,'✅ اكتمل الهجوم على '+ip,'ok');
+sendWebhook();
+}
+},300);
+}
+
+function stopAttack(){
+if(attackInterval){clearInterval(attackInterval);attackInterval=null;}
+isAttacking=false;
+attackBtn.disabled=false;
+stopAttackBtn.disabled=true;
+log(attackLog,'⏹ تم إيقاف الهجوم','info');
+if(attackTargets.length>0 && attackTargets[0].status==='running'){
+attackTargets[0].status='stopped';
+renderAttackList();
+}
+}
+
+function renderAttackList(){
 attackList.innerHTML='';
-attacks.forEach(function(atk){
-const item=document.createElement('div');
-item.className='call-item';
-item.innerHTML='<div class="call-icon"><i class="fa-solid fa-shield-halved"></i></div><div class="call-info"><div class="number" style="color:var(--red);">'+atk.ip+'</div><div class="meta">'+atk.type+' · '+atk.time+' · '+atk.status+'</div></div>';
-attackList.appendChild(item);
+attackTargets.slice(0,5).forEach(function(t){
+const div=document.createElement('div');
+div.className='attack-item';
+const statusText=t.status==='running'?'جاري 🔄':t.status==='done'?'✅ مكتمل':t.status==='stopped'?'⏹ متوقف':'';
+const cls=t.status==='running'?'running':t.status==='done'?'done':'';
+div.innerHTML='<span class="ip">'+t.ip+'</span> <span class="status '+cls+'">'+statusText+'</span>';
+attackList.appendChild(div);
 });
-}
-
-function updateCallsPeriodically(){
-setInterval(function(){
-calls.forEach(function(call){
-const mins=Math.floor(Math.random()*60);
-const hrs=Math.floor(Math.random()*6);
-if(hrs>0)call.time='قبل '+hrs+' ساعة';
-else if(mins>0)call.time='قبل '+mins+' دقيقة';
-else call.time='الآن';
-});
-renderCalls();
-},15000);
-}
-
-function updateAttacksPeriodically(){
-setInterval(function(){
-attacks.forEach(function(atk){
-const times=['قبل دقيقة','قبل 5 دقائق','قبل 12 دقيقة','قبل ساعة','قبل 3 ساعات','قبل 6 ساعات'];
-atk.time=times[Math.floor(Math.random()*times.length)];
-const statuses=['مراقب','محظور','تم التصدي','محظور مؤقت','تحليل'];
-atk.status=statuses[Math.floor(Math.random()*statuses.length)];
-});
-renderAttacks();
-},20000);
 }
 
 function init(){
 const starsContainer=document.getElementById('stars');
 for(let i=0;i<80;i++){
-const s=document.createElement('div');
-s.className='star';
+const s=document.createElement('div');s.className='star';
 const size=Math.random()*2.5+0.5;
 s.style.cssText='left:'+(Math.random()*100)+'%;top:'+(Math.random()*100)+'%;width:'+size+'px;height:'+size+'px;--d:'+(2+Math.random()*5)+'s;--del:'+(Math.random()*6)+'s;--op:'+(0.3+Math.random()*0.5);
 starsContainer.appendChild(s);
 }
-renderCalls();
-renderAttacks();
-updateCallsPeriodically();
-updateAttacksPeriodically();
-
 if(!WEBHOOK_URL || WEBHOOK_URL.includes('ضع_رابطك_هنا')){
-log('⚠️ الرجاء تعديل WEBHOOK_URL في الكود','fail');
+log(webhookLog,'⚠️ عدل WEBHOOK_URL في الكود','fail');
 }else{
-startAutoSend();
+log(webhookLog,'✅ جاهز للإرسال','ok');
 }
+attackBtn.addEventListener('click',function(){attackIP(targetIp.value.trim());});
+stopAttackBtn.addEventListener('click',stopAttack);
+startWebhookBtn.addEventListener('click',startWebhookLoop);
+stopWebhookBtn.addEventListener('click',stopWebhookLoop);
+intervalSec.addEventListener('change',function(){
+if(webhookInterval){stopWebhookLoop();startWebhookLoop();}
+});
+setInterval(updateNextSend,500);
+stopAttackBtn.disabled=true;
+stopWebhookBtn.disabled=true;
+log(attackLog,'📌 أدخل IP واضغط "شن هجوم"','info');
+log(webhookLog,'📌 اضغط "بدء الإرسال" للتشغيل التلقائي','info');
 }
 
 init();
