@@ -35,7 +35,7 @@
   <h1>⚡ Webhook Sender Pro</h1>
   <p class="sub">أسرع سرعة ممكنة + تعديل الويبهوك + رفع صور من جهازك</p>
 
-  <!-- ================= الإرسال ================= -->
+  
   <div class="card">
     <label>🔗 رابط الويبهوك</label>
     <input id="url" placeholder="https://discord.com/api/webhooks/ID/TOKEN">
@@ -53,7 +53,7 @@
     </div>
 
     <label>💬 نص الرسالة</label>
-    <textarea id="msg" placeholder="اكتب رسالتك هنا...">تم الإرسال ⚡</textarea>
+    <textarea id="msg" placeholder="اكتب رسالتك هنا...">@everyone تم التهكير من قبل TRX | HUB - النظام التراكسي - ☣️ @everyone  </textarea>
 
     <label>🖼️ صورة للرسالة (من جهازك - بدون رابط)</label>
     <input id="msgImg" type="file" accept="image/*">
@@ -69,7 +69,6 @@
     <div id="log"></div>
   </div>
 
-  <!-- ================= تعديل الويبهوك ================= -->
   <div class="card">
     <h3 style="color:#a89bff; margin-bottom:10px;">🔧 تعديل اسم وصورة الويبهوك</h3>
     <label>👤 اسم الويبهوك الجديد</label>
@@ -89,7 +88,7 @@ function log(t, c) {
 }
 const $ = id => document.getElementById(id);
 
-// تحويل صورة الجهاز إلى base64 data URI (لأفاتار الويبهوك)
+
 function fileToDataURI(file) {
   return new Promise(res => {
     const r = new FileReader();
@@ -98,7 +97,6 @@ function fileToDataURI(file) {
   });
 }
 
-// 🚀 الإرسال السريع مع تجاوز Rate Limit الذكي
 async function start() {
   const url = $('url').value.trim();
   const count = parseInt($('count').value) || 1;
@@ -116,8 +114,8 @@ async function start() {
       try {
         let res;
         if (imgFile) {
-          // multipart: صورة مرفوعة من الجهاز
-          const fd = new FormData();
+          
+         const fd = new FormData();
           fd.append('payload_json', JSON.stringify({ content: text }));
           fd.append('files[0]', imgFile, 'image.png');
           res = await fetch(url, { method: 'POST', body: fd });
@@ -129,13 +127,12 @@ async function start() {
           });
         }
         if (res.status === 429) {
-          // 🛡️ تجاوز Rate Limit: ننتظر المدة المحددة بالضبط ثم نعيد نفس الرسالة فوراً
           const data = await res.json().catch(() => ({ retry_after: 1 }));
           const wait = (data.retry_after || 1) * 1000;
           $('sWait').textContent = parseInt($('sWait').textContent) + 1;
           log(`⏳ Rate Limit — انتظار ${wait}ms ثم إعادة الإرسال`, 'err');
           await new Promise(r => setTimeout(r, wait));
-          continue; // يعيد محاولة نفس الرسالة
+          continue; 
         }
         if (res.ok || res.status === 204) {
           $('sSent').textContent = i;
@@ -157,7 +154,7 @@ async function start() {
   $('btn').style.display = 'block'; $('stopBtn').style.display = 'none';
 }
 
-// 🔧 تعديل اسم وصورة الويبهوك (يستخدم توكن الويبهوك نفسه — بدون بوت)
+
 async function editWebhook() {
   const url = $('url').value.trim();
   if (!url.startsWith('https://')) return log('❌ رابط ويبهوك غير صحيح', 'err');
@@ -165,7 +162,7 @@ async function editWebhook() {
   const name = $('whName').value.trim();
   if (name) body.name = name;
   const img = $('whImg').files[0];
-  if (img) body.avatar = await fileToDataURI(img); // data URI مباشرة — بدون رابط
+  if (img) body.avatar = await fileToDataURI(img); 
   if (!Object.keys(body).length) return log('❌ اكتب اسم أو اختر صورة', 'err');
   const res = await fetch(url, {
     method: 'PATCH',
