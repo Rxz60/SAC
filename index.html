@@ -3,406 +3,151 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MRX · بحث سكربتات</title>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<title>Webhook Sender ⚡</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{--red-dark:#3a0000;--red:#8b0000;--red-bright:#dc2626;--red-glow:#ff2b2b;--card:#0f0202;--card-hover:#1a0505;--border:#2a0808;--hi:#fff5f5;--mid:#b08888;--lo:#5c3333}
-body{font-family:'Tajawal',sans-serif;background:#0a0000;color:#fff5f5;min-height:100vh;
-background-image:url('https://github.com/Rxz60/Search-for-scripts/raw/refs/heads/main/90E40623-F5E8-42C1-B76B-DFB6194C2ED5.gif');
-background-size:cover;background-position:center;background-attachment:fixed;background-repeat:no-repeat;position:relative}
-body::before{content:'';position:fixed;inset:0;background:linear-gradient(180deg,rgba(20,0,0,0.92) 0%,rgba(10,0,0,0.96) 100%);z-index:0;pointer-events:none}
-.container{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:24px 20px 60px}
-
-.topbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;background:rgba(15,2,2,0.85);backdrop-filter:blur(14px);border:1px solid var(--border);border-radius:60px;padding:12px 24px;margin-bottom:28px;box-shadow:0 10px 40px rgba(139,0,0,0.35)}
-.brand{display:flex;align-items:center;gap:12px;font-weight:900;font-size:1.4rem;color:#ffd4d4;letter-spacing:1px}
-.brand-logo{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#8b0000,#ff2b2b);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem;box-shadow:0 0 20px rgba(255,43,43,0.5)}
-.nav-links{display:flex;gap:8px;flex-wrap:wrap}
-.nav-link{padding:8px 18px;border-radius:50px;color:var(--mid);font-weight:700;font-size:.85rem;text-decoration:none;transition:.3s;cursor:pointer;border:1px solid transparent}
-.nav-link:hover,.nav-link.active{color:#fff;background:rgba(139,0,0,0.4);border-color:var(--red)}
-
-.hero{text-align:center;padding:30px 20px 20px;margin-bottom:20px}
-.hero-title{font-size:clamp(2rem,6vw,3.2rem);font-weight:900;background:linear-gradient(135deg,#ffb3b3,#ff2b2b,#8b0000);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-0.5px;text-shadow:0 0 40px rgba(255,43,43,0.3)}
-.hero-sub{color:var(--mid);font-size:.95rem;margin-top:8px}
-
-.search-wrapper{max-width:720px;margin:0 auto 24px;position:relative}
-.search-box{display:flex;align-items:center;gap:8px;background:rgba(15,2,2,0.9);backdrop-filter:blur(10px);border:1px solid var(--border);border-radius:60px;padding:6px 6px 6px 22px;transition:.3s;box-shadow:0 8px 30px rgba(0,0,0,0.5)}
-.search-box:focus-within{border-color:var(--red-bright);box-shadow:0 0 30px rgba(255,43,43,0.4)}
-.search-box i{color:var(--red-bright);font-size:1.05rem}
-.search-box input{flex:1;background:transparent;border:none;color:#fff;font-size:1rem;padding:14px 8px;font-family:'Tajawal',sans-serif;outline:none;text-align:right}
-.search-box input::placeholder{color:#7a4a4a}
-.search-box button{background:linear-gradient(135deg,#dc2626,#8b0000);color:#fff;border:none;border-radius:50px;padding:13px 30px;font-weight:900;cursor:pointer;font-family:'Tajawal',sans-serif;transition:.3s;box-shadow:0 4px 20px rgba(220,38,38,0.4)}
-.search-box button:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(220,38,38,0.6)}
-.search-box button:disabled{opacity:.5;cursor:not-allowed;transform:none}
-
-.tags{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:26px;max-width:820px;margin-left:auto;margin-right:auto}
-.tag{background:rgba(15,2,2,0.8);border:1px solid var(--border);color:var(--mid);padding:7px 16px;border-radius:50px;font-size:.78rem;font-weight:700;cursor:pointer;transition:.3s;font-family:'Tajawal',sans-serif}
-.tag:hover{color:#fff;background:rgba(139,0,0,0.5);border-color:var(--red-bright);transform:translateY(-2px)}
-
-.stats{display:flex;justify-content:center;gap:24px;margin-bottom:24px;color:var(--mid);font-size:.85rem;flex-wrap:wrap}
-.stats b{color:#ff8080;font-weight:900}
-
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px;margin-bottom:30px}
-
-.card{background:rgba(15,2,2,0.88);backdrop-filter:blur(10px);border:1px solid var(--border);border-radius:18px;overflow:hidden;transition:.3s cubic-bezier(.4,0,.2,1);cursor:pointer;position:relative}
-.card:hover{border-color:var(--red-bright);transform:translateY(-6px);box-shadow:0 20px 40px rgba(255,43,43,0.25),0 0 0 1px rgba(255,43,43,0.3)}
-.card-img-wrapper{position:relative;width:100%;padding-top:56%;overflow:hidden;background:linear-gradient(135deg,#1a0505,#0a0000)}
-.card-img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;transition:.5s}
-.card:hover .card-img{transform:scale(1.08)}
-.card-badge{position:absolute;top:10px;left:10px;background:rgba(139,0,0,0.9);backdrop-filter:blur(6px);color:#fff;font-size:.65rem;font-weight:900;padding:4px 10px;border-radius:50px;border:1px solid rgba(255,43,43,0.4);letter-spacing:.5px}
-.card-badge.verified{background:linear-gradient(135deg,#dc2626,#8b0000);box-shadow:0 0 15px rgba(255,43,43,0.5)}
-.card-views{position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);color:#fff;font-size:.7rem;font-weight:800;padding:4px 10px;border-radius:50px;display:flex;align-items:center;gap:5px}
-.card-views i{color:#ff5555;font-size:.7rem}
-.card-body{padding:14px 14px 16px}
-.card-name{font-size:.95rem;font-weight:900;color:#fff;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
-.card-game{font-size:.75rem;color:#ff8080;font-weight:700;display:flex;align-items:center;gap:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.card-game i{color:#dc2626;font-size:.7rem}
-.card-footer{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:10px;border-top:1px solid rgba(139,0,0,0.2)}
-.card-btn{background:linear-gradient(135deg,#dc2626,#8b0000);color:#fff;border:none;border-radius:50px;padding:8px 18px;font-weight:900;font-size:.75rem;cursor:pointer;font-family:'Tajawal',sans-serif;transition:.3s;box-shadow:0 4px 15px rgba(220,38,38,0.3)}
-.card-btn:hover{transform:scale(1.05);box-shadow:0 6px 20px rgba(220,38,38,0.5)}
-.card-type{font-size:.65rem;color:#7a4a4a;font-weight:700;text-transform:uppercase;letter-spacing:1px}
-
-.loader{text-align:center;padding:80px 20px;color:var(--mid);grid-column:1/-1}
-.spinner{width:48px;height:48px;border:4px solid rgba(139,0,0,0.2);border-top-color:#dc2626;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-.empty{text-align:center;padding:80px 20px;color:#7a4a4a;grid-column:1/-1}
-.empty i{font-size:4rem;display:block;margin-bottom:18px;color:var(--red-dark);text-shadow:0 0 30px rgba(139,0,0,0.5)}
-.empty-title{font-size:1.3rem;font-weight:900;color:#ff8080;margin-bottom:6px}
-
-.pagination{display:flex;justify-content:center;align-items:center;gap:12px;margin-top:30px;flex-wrap:wrap}
-.page-btn{background:rgba(15,2,2,0.9);border:1px solid var(--border);color:#ff8080;padding:11px 24px;border-radius:50px;font-weight:800;cursor:pointer;font-family:'Tajawal',sans-serif;transition:.3s;font-size:.85rem}
-.page-btn:hover:not(:disabled){color:#fff;border-color:var(--red-bright);background:rgba(139,0,0,0.4);transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,43,43,0.3)}
-.page-btn:disabled{opacity:.3;cursor:not-allowed}
-.page-info{color:var(--mid);font-size:.85rem;padding:10px 18px;background:rgba(15,2,2,0.9);border-radius:50px;border:1px solid var(--border);font-weight:700}
-
-.modal{position:fixed;inset:0;background:rgba(0,0,0,0.92);backdrop-filter:blur(12px);z-index:100;display:none;align-items:center;justify-content:center;padding:20px;animation:fadeIn .3s}
-.modal.open{display:flex}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.modal-box{background:linear-gradient(145deg,#150303,#0a0000);border:1px solid var(--red);border-radius:24px;padding:0;max-width:660px;width:100%;max-height:92vh;overflow:hidden;position:relative;box-shadow:0 30px 80px rgba(255,43,43,0.3),0 0 0 1px rgba(255,43,43,0.2);animation:slideUp .4s cubic-bezier(.175,.885,.32,1.275)}
-@keyframes slideUp{from{opacity:0;transform:translateY(30px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
-.modal-header{position:relative;height:200px;overflow:hidden;background:linear-gradient(135deg,#1a0505,#0a0000)}
-.modal-header img{width:100%;height:100%;object-fit:cover;opacity:.85}
-.modal-header::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(10,0,0,0.98) 100%)}
-.modal-close{position:absolute;top:14px;left:14px;background:rgba(139,0,0,0.8);backdrop-filter:blur(6px);border:1px solid var(--red);color:#fff;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:1rem;transition:.3s;z-index:5;display:flex;align-items:center;justify-content:center}
-.modal-close:hover{background:var(--red-bright);transform:rotate(90deg)}
-.modal-body{padding:20px 24px 24px;position:relative;margin-top:-50px;z-index:2}
-.modal-title{font-size:1.4rem;font-weight:900;color:#fff;margin-bottom:8px;text-shadow:0 2px 10px rgba(0,0,0,0.8)}
-.modal-game{color:#ff8080;font-size:.85rem;margin-bottom:6px;font-weight:700}
-.modal-game i{color:#dc2626;margin-left:5px}
-.modal-meta{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:16px;font-size:.75rem;color:var(--mid)}
-.modal-meta span{display:flex;align-items:center;gap:5px}
-.modal-meta i{color:#dc2626}
-.code-label{color:#ff8080;font-weight:800;font-size:.8rem;margin-bottom:8px;display:flex;align-items:center;gap:6px}
-.code-box{background:#000;border:1px solid var(--red-dark);border-radius:14px;padding:16px;font-family:'Courier New',monospace;font-size:.75rem;color:#ffb3b3;direction:ltr;text-align:left;white-space:pre-wrap;word-break:break-all;max-height:240px;overflow-y:auto;margin-bottom:16px;box-shadow:inset 0 0 30px rgba(139,0,0,0.15)}
-.code-box::-webkit-scrollbar{width:6px}
-.code-box::-webkit-scrollbar-track{background:#0a0000}
-.code-box::-webkit-scrollbar-thumb{background:var(--red);border-radius:10px}
-.modal-actions{display:flex;gap:10px;flex-wrap:wrap}
-.copy-btn{flex:1;padding:13px;border:none;border-radius:14px;background:linear-gradient(135deg,#dc2626,#8b0000);color:#fff;font-weight:900;font-size:.9rem;cursor:pointer;font-family:'Tajawal',sans-serif;transition:.3s;box-shadow:0 4px 20px rgba(220,38,38,0.3);display:flex;align-items:center;justify-content:center;gap:8px}
-.copy-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(220,38,38,0.6)}
-.copy-btn:active{transform:scale(.97)}
-.close-btn{flex:1;padding:13px;border:1px solid var(--red-dark);border-radius:14px;background:transparent;color:#ff8080;font-weight:900;font-size:.9rem;cursor:pointer;font-family:'Tajawal',sans-serif;transition:.3s}
-.close-btn:hover{background:rgba(139,0,0,0.3);color:#fff;border-color:var(--red-bright)}
-
-.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);background:linear-gradient(135deg,#dc2626,#8b0000);color:#fff;padding:14px 28px;border-radius:50px;font-weight:800;font-size:.9rem;box-shadow:0 10px 40px rgba(255,43,43,0.5);transition:.4s cubic-bezier(.175,.885,.32,1.275);z-index:1000;opacity:0}
-.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
-
-.footer{text-align:center;color:#5c3333;font-size:.75rem;padding:30px 0 0;border-top:1px solid var(--border);margin-top:40px;font-weight:700}
-
-@media(max-width:640px){
-.topbar{border-radius:24px;padding:10px 16px}
-.brand{font-size:1.1rem}
-.brand-logo{width:32px;height:32px;font-size:.95rem}
-.nav-link{padding:6px 12px;font-size:.75rem}
-.grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
-.card-body{padding:10px}
-.card-name{font-size:.85rem}
-.card-game{font-size:.7rem}
-.card-btn{padding:6px 14px;font-size:.7rem}
-.modal-header{height:150px}
-.modal-body{padding:16px}
-.modal-title{font-size:1.15rem}
-}
+  * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', Tahoma, sans-serif; }
+  body { background:#0d0d14; color:#e0e0e0; min-height:100vh; padding:30px 15px; }
+  .container { max-width:680px; margin:auto; }
+  h1 { text-align:center; color:#7b5cff; margin-bottom:5px; }
+  .sub { text-align:center; color:#888; margin-bottom:25px; font-size:14px; }
+  .card { background:#16161f; border:1px solid #2a2a3a; border-radius:14px; padding:22px; margin-bottom:18px; }
+  label { display:block; margin:12px 0 6px; color:#a89bff; font-size:13px; font-weight:600; }
+  input, textarea, select { width:100%; background:#0d0d14; border:1px solid #33334a; color:#fff; border-radius:8px; padding:11px; font-size:14px; outline:none; }
+  input:focus, textarea:focus { border-color:#7b5cff; }
+  textarea { resize:vertical; min-height:80px; }
+  .row { display:flex; gap:12px; }
+  .row > div { flex:1; }
+  .hint { font-size:11px; color:#666; margin-top:4px; }
+  button { width:100%; padding:14px; border:none; border-radius:10px; font-size:16px; font-weight:bold; cursor:pointer; margin-top:15px; transition:.2s; }
+  .send { background:linear-gradient(90deg,#7b5cff,#5c8aff); color:#fff; }
+  .send:hover { opacity:.85; }
+  .stop { background:#ff4757; color:#fff; margin-top:8px; display:none; }
+  .stats { display:flex; gap:10px; margin-top:15px; }
+  .stat { flex:1; background:#0d0d14; border-radius:10px; padding:12px; text-align:center; }
+  .stat b { display:block; font-size:22px; color:#7b5cff; }
+  .stat span { font-size:11px; color:#888; }
+  #log { margin-top:15px; max-height:180px; overflow-y:auto; background:#0d0d14; border-radius:10px; padding:10px; font-size:12px; font-family:monospace; direction:ltr; text-align:left; }
+  .ok { color:#2ed573; } .err { color:#ff4757; }
+  details { margin-top:12px; } summary { cursor:pointer; color:#a89bff; font-size:13px; }
 </style>
 </head>
 <body>
-
 <div class="container">
+  <h1>⚡ Webhook Sender</h1>
+  <p class="sub">أرسل رسائل متعددة بسرعة — تحكم كامل بالعدد والتوقيت</p>
 
-<div class="topbar">
-<div class="brand"><div class="brand-logo"><i class="fa-solid fa-fire"></i></div> MRX SCRIPTS</div>
-<div class="nav-links">
-<span class="nav-link active" onclick="loadTrending()"><i class="fa-solid fa-fire"></i> الرائج</span>
-<span class="nav-link" onclick="quickSearch('Blox Fruits')">Blox Fruits</span>
-<span class="nav-link" onclick="quickSearch('Doors')">Doors</span>
-<span class="nav-link" onclick="quickSearch('MM2')">MM2</span>
-</div>
-</div>
+  <div class="card">
+    <label>🔗 رابط الويبهوك (Webhook URL)</label>
+    <input id="url" placeholder="https://discord.com/api/webhooks/...">
 
-<div class="hero">
-<div class="hero-title">ابحث عن أي سكربت</div>
-<div class="hero-sub">Powered by ScriptBlox API · نتائج فورية</div>
-</div>
+    <div class="row">
+      <div>
+        <label>📨 عدد الرسائل</label>
+        <input id="count" type="number" value="10" min="1">
+      </div>
+      <div>
+        <label>⏱️ الفاصل بين كل رسالة (ثانية)</label>
+        <input id="delay" type="number" value="0.5" step="0.1" min="0">
+        <p class="hint">0 = أسرع سرعة ممكنة | 0.5 = نص ثانية</p>
+      </div>
+    </div>
 
-<div class="search-wrapper">
-<div class="search-box">
-<i class="fa-solid fa-magnifying-glass"></i>
-<input type="text" id="searchInput" placeholder="اكتب اسم السكربت أو الماب..." onkeydown="if(event.key==='Enter')doSearch()">
-<button id="searchBtn" onclick="doSearch()"><i class="fa-solid fa-search"></i> بحث</button>
-</div>
-</div>
+    <label>💬 نص الرسالة</label>
+    <textarea id="msg" placeholder="اكتب رسالتك هنا...">@here تم الإرسال ⚡</textarea>
 
-<div class="tags">
-<button class="tag" onclick="quickSearch('Blox Fruits')">🍎 Blox Fruits</button>
-<button class="tag" onclick="quickSearch('Pet Simulator')">🐾 Pet Sim</button>
-<button class="tag" onclick="quickSearch('Arsenal')">🔫 Arsenal</button>
-<button class="tag" onclick="quickSearch('Doors')">🚪 Doors</button>
-<button class="tag" onclick="quickSearch('Murder Mystery')">🔪 MM2</button>
-<button class="tag" onclick="quickSearch('Jailbreak')">🚔 Jailbreak</button>
-<button class="tag" onclick="quickSearch('Adopt Me')">🐶 Adopt Me</button>
-<button class="tag" onclick="quickSearch('Anime')">⚔️ Anime</button>
-</div>
+    <details>
+      <summary>🖼️ إضافة صورة / إيمبد (اختياري)</summary>
+      <label>رابط الصورة (تظهر داخل الرسالة)</label>
+      <input id="img" placeholder="https://example.com/image.png">
+      <label>عنوان الإيمبد (Embed Title)</label>
+      <input id="etitle" placeholder="عنوان الإيمبد">
+      <label>وصف الإيمبد</label>
+      <textarea id="edesc" placeholder="وصف الإيمبد"></textarea>
+      <label>لون الإيمبد (HEX)</label>
+      <input id="ecolor" type="color" value="#7b5cff">
+    </details>
 
-<div class="stats">
-<span>📊 النتائج: <b id="countResult">0</b></span>
-<span>📄 الصفحة: <b id="pageNum">1</b></span>
-</div>
+    <button class="send" id="btn" onclick="start()">🚀 ابدأ الإرسال</button>
+    <button class="stop" id="stopBtn" onclick="stop()">⏹️ إيقاف</button>
 
-<div id="resultsContainer">
-<div class="empty">
-<i class="fa-solid fa-magnifying-glass"></i>
-<div class="empty-title">ابدأ البحث</div>
-<div>اكتب اسم سكربت أو اختر من الأزرار السريعة</div>
+    <div class="stats">
+      <div class="stat"><b id="sSent">0</b><span>أُرسلت</span></div>
+      <div class="stat"><b id="sFail">0</b><span>فشلت</span></div>
+      <div class="stat"><b id="sTotal">0</b><span>الإجمالي</span></div>
+    </div>
+    <div id="log"></div>
+  </div>
 </div>
-</div>
-
-<div class="pagination" id="pagination" style="display:none">
-<button class="page-btn" id="prevBtn" onclick="changePage(-1)"><i class="fa-solid fa-chevron-right"></i> السابق</button>
-<span class="page-info" id="pageInfo">صفحة 1</span>
-<button class="page-btn" id="nextBtn" onclick="changePage(1)">التالي <i class="fa-solid fa-chevron-left"></i></button>
-</div>
-
-<div class="footer">© MRX SCRIPTS 2026 · Powered by ScriptBlox</div>
-
-</div>
-
-<div class="modal" id="modal" onclick="if(event.target===this)closeModal()">
-<div class="modal-box" onclick="event.stopPropagation()">
-<div class="modal-header">
-<button class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
-<img id="mImg" src="" alt="">
-</div>
-<div class="modal-body">
-<div class="modal-title" id="mTitle">—</div>
-<div class="modal-game" id="mGame"><i class="fa-solid fa-map-location-dot"></i> —</div>
-<div class="modal-meta" id="mMeta"></div>
-<div class="code-label"><i class="fa-solid fa-code"></i> كود السكربت</div>
-<div class="code-box" id="mCode">—</div>
-<div class="modal-actions">
-<button class="copy-btn" onclick="copyCode()"><i class="fa-solid fa-copy"></i> نسخ الكود</button>
-<button class="close-btn" onclick="closeModal()">إغلاق</button>
-</div>
-</div>
-</div>
-</div>
-
-<div class="toast" id="toast">تم!</div>
 
 <script>
-const API_SEARCH='https://scriptblox.com/api/script/search';
-const API_TRENDING='https://scriptblox.com/api/script/fetch?page=1';
-let currentPage=1,currentQuery='',currentCode='',totalPages=1,mode='search';
+let running = false;
 
-const DEFAULT_IMG='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22600%22 height=%22300%22%3E%3Crect width=%22600%22 height=%22300%22 fill=%22%23150505%22/%3E%3Ctext x=%22300%22 y=%22150%22 text-anchor=%22middle%22 fill=%22%235c3333%22 font-size=%2270%22%3E%F0%9F%93%9C%3C/text%3E%3C/svg%3E';
-
-function showToast(msg){
-const t=document.getElementById('toast');
-t.textContent=msg;t.classList.add('show');
-clearTimeout(t._timer);
-t._timer=setTimeout(()=>t.classList.remove('show'),2200);
+function log(txt, cls) {
+  const l = document.getElementById('log');
+  const d = document.createElement('div');
+  d.className = cls || '';
+  d.textContent = txt;
+  l.prepend(d);
 }
 
-async function doSearch(){
-const q=document.getElementById('searchInput').value.trim();
-if(!q)return;
-currentQuery=q;currentPage=1;mode='search';
-await fetchScripts();
+function buildPayload(msg) {
+  const p = { content: msg };
+  const img = document.getElementById('img').value.trim();
+  const title = document.getElementById('etitle').value.trim();
+  const desc = document.getElementById('edesc').value.trim();
+  if (img) p.image = { url: img };
+  if (title || desc) {
+    const color = parseInt(document.getElementById('ecolor').value.slice(1), 16);
+    p.embeds = [{ title, description: desc, color }];
+  }
+  return p;
 }
 
-async function quickSearch(q){
-document.getElementById('searchInput').value=q;
-currentQuery=q;currentPage=1;mode='search';
-await fetchScripts();
+async function sendOne(url, payload) {
+  try {
+    const r = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    return r.status === 204 || r.ok;
+  } catch (e) { return false; }
 }
 
-async function loadTrending(){
-currentQuery='';currentPage=1;mode='trending';
-await fetchScripts();
+async function start() {
+  const url = document.getElementById('url').value.trim();
+  const count = parseInt(document.getElementById('count').value) || 1;
+  const delay = (parseFloat(document.getElementById('delay').value) || 0) * 1000;
+  const msg = document.getElementById('msg').value;
+  const payload = buildPayload(msg);
+
+  if (!url.startsWith('https://')) return log('❌ ضع رابط ويبهوك صحيح', 'err');
+
+  running = true;
+  document.getElementById('btn').style.display = 'none';
+  document.getElementById('stopBtn').style.display = 'block';
+  document.getElementById('sTotal').textContent = count;
+
+  for (let i = 1; i <= count && running; i++) {
+    const ok = await sendOne(url, payload);
+    if (ok) {
+      document.getElementById('sSent').textContent = i;
+      log(`✔ [${i}/${count}] تم الإرسال`, 'ok');
+    } else {
+      document.getElementById('sFail').textContent =
+        parseInt(document.getElementById('sFail').textContent) + 1;
+      log(`✖ [${i}/${count}] فشل (ربما Rate Limit)`, 'err');
+    }
+    if (delay > 0 && i < count) await new Promise(r => setTimeout(r, delay));
+  }
+
+  running = false;
+  log('🏁 انتهى', 'ok');
+  document.getElementById('btn').style.display = 'block';
+  document.getElementById('stopBtn').style.display = 'none';
 }
 
-async function changePage(delta){
-const np=currentPage+delta;
-if(np<1||np>totalPages)return;
-currentPage=np;
-await fetchScripts();
-window.scrollTo({top:0,behavior:'smooth'});
-}
-
-async function fetchScripts(){
-const container=document.getElementById('resultsContainer');
-container.innerHTML='<div class="loader"><div class="spinner"></div>جاري جلب السكربتات...</div>';
-document.getElementById('searchBtn').disabled=true;
-document.getElementById('pagination').style.display='none';
-
-try{
-let url;
-if(mode==='trending'){
-url='https://scriptblox.com/api/script/fetch?page='+currentPage;
-}else{
-url=API_SEARCH+'?q='+encodeURIComponent(currentQuery)+'&page='+currentPage;
-}
-const res=await fetch(url);
-if(!res.ok)throw new Error('فشل الاتصال بالـ API');
-const data=await res.json();
-
-let scripts=[];
-if(mode==='trending'){
-scripts=(data.result&&data.result.scripts)?data.result.scripts:[];
-totalPages=(data.result&&data.result.totalPages)?data.result.totalPages:1;
-}else{
-scripts=(data.result&&data.result.scripts)?data.result.scripts:[];
-totalPages=(data.result&&data.result.totalPages)?data.result.totalPages:1;
-if(scripts.length===0&&data.result&&data.result.length){
-scripts=data.result;totalPages=1;
-}
-}
-
-document.getElementById('countResult').textContent=scripts.length;
-document.getElementById('pageNum').textContent=currentPage;
-
-if(!scripts.length){
-container.innerHTML='<div class="empty"><i class="fa-solid fa-inbox"></i><div class="empty-title">لا توجد نتائج</div><div>جرّب كلمة بحث أخرى</div></div>';
-document.getElementById('searchBtn').disabled=false;
-return;
-}
-
-renderScripts(scripts);
-renderPagination();
-}catch(e){
-container.innerHTML='<div class="empty"><i class="fa-solid fa-triangle-exclamation"></i><div class="empty-title">حدث خطأ</div><div>'+escapeHtml(e.message)+'</div></div>';
-}
-document.getElementById('searchBtn').disabled=false;
-}
-
-function renderScripts(scripts){
-const container=document.getElementById('resultsContainer');
-const grid=document.createElement('div');
-grid.className='grid';
-
-scripts.forEach(function(s){
-const card=document.createElement('div');
-card.className='card';
-card.onclick=function(){openModal(s);};
-
-const img=s.image||DEFAULT_IMG;
-const name=escapeHtml(s.title||s.name||'بدون اسم');
-const gameName=s.game&&s.game.name?s.game.name:(s.game||'غير محدد');
-const game=escapeHtml(gameName);
-const views=s.views||0;
-const verified=s.verified||false;
-const scriptType=s.scriptType||'free';
-
-card.innerHTML=
-'<div class="card-img-wrapper">'+
-'<img class="card-img" src="'+img+'" alt="'+name+'" onerror="this.src=\''+DEFAULT_IMG+'\'">'+
-(verified?'<span class="card-badge verified"><i class="fa-solid fa-check-circle"></i> موثّق</span>':'<span class="card-badge">'+scriptType+'</span>')+
-'<span class="card-views"><i class="fa-solid fa-eye"></i> '+views+'</span>'+
-'</div>'+
-'<div class="card-body">'+
-'<div class="card-name">'+name+'</div>'+
-'<div class="card-game"><i class="fa-solid fa-map-location-dot"></i> '+game+'</div>'+
-'<div class="card-footer">'+
-'<button class="card-btn"><i class="fa-solid fa-code"></i> عرض الكود</button>'+
-'<span class="card-type">LUA</span>'+
-'</div>'+
-'</div>';
-
-grid.appendChild(card);
-});
-
-container.innerHTML='';
-container.appendChild(grid);
-}
-
-function renderPagination(){
-const pag=document.getElementById('pagination');
-if(totalPages>1){
-pag.style.display='flex';
-document.getElementById('prevBtn').disabled=currentPage<=1;
-document.getElementById('nextBtn').disabled=currentPage>=totalPages;
-document.getElementById('pageInfo').textContent='صفحة '+currentPage+' من '+totalPages;
-}else{
-pag.style.display='none';
-}
-}
-
-function openModal(s){
-currentCode=s.script||'-- لا يوجد كود متاح';
-document.getElementById('mTitle').textContent=s.title||s.name||'بدون اسم';
-document.getElementById('mGame').innerHTML='<i class="fa-solid fa-map-location-dot"></i> '+escapeHtml(s.game&&s.game.name?s.game.name:(s.game||'غير محدد'));
-document.getElementById('mCode').textContent=currentCode;
-
-const views=s.views||0;
-const verified=s.verified?'<span><i class="fa-solid fa-check-circle"></i> موثّق</span>':'';
-const key=s.key?'<span><i class="fa-solid fa-key"></i> يحتاج مفتاح</span>':'<span><i class="fa-solid fa-lock-open"></i> مجاني</span>';
-document.getElementById('mMeta').innerHTML='<span><i class="fa-solid fa-eye"></i> '+views+' مشاهدة</span>'+key+verified;
-
-const img=document.getElementById('mImg');
-img.src=s.image||DEFAULT_IMG;
-img.onerror=function(){this.src=DEFAULT_IMG;};
-
-document.getElementById('modal').classList.add('open');
-document.body.style.overflow='hidden';
-}
-
-function closeModal(){
-document.getElementById('modal').classList.remove('open');
-document.body.style.overflow='';
-}
-
-function copyCode(){
-if(!currentCode)return;
-navigator.clipboard.writeText(currentCode).then(function(){
-showToast('✅ تم نسخ الكود بنجاح');
-}).catch(function(){
-const ta=document.createElement('textarea');
-ta.value=currentCode;
-document.body.appendChild(ta);
-ta.select();
-try{document.execCommand('copy');showToast('✅ تم نسخ الكود');}catch(e){showToast('❌ فشل النسخ');}
-ta.remove();
-});
-}
-
-function escapeHtml(str){
-return String(str).replace(/[&<>"']/g,function(c){
-return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
-});
-}
-
-document.addEventListener('contextmenu',function(e){e.preventDefault();});
-document.addEventListener('keydown',function(e){
-if(e.key==='Escape')closeModal();
-if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&(e.key==='I'||e.key==='J'))||(e.ctrlKey&&e.key==='U')){
-e.preventDefault();
-}
-});
-
-window.addEventListener('load',function(){
-loadTrending();
-});
+function stop() { running = false; log('⏹ تم الإيقاف يدوياً', 'err'); }
 </script>
 </body>
 </html>
