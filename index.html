@@ -3,151 +3,177 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Webhook Sender ⚡</title>
+<title>⚡ Webhook Sender Pro</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', Tahoma, sans-serif; }
   body { background:#0d0d14; color:#e0e0e0; min-height:100vh; padding:30px 15px; }
-  .container { max-width:680px; margin:auto; }
+  .container { max-width:700px; margin:auto; }
   h1 { text-align:center; color:#7b5cff; margin-bottom:5px; }
   .sub { text-align:center; color:#888; margin-bottom:25px; font-size:14px; }
   .card { background:#16161f; border:1px solid #2a2a3a; border-radius:14px; padding:22px; margin-bottom:18px; }
   label { display:block; margin:12px 0 6px; color:#a89bff; font-size:13px; font-weight:600; }
-  input, textarea, select { width:100%; background:#0d0d14; border:1px solid #33334a; color:#fff; border-radius:8px; padding:11px; font-size:14px; outline:none; }
+  input, textarea { width:100%; background:#0d0d14; border:1px solid #33334a; color:#fff; border-radius:8px; padding:11px; font-size:14px; outline:none; }
   input:focus, textarea:focus { border-color:#7b5cff; }
-  textarea { resize:vertical; min-height:80px; }
+  textarea { resize:vertical; min-height:70px; }
   .row { display:flex; gap:12px; }
   .row > div { flex:1; }
   .hint { font-size:11px; color:#666; margin-top:4px; }
-  button { width:100%; padding:14px; border:none; border-radius:10px; font-size:16px; font-weight:bold; cursor:pointer; margin-top:15px; transition:.2s; }
-  .send { background:linear-gradient(90deg,#7b5cff,#5c8aff); color:#fff; }
+  button { padding:14px; border:none; border-radius:10px; font-size:15px; font-weight:bold; cursor:pointer; transition:.2s; width:100%; }
+  .send { background:linear-gradient(90deg,#7b5cff,#5c8aff); color:#fff; margin-top:15px; }
   .send:hover { opacity:.85; }
-  .stop { background:#ff4757; color:#fff; margin-top:8px; display:none; }
+  .mini { background:#3a3a55; color:#fff; padding:10px; font-size:13px; }
   .stats { display:flex; gap:10px; margin-top:15px; }
   .stat { flex:1; background:#0d0d14; border-radius:10px; padding:12px; text-align:center; }
   .stat b { display:block; font-size:22px; color:#7b5cff; }
   .stat span { font-size:11px; color:#888; }
-  #log { margin-top:15px; max-height:180px; overflow-y:auto; background:#0d0d14; border-radius:10px; padding:10px; font-size:12px; font-family:monospace; direction:ltr; text-align:left; }
+  #log { margin-top:15px; max-height:170px; overflow-y:auto; background:#0d0d14; border-radius:10px; padding:10px; font-size:12px; font-family:monospace; direction:ltr; text-align:left; }
   .ok { color:#2ed573; } .err { color:#ff4757; }
-  details { margin-top:12px; } summary { cursor:pointer; color:#a89bff; font-size:13px; }
 </style>
 </head>
 <body>
 <div class="container">
-  <h1>⚡ Webhook Sender</h1>
-  <p class="sub">أرسل رسائل متعددة بسرعة — تحكم كامل بالعدد والتوقيت</p>
+  <h1>⚡ Webhook Sender Pro</h1>
+  <p class="sub">أسرع سرعة ممكنة + تعديل الويبهوك + رفع صور من جهازك</p>
 
+  <!-- ================= الإرسال ================= -->
   <div class="card">
-    <label>🔗 رابط الويبهوك (Webhook URL)</label>
-    <input id="url" placeholder="https://discord.com/api/webhooks/...">
+    <label>🔗 رابط الويبهوك</label>
+    <input id="url" placeholder="https://discord.com/api/webhooks/ID/TOKEN">
 
     <div class="row">
       <div>
         <label>📨 عدد الرسائل</label>
-        <input id="count" type="number" value="10" min="1">
+        <input id="count" type="number" value="20" min="1">
       </div>
       <div>
-        <label>⏱️ الفاصل بين كل رسالة (ثانية)</label>
-        <input id="delay" type="number" value="0.5" step="0.1" min="0">
-        <p class="hint">0 = أسرع سرعة ممكنة | 0.5 = نص ثانية</p>
+        <label>⏱️ الفاصل (ثانية)</label>
+        <input id="delay" type="number" value="0" step="0.1" min="0">
+        <p class="hint">0 = أقصى سرعة + تجاوز تلقائي للـ Rate Limit (ينتظر بالضبط المدة المطلوبة ويرجع يرسل فوراً)</p>
       </div>
     </div>
 
     <label>💬 نص الرسالة</label>
-    <textarea id="msg" placeholder="اكتب رسالتك هنا...">@here تم الإرسال ⚡</textarea>
+    <textarea id="msg" placeholder="اكتب رسالتك هنا...">تم الإرسال ⚡</textarea>
 
-    <details>
-      <summary>🖼️ إضافة صورة / إيمبد (اختياري)</summary>
-      <label>رابط الصورة (تظهر داخل الرسالة)</label>
-      <input id="img" placeholder="https://example.com/image.png">
-      <label>عنوان الإيمبد (Embed Title)</label>
-      <input id="etitle" placeholder="عنوان الإيمبد">
-      <label>وصف الإيمبد</label>
-      <textarea id="edesc" placeholder="وصف الإيمبد"></textarea>
-      <label>لون الإيمبد (HEX)</label>
-      <input id="ecolor" type="color" value="#7b5cff">
-    </details>
+    <label>🖼️ صورة للرسالة (من جهازك - بدون رابط)</label>
+    <input id="msgImg" type="file" accept="image/*">
 
-    <button class="send" id="btn" onclick="start()">🚀 ابدأ الإرسال</button>
-    <button class="stop" id="stopBtn" onclick="stop()">⏹️ إيقاف</button>
+    <button class="send" id="btn" onclick="start()">🚀 ابدأ الإرسال السريع</button>
+    <button class="send mini" id="stopBtn" onclick="running=false; log('⏹ تم الإيقاف','err')" style="display:none">⏹️ إيقاف</button>
 
     <div class="stats">
       <div class="stat"><b id="sSent">0</b><span>أُرسلت</span></div>
+      <div class="stat"><b id="sWait">0</b><span>تجاوز RL</span></div>
       <div class="stat"><b id="sFail">0</b><span>فشلت</span></div>
-      <div class="stat"><b id="sTotal">0</b><span>الإجمالي</span></div>
     </div>
     <div id="log"></div>
+  </div>
+
+  <!-- ================= تعديل الويبهوك ================= -->
+  <div class="card">
+    <h3 style="color:#a89bff; margin-bottom:10px;">🔧 تعديل اسم وصورة الويبهوك</h3>
+    <label>👤 اسم الويبهوك الجديد</label>
+    <input id="whName" placeholder="اسم الويبهوك">
+    <label>🖼️ صورة الويبهوك (من جهازك - بدون رابط)</label>
+    <input id="whImg" type="file" accept="image/*">
+    <button class="send" onclick="editWebhook()">💾 حفظ التعديلات</button>
   </div>
 </div>
 
 <script>
 let running = false;
-
-function log(txt, cls) {
-  const l = document.getElementById('log');
+function log(t, c) {
   const d = document.createElement('div');
-  d.className = cls || '';
-  d.textContent = txt;
-  l.prepend(d);
+  d.className = c || ''; d.textContent = t;
+  document.getElementById('log').prepend(d);
+}
+const $ = id => document.getElementById(id);
+
+// تحويل صورة الجهاز إلى base64 data URI (لأفاتار الويبهوك)
+function fileToDataURI(file) {
+  return new Promise(res => {
+    const r = new FileReader();
+    r.onload = () => res(r.result);
+    r.readAsDataURL(file);
+  });
 }
 
-function buildPayload(msg) {
-  const p = { content: msg };
-  const img = document.getElementById('img').value.trim();
-  const title = document.getElementById('etitle').value.trim();
-  const desc = document.getElementById('edesc').value.trim();
-  if (img) p.image = { url: img };
-  if (title || desc) {
-    const color = parseInt(document.getElementById('ecolor').value.slice(1), 16);
-    p.embeds = [{ title, description: desc, color }];
-  }
-  return p;
-}
-
-async function sendOne(url, payload) {
-  try {
-    const r = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    return r.status === 204 || r.ok;
-  } catch (e) { return false; }
-}
-
+// 🚀 الإرسال السريع مع تجاوز Rate Limit الذكي
 async function start() {
-  const url = document.getElementById('url').value.trim();
-  const count = parseInt(document.getElementById('count').value) || 1;
-  const delay = (parseFloat(document.getElementById('delay').value) || 0) * 1000;
-  const msg = document.getElementById('msg').value;
-  const payload = buildPayload(msg);
-
-  if (!url.startsWith('https://')) return log('❌ ضع رابط ويبهوك صحيح', 'err');
+  const url = $('url').value.trim();
+  const count = parseInt($('count').value) || 1;
+  const delay = (parseFloat($('delay').value) || 0) * 1000;
+  const text = $('msg').value;
+  const imgFile = $('msgImg').files[0];
+  if (!url.startsWith('https://')) return log('❌ رابط ويبهوك غير صحيح', 'err');
 
   running = true;
-  document.getElementById('btn').style.display = 'none';
-  document.getElementById('stopBtn').style.display = 'block';
-  document.getElementById('sTotal').textContent = count;
+  $('btn').style.display = 'none'; $('stopBtn').style.display = 'block';
 
   for (let i = 1; i <= count && running; i++) {
-    const ok = await sendOne(url, payload);
-    if (ok) {
-      document.getElementById('sSent').textContent = i;
-      log(`✔ [${i}/${count}] تم الإرسال`, 'ok');
-    } else {
-      document.getElementById('sFail').textContent =
-        parseInt(document.getElementById('sFail').textContent) + 1;
-      log(`✖ [${i}/${count}] فشل (ربما Rate Limit)`, 'err');
+    let sent = false;
+    while (!sent && running) {
+      try {
+        let res;
+        if (imgFile) {
+          // multipart: صورة مرفوعة من الجهاز
+          const fd = new FormData();
+          fd.append('payload_json', JSON.stringify({ content: text }));
+          fd.append('files[0]', imgFile, 'image.png');
+          res = await fetch(url, { method: 'POST', body: fd });
+        } else {
+          res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ content: text })
+          });
+        }
+        if (res.status === 429) {
+          // 🛡️ تجاوز Rate Limit: ننتظر المدة المحددة بالضبط ثم نعيد نفس الرسالة فوراً
+          const data = await res.json().catch(() => ({ retry_after: 1 }));
+          const wait = (data.retry_after || 1) * 1000;
+          $('sWait').textContent = parseInt($('sWait').textContent) + 1;
+          log(`⏳ Rate Limit — انتظار ${wait}ms ثم إعادة الإرسال`, 'err');
+          await new Promise(r => setTimeout(r, wait));
+          continue; // يعيد محاولة نفس الرسالة
+        }
+        if (res.ok || res.status === 204) {
+          $('sSent').textContent = i;
+          log(`✔ [${i}/${count}] أُرسلت`, 'ok');
+        } else {
+          $('sFail').textContent = parseInt($('sFail').textContent) + 1;
+          log(`✖ [${i}/${count}] خطأ ${res.status}`, 'err');
+        }
+        sent = true;
+      } catch (e) {
+        $('sFail').textContent = parseInt($('sFail').textContent) + 1;
+        log('✖ خطأ اتصال', 'err'); sent = true;
+      }
     }
     if (delay > 0 && i < count) await new Promise(r => setTimeout(r, delay));
   }
-
   running = false;
   log('🏁 انتهى', 'ok');
-  document.getElementById('btn').style.display = 'block';
-  document.getElementById('stopBtn').style.display = 'none';
+  $('btn').style.display = 'block'; $('stopBtn').style.display = 'none';
 }
 
-function stop() { running = false; log('⏹ تم الإيقاف يدوياً', 'err'); }
+// 🔧 تعديل اسم وصورة الويبهوك (يستخدم توكن الويبهوك نفسه — بدون بوت)
+async function editWebhook() {
+  const url = $('url').value.trim();
+  if (!url.startsWith('https://')) return log('❌ رابط ويبهوك غير صحيح', 'err');
+  const body = {};
+  const name = $('whName').value.trim();
+  if (name) body.name = name;
+  const img = $('whImg').files[0];
+  if (img) body.avatar = await fileToDataURI(img); // data URI مباشرة — بدون رابط
+  if (!Object.keys(body).length) return log('❌ اكتب اسم أو اختر صورة', 'err');
+  const res = await fetch(url, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  log(res.ok ? '✅ تم تعديل الويبهوك' : `✖ فشل (${res.status})`, res.ok ? 'ok' : 'err');
+}
 </script>
 </body>
 </html>
