@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>⚡ Webhook Sender Pro</title>
+<title>⚡ Webhook Info & Sender Pro</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', Tahoma, sans-serif; }
   body { background:#0d0d14; color:#e0e0e0; min-height:100vh; padding:30px 15px; }
   .container { max-width:700px; margin:auto; }
   h1 { text-align:center; color:#7b5cff; margin-bottom:5px; }
-  .sub { text-align:center; color:#888; margin-bottom:25px; font-size:14px; }
+  .sub { text-align:center; color:#888; margin-bottom:25px; font-size:13px; }
   .card { background:#16161f; border:1px solid #2a2a3a; border-radius:14px; padding:22px; margin-bottom:18px; }
   label { display:block; margin:12px 0 6px; color:#a89bff; font-size:13px; font-weight:600; }
   input, textarea { width:100%; background:#0d0d14; border:1px solid #33334a; color:#fff; border-radius:8px; padding:11px; font-size:14px; outline:none; }
@@ -19,28 +19,34 @@
   .row > div { flex:1; }
   .hint { font-size:11px; color:#666; margin-top:4px; }
   button { padding:14px; border:none; border-radius:10px; font-size:15px; font-weight:bold; cursor:pointer; transition:.2s; width:100%; }
+  .mini { background:#3a3a55; color:#fff; padding:10px; font-size:13px; }
   .send { background:linear-gradient(90deg,#7b5cff,#5c8aff); color:#fff; margin-top:15px; }
   .send:hover { opacity:.85; }
-  .mini { background:#3a3a55; color:#fff; padding:10px; font-size:13px; }
   .stats { display:flex; gap:10px; margin-top:15px; }
   .stat { flex:1; background:#0d0d14; border-radius:10px; padding:12px; text-align:center; }
   .stat b { display:block; font-size:22px; color:#7b5cff; }
   .stat span { font-size:11px; color:#888; }
   #log { margin-top:15px; max-height:170px; overflow-y:auto; background:#0d0d14; border-radius:10px; padding:10px; font-size:12px; font-family:monospace; direction:ltr; text-align:left; }
   .ok { color:#2ed573; } .err { color:#ff4757; }
+  .info-row { display:flex; align-items:center; gap:12px; background:#0d0d14; border-radius:10px; padding:12px; margin-top:10px; }
+  .info-row img { width:48px; height:48px; border-radius:50%; object-fit:cover; background:#2a2a3a; }
+  .info-row .txt { direction:ltr; text-align:left; font-size:13px; word-break:break-all; }
+  .info-row b { color:#a89bff; display:block; font-size:11px; }
 </style>
 </head>
 <body>
 <div class="container">
   <h1>⚡ Webhook Sender Pro</h1>
-  <p class="sub">أسرع سرعة ممكنة + تعديل الويبهوك + رفع صور من جهازك</p>
+  <p class="sub">معلومات الويبهوك + إرسال سريع + تعديل الويبهوك + رفع صور من جهازك</p>
 
-  
   <div class="card">
     <label>🔗 رابط الويبهوك</label>
     <input id="url" placeholder="https://discord.com/api/webhooks/ID/TOKEN">
 
-    <div class="row">
+    <button class="mini" style="margin-top:12px" onclick="getInfo()">🔍 جلب معلومات الويبهوك</button>
+    <div id="info"></div>
+
+    <div class="row" style="margin-top:15px">
       <div>
         <label>📨 عدد الرسائل</label>
         <input id="count" type="number" value="20" min="1">
@@ -48,14 +54,14 @@
       <div>
         <label>⏱️ الفاصل (ثانية)</label>
         <input id="delay" type="number" value="0" step="0.1" min="0">
-        <p class="hint">0 = أقصى سرعة + تجاوز تلقائي للـ Rate Limit (ينتظر بالضبط المدة المطلوبة ويرجع يرسل فوراً)</p>
+        <p class="hint">0 = أقصى سرعة + تجاوز تلقائي للـ Rate Limit</p>
       </div>
     </div>
 
     <label>💬 نص الرسالة</label>
-    <textarea id="msg" placeholder="اكتب رسالتك هنا...">@everyone تم التهكير من قبل ☣️ TRX  ☣️ @everyone @here </textarea>
+    <textarea id="msg" placeholder="اكتب رسالتك هنا..."> @everyone تم التهكير من قبل ☣️ TRX  ☣️ @everyone @here</textarea>
 
-    <label>🖼️ صورة للرسالة (من جهازك - بدون رابط)</label>
+    <label>🖼️ صورة للرسالة (من جهازك)</label>
     <input id="msgImg" type="file" accept="image/*">
 
     <button class="send" id="btn" onclick="start()">🚀 ابدأ الإرسال السريع</button>
@@ -73,7 +79,7 @@
     <h3 style="color:#a89bff; margin-bottom:10px;">🔧 تعديل اسم وصورة الويبهوك</h3>
     <label>👤 اسم الويبهوك الجديد</label>
     <input id="whName" placeholder="اسم الويبهوك">
-    <label>🖼️ صورة الويبهوك (من جهازك - بدون رابط)</label>
+    <label>🖼️ صورة الويبهوك (من جهازك)</label>
     <input id="whImg" type="file" accept="image/*">
     <button class="send" onclick="editWebhook()">💾 حفظ التعديلات</button>
   </div>
@@ -81,13 +87,13 @@
 
 <script>
 let running = false;
+const $ = id => document.getElementById(id);
+
 function log(t, c) {
   const d = document.createElement('div');
   d.className = c || ''; d.textContent = t;
-  document.getElementById('log').prepend(d);
+  $('log').prepend(d);
 }
-const $ = id => document.getElementById(id);
-
 
 function fileToDataURI(file) {
   return new Promise(res => {
@@ -97,6 +103,46 @@ function fileToDataURI(file) {
   });
 }
 
+async function getInfo() {
+  const url = $('url').value.trim();
+  if (!url.startsWith('https://')) return log('❌ رابط ويبهوك غير صحيح', 'err');
+  const box = $('info');
+  box.innerHTML = '';
+
+  try {
+    const res = await fetch(url + '?with_channels=true');
+    if (!res.ok) return log(`✖ فشل جلب المعلومات (${res.status})`, 'err');
+    const d = await res.json();
+
+    const whAvatar = d.avatar
+      ? `https://cdn.discordapp.com/avatars/${d.id}/${d.avatar}.png`
+      : 'https://cdn.discordapp.com/embed/avatars/0.png';
+    const chAvatar = d.channel?.icon
+      ? `https://cdn.discordapp.com/channel-icons/${d.channel.id}/${d.channel.icon}.png`
+      : '';
+    const guildLink = d.guild_id ? `https://discord.com/channels/${d.guild_id}` : '—';
+
+    box.innerHTML = `
+      <div class="info-row">
+        <img src="${whAvatar}">
+        <div class="txt">
+          <b>WEBHOOK NAME</b>${d.name || '—'}<br>
+          <b>WEBHOOK ID</b>${d.id || '—'}<br>
+          <b>GUILD ID (السيرفر)</b>${d.guild_id || '—'}<br>
+          <b>CHANNEL</b>${d.channel?.name || '—'} (#${d.channel?.id || '—'})<br>
+          <b>GUILD LINK</b><a href="${guildLink}" target="_blank" style="color:#5c8aff">${guildLink}</a>
+        </div>
+      </div>
+      ${chAvatar ? `<div class="info-row"><img src="${chAvatar}"><div class="txt"><b>CHANNEL ICON</b>قناة: ${d.channel?.name || '—'}</div></div>` : ''}
+      <p class="hint" style="margin-top:10px">ℹ️ اسم وصورة السيرفر ورابط استضافة البوت لا يمكن Discord API إرجاعها من رابط ويبهوك فقط — تحتاج توكن بوت أو تكون داخل السيرفر.</p>
+    `;
+    log('✅ تم جلب معلومات الويبهوك', 'ok');
+  } catch (e) {
+    log('✖ خطأ اتصال', 'err');
+  }
+}
+
+/* ================= الإرسال السريع ================= */
 async function start() {
   const url = $('url').value.trim();
   const count = parseInt($('count').value) || 1;
@@ -114,8 +160,7 @@ async function start() {
       try {
         let res;
         if (imgFile) {
-          
-         const fd = new FormData();
+          const fd = new FormData();
           fd.append('payload_json', JSON.stringify({ content: text }));
           fd.append('files[0]', imgFile, 'image.png');
           res = await fetch(url, { method: 'POST', body: fd });
@@ -130,9 +175,9 @@ async function start() {
           const data = await res.json().catch(() => ({ retry_after: 1 }));
           const wait = (data.retry_after || 1) * 1000;
           $('sWait').textContent = parseInt($('sWait').textContent) + 1;
-          log(`⏳ Rate Limit — انتظار ${wait}ms ثم إعادة الإرسال`, 'err');
+          log(`⏳ Rate Limit — انتظار ${wait}ms`, 'err');
           await new Promise(r => setTimeout(r, wait));
-          continue; 
+          continue;
         }
         if (res.ok || res.status === 204) {
           $('sSent').textContent = i;
@@ -144,7 +189,8 @@ async function start() {
         sent = true;
       } catch (e) {
         $('sFail').textContent = parseInt($('sFail').textContent) + 1;
-        log('✖ خطأ اتصال', 'err'); sent = true;
+        log('✖ خطأ اتصال', 'err');
+        sent = true;
       }
     }
     if (delay > 0 && i < count) await new Promise(r => setTimeout(r, delay));
@@ -154,7 +200,7 @@ async function start() {
   $('btn').style.display = 'block'; $('stopBtn').style.display = 'none';
 }
 
-
+/* ================= تعديل الويبهوك ================= */
 async function editWebhook() {
   const url = $('url').value.trim();
   if (!url.startsWith('https://')) return log('❌ رابط ويبهوك غير صحيح', 'err');
@@ -162,7 +208,7 @@ async function editWebhook() {
   const name = $('whName').value.trim();
   if (name) body.name = name;
   const img = $('whImg').files[0];
-  if (img) body.avatar = await fileToDataURI(img); 
+  if (img) body.avatar = await fileToDataURI(img);
   if (!Object.keys(body).length) return log('❌ اكتب اسم أو اختر صورة', 'err');
   const res = await fetch(url, {
     method: 'PATCH',
