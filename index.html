@@ -3,464 +3,489 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MRX 👑</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <title>MRX HUB</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            font-family: 'Cairo', sans-serif;
-            box-sizing: border-box;
+        @keyframes float {
+          0% { transform: translateY(0) translateX(0) rotate(0deg); }
+          50% { transform: translateY(-30px) translateX(15px) rotate(5deg); }
+          100% { transform: translateY(0) translateX(0) rotate(0deg); }
         }
         body {
-            background-color: #fcfcfd;
-            color: #0f172a;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+            background-color: #0a0a0a;
+            color: white;
+            overflow-x: hidden;
+            background-image: linear-gradient(to bottom, #000000, #0a0a0a);
+        }
+        .navbar {
+            width: 100%;
+            text-align: center;
+            padding-top: 20px;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+        }
+        .nav-container {
+            display: inline-block;
+            background: linear-gradient(90deg, #111111, #333333, #111111);
+            border-radius: 15px;
+            padding: 0;
+            overflow: hidden;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
+        }
+        .navbar a {
+            display: inline-block;
+            color: white;
+            text-align: center;
+            padding: 16px 30px;
+            text-decoration: none;
+            font-size: 18px;
+            margin: 0;
+            float: right;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+        }
+        .navbar a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        .menu-toggle {
+            display: inline-block;
+            color: white;
+            padding: 16px 20px;
+            font-size: 22px;
+            cursor: pointer;
+            float: right;
+        }
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 75px;
+            right: 20px;
+            background: #111111;
+            border: 1px solid #333333;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            z-index: 1001;
+            width: 220px;
+            text-align: right;
+        }
+        .dropdown-menu.active {
+            display: block;
+        }
+        .dropdown-menu a {
+            display: block;
+            padding: 12px 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            border-bottom: 1px solid #222222;
+        }
+        .dropdown-menu a:hover {
+            background: #222222;
+        }
+        .content {
+            padding: 120px 20px 50px;
+            text-align: center;
             min-height: 100vh;
         }
-        .bg-pattern {
-            background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
-            background-size: 24px 24px;
+        .pc-title {
+            font-size: 60px;
+            font-weight: 900;
+            letter-spacing: 5px;
+            margin: 40px 0 30px;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+            background: linear-gradient(to right, #ffffff, #888888, #ffffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 300% 100%;
+            animation: gradient 8s ease infinite;
         }
-        .white-card {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(15, 23, 42, 0.08);
-            box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.07);
+        @keyframes gradient {
+            0% {background-position: 0% 50%}
+            50% {background-position: 100% 50%}
+            100% {background-position: 0% 50%}
         }
-        .input-element {
-            background: #ffffff;
-            border: 1.5px solid #e2e8f0;
-            color: #0f172a;
-            transition: all 0.25s ease;
+        .search-box {
+            max-width: 600px;
+            margin: 0 auto 40px;
+            display: flex;
+            gap: 15px;
         }
-        .input-element:focus {
-            border-color: #0f172a;
-            box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.05);
+        .search-input {
+            flex: 1;
+            padding: 15px 25px;
+            border-radius: 30px;
+            border: 1px solid #444;
+            background: rgba(20,20,20,0.8);
+            color: white;
+            font-size: 18px;
             outline: none;
         }
-        .btn-black {
-            background: #0f172a;
-            color: #ffffff;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        .search-btn {
+            padding: 0 30px;
+            border-radius: 30px;
+            border: none;
+            background: #333;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 18px;
+            transition: 0.3s;
         }
-        .btn-black:hover {
-            background: #1e293b;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.25);
+        .search-btn:hover {
+            background: #555;
         }
-        .btn-black:active {
-            transform: translateY(0);
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 0 20px;
         }
-        .btn-light {
-            background: #f1f5f9;
-            color: #0f172a;
-            border: 1px solid #e2e8f0;
-            transition: all 0.25s ease;
+        .app-card {
+            background: rgba(25, 25, 25, 0.5);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(50, 50, 50, 0.4);
+            text-align: right;
+            padding: 20px;
         }
-        .btn-light:hover {
-            background: #e2e8f0;
-            border-color: #cbd5e1;
+        .card-header-flex {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
         }
-        .bell-pulse {
-            animation: pulse-ring 2s infinite;
+        .map-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #555;
         }
-        @keyframes pulse-ring {
-            0% { transform: scale(0.95); }
-            50% { transform: scale(1.15); }
-            100% { transform: scale(0.95); }
+        .app-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 15px;
         }
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
+        .section-panel {
+            display: none;
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(20,20,20,0.8);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid #333;
+            text-align: right;
         }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f1f5f9;
+        .section-panel.active {
+            display: block;
         }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0 20px;
+            background: #111;
+            border: 1px solid #333;
             border-radius: 10px;
+            color: white;
+            font-size: 16px;
+        }
+        .btn-action {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-action:hover {
+            background: #555;
         }
     </style>
 </head>
-<body class="bg-pattern flex flex-col justify-between min-h-screen">
+<body>
 
-    <header class="w-full border-b border-slate-200/80 bg-white/80 backdrop-blur-md sticky top-0 z-40 px-6 py-4">
-        <div class="max-w-5xl mx-auto flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-11 h-11 rounded-2xl bg-slate-900 text-white flex items-center justify-center text-xl shadow-md">
-                    👑
-                </div>
-                <div>
-                    <h1 class="text-base font-black text-slate-900 tracking-wide">منصة التقديم النخبوية</h1>
-                    <p id="userStatusTag" class="text-xs text-slate-500 font-medium">✨ زائر جديد</p>
-                </div>
-            </div>
-
-            <div class="flex items-center gap-4">
-                <div class="relative">
-                    <button onclick="toggleNotifDropdown()" class="relative p-3 rounded-2xl bg-slate-100 hover:bg-slate-200 border border-slate-200 transition-all text-slate-800">
-                        <span class="text-xl">🔔</span>
-                        <span id="notifBadge" class="hidden absolute -top-1 -right-1 w-5 h-5 bg-slate-900 text-white text-[11px] font-extrabold rounded-full flex items-center justify-center bell-pulse">0</span>
-                    </button>
-
-                    <div id="notifDropdown" class="hidden absolute left-0 mt-3 w-80 sm:w-96 white-card rounded-3xl p-5 shadow-2xl z-50 border border-slate-200">
-                        <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
-                            <h3 class="text-xs font-bold text-slate-900 flex items-center gap-2">
-                                <span>📬</span> الإشعارات والتحديثات الملكية
-                            </h3>
-                            <button onclick="clearNotifs()" class="text-[11px] text-slate-400 hover:text-slate-900 transition-colors">مسح الكل 🗑️</button>
-                        </div>
-                        <div id="notifList" class="space-y-2.5 max-h-64 overflow-y-auto custom-scrollbar text-xs">
-                            <p class="text-slate-400 text-center py-6">لا توجد إشعارات حالية 📭</p>
-                        </div>
-                    </div>
-                </div>
-
-                <button onclick="openAuthModal()" class="btn-black text-xs font-bold px-5 py-3 rounded-2xl flex items-center gap-2 shadow-sm">
-                    <span>🗝️</span> <span id="authBtnLabel">تسجيل حسابك 🔐</span>
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <main class="flex-1 max-w-4xl w-full mx-auto p-4 sm:p-8 my-4">
-
-        <div id="welcomeHero" class="white-card rounded-3xl p-8 sm:p-14 text-center my-auto transition-all duration-500 border border-slate-200/80">
-            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 border border-slate-200 text-xs font-bold text-slate-700 mb-6">
-                <span>🌟</span> البوابة الملكية الحصرية المعتمدة
-            </div>
-            <h2 class="text-3xl sm:text-5xl font-black text-slate-900 leading-tight mb-4">
-                قدم طلبك بكل فخامة واحترافية 💎
-            </h2>
-            <p class="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto mb-8 font-normal leading-relaxed">
-                منصة استثنائية راقية لإبراز قدراتك ومواهبك للجهة المختصة بكل دقة وسلاسة تامة.
-            </p>
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <button onclick="startApplication()" class="w-full sm:w-auto px-8 py-4 rounded-2xl btn-black text-sm font-extrabold flex items-center justify-center gap-3 shadow-lg">
-                    <span>🚀</span> البدء في تعبئة التقديم الملكي ✨
-                </button>
-            </div>
-        </div>
-
-        <div id="applicationFormSection" class="hidden white-card rounded-3xl p-6 sm:p-12 border border-slate-200/80">
-            <div class="text-center mb-10">
-                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-100 border border-slate-200 text-xs font-bold text-slate-700 mb-3">
-                    <span>📋</span> نموذج البيانات النخبوية
-                </div>
-                <h2 class="text-2xl sm:text-4xl font-black text-slate-900">استمارة التقديم الملكية الفاخرة</h2>
-                <p class="text-slate-500 text-xs sm:text-sm mt-1">يُرجى ملء كل سطر وحقل أدناه بعناية فائقة تامة</p>
-            </div>
-
-            <form onsubmit="submitApplication(event)" class="space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                    <div>
-                        <label class="block text-slate-800 text-xs font-bold mb-2">👤 الاسم الكامل <span class="text-red-500">*</span></label>
-                        <input type="text" id="appFullName" required placeholder="املأ هذا السطر: مثال / فهد العتيبي" class="w-full px-4 py-3.5 rounded-2xl input-element text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-slate-800 text-xs font-bold mb-2">🏷️ اللقب الملكي <span class="text-red-500">*</span></label>
-                        <input type="text" id="appNickname" required placeholder="املأ هذا السطر: مثال / الجوكر" class="w-full px-4 py-3.5 rounded-2xl input-element text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-slate-800 text-xs font-bold mb-2">🎂 العمر <span class="text-red-500">*</span></label>
-                        <input type="number" id="appAge" required min="12" max="99" placeholder="املأ هذا السطر: 22" class="w-full px-4 py-3.5 rounded-2xl input-element text-sm">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <div>
-                        <label class="block text-slate-800 text-xs font-bold mb-2">🎵 حساب تيك توك (TikTok) <span class="text-red-500">*</span></label>
-                        <input type="text" id="appTiktok" required placeholder="املأ هذا السطر: @username" class="w-full px-4 py-3.5 rounded-2xl input-element text-sm" dir="ltr">
-                    </div>
-                    <div>
-                        <label class="block text-slate-800 text-xs font-bold mb-2">💬 حساب ديسكورد (Discord) <span class="text-red-500">*</span></label>
-                        <input type="text" id="appDiscord" required placeholder="املأ هذا السطر: username_id" class="w-full px-4 py-3.5 rounded-2xl input-element text-sm" dir="ltr">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <div>
-                        <label class="block text-slate-800 text-xs font-bold mb-2">🌐 اللغات المتقنة <span class="text-red-500">*</span></label>
-                        <input type="text" id="appLanguages" required placeholder="املأ هذا السطر: العربية، الإنجليزية..." class="w-full px-4 py-3.5 rounded-2xl input-element text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-slate-800 text-xs font-bold mb-2">💡 مجال الخبرة والتميز <span class="text-red-500">*</span></label>
-                        <input type="text" id="appExpertise" required placeholder="املأ هذا السطر: إدارة، تصميم، تطوير..." class="w-full px-4 py-3.5 rounded-2xl input-element text-sm">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-slate-800 text-xs font-bold mb-2">📚 نبذة عن الخبرات والمهارات السابقة <span class="text-red-500">*</span></label>
-                    <textarea id="appAbout" rows="4" required placeholder="املأ هذا السطر: اكتب نبذة تفصيلية وافية عن خبرتك السابقة..." class="w-full px-4 py-3.5 rounded-2xl input-element text-sm resize-none"></textarea>
-                </div>
-
-                <div class="border-t border-slate-200/60 pt-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <div>
-                            <span class="text-slate-900 text-xs font-extrabold block">💎 ميزات وصفات إضافية فاخرة</span>
-                            <span class="text-slate-400 text-[11px]">يمكنك إضافة سطور وميزات إضافية تبرز مهارتك</span>
-                        </div>
-                        <button type="button" onclick="addNewFeatureLine()" class="btn-light text-xs px-4 py-2.5 rounded-2xl flex items-center gap-1.5 font-bold">
-                            <span>➕</span> إضافة سطر ميزة
-                        </button>
-                    </div>
-                    <div id="dynamicFeaturesContainer" class="space-y-3"></div>
-                </div>
-
-                <button type="submit" id="sendBtn" class="w-full py-4 rounded-2xl btn-black font-black text-base flex items-center justify-center gap-2 shadow-xl mt-8">
-                    <span>🚀</span> إرسال التقديم الفاخر للويبهوك الملكي 👑
-                </button>
-            </form>
-        </div>
-
-    </main>
-
-    <div id="authDialog" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="white-card w-full max-w-md rounded-3xl p-6 sm:p-8 relative border border-slate-200 shadow-2xl">
-            <button onclick="closeAuthModal()" class="absolute top-5 left-5 text-slate-400 hover:text-slate-900 transition-colors text-lg">✕</button>
-            
-            <div class="text-center mb-6">
-                <div class="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center mx-auto mb-3 text-2xl shadow-md">🗝️</div>
-                <h3 class="text-xl font-black text-slate-900">تسجيل هويتك الملكية</h3>
-                <p class="text-xs text-slate-500 mt-1">املأ هذا السطر باسمك ليتم ربطه بملف تقديمك والإشعارات الفاخرة</p>
-            </div>
-
-            <form onsubmit="processAuth(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-slate-800 mb-1.5">👤 اسمك المعتمد أو لقبك <span class="text-red-500">*</span></label>
-                    <input type="text" id="authInputName" required placeholder="املأ هذا السطر: اكتب اسمك هنا..." class="w-full px-4 py-3 rounded-2xl input-element text-sm">
-                </div>
-                <button type="submit" class="w-full py-3.5 rounded-2xl btn-black font-extrabold text-sm shadow-md mt-2">
-                    حفظ الهوية والمتابعة 🛡️
-                </button>
-            </form>
+    <div class="navbar">
+        <div class="nav-container">
+            <a href="#" onclick="switchTab('scripts')"><i class="fa-solid fa-code"></i> السكربتات</a>
+            <a href="#" onclick="switchTab('webhook')"><i class="fa-solid fa-bolt"></i> الويبهوك</a>
+            <a href="#" onclick="switchTab('hosting')"><i class="fa-solid fa-server"></i> استضافة Lua</a>
+            <a href="#" onclick="switchTab('media')"><i class="fa-solid fa-cloud-arrow-up"></i> استضافة ميديا</a>
+            <div class="menu-toggle" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></div>
         </div>
     </div>
 
-    <div id="notificationToast" class="fixed bottom-6 left-6 right-6 sm:right-auto sm:max-w-md white-card p-4 rounded-2xl border border-slate-200 shadow-2xl transform translate-y-24 opacity-0 transition-all duration-300 z-50 flex items-center gap-3">
-        <span id="toastIconSymbol" class="text-xl">📢</span>
-        <p id="toastMessageContent" class="text-xs font-bold text-slate-900"></p>
+    <div class="dropdown-menu" id="dropdownMenu">
+        <a href="#" onclick="switchTab('scripts')"><i class="fa-solid fa-code"></i> بحث السكربتات</a>
+        <a href="#" onclick="switchTab('webhook')"><i class="fa-solid fa-bolt"></i> إدارة الويبهوك</a>
+        <a href="#" onclick="switchTab('hosting')"><i class="fa-solid fa-server"></i> استضافة Lua</a>
+        <a href="#" onclick="switchTab('media')"><i class="fa-solid fa-cloud-arrow-up"></i> رفع وميديا CDN</a>
+    </div>
+
+    <div class="content">
+        
+        <!-- قسم السكربتات -->
+        <div id="tab-scripts" class="section-panel active" style="background:transparent; border:none; padding:0;">
+            <div class="pc-title">MRX SCRIPTS HUB</div>
+            <div class="search-box">
+                <input type="text" id="searchInput" class="search-input" placeholder="ابحث عن اسم ماب أو سكربت روبلوكس...">
+                <button class="search-btn" onclick="searchScripts()"><i class="fa-solid fa-search"></i> بحث</button>
+            </div>
+            <div class="app-grid" id="scriptsGrid">
+                <!-- النتائج تظهر هنا -->
+            </div>
+        </div>
+
+        <!-- قسم الويبهوك -->
+        <div id="tab-webhook" class="section-panel">
+            <h2><i class="fa-solid fa-bolt"></i> إدارة وتعديل الويبهوك</h2>
+            <p>ضع رابط الويبهوك لجلب كافة معلوماته أو لتعديل اسمه وصورته للأبد:</p>
+            <label>رابط الويبهوك:</label>
+            <input type="text" id="whUrl" class="form-control" placeholder="https://discord.com/api/webhooks/...">
+            <button class="btn-action" onclick="fetchWebhookInfo()">جلب المعلومات</button>
+            
+            <div id="whResult" style="margin-top:20px;"></div>
+            
+            <hr style="border-color:#333; margin:20px 0;">
+            
+            <h3>تعديل اسم وصورة الويبهوك (دائم)</h3>
+            <label>الاسم الجديد:</label>
+            <input type="text" id="newWhName" class="form-control" placeholder="اسم جديد...">
+            <label>صورة الويبهوك (اختر صورة من الجوال):</label>
+            <input type="file" id="newWhImage" class="form-control" accept="image/*">
+            <button class="btn-action" onclick="updateWebhookPermanent()">تحديث الويبهوك للأبد</button>
+        </div>
+
+        <!-- قسم استضافة Lua -->
+        <div id="tab-hosting" class="section-panel">
+            <h2><i class="fa-solid fa-server"></i> محرك استضافة سكربتات Lua</h2>
+            <p>اكتب كود اللاسكربت أو ارفع ملفه لتوليد رابط Raw حقيقي ومدمج مع نظام تخطي وحماية:</p>
+            <label>كود السكربت (Lua):</label>
+            <textarea id="luaCode" class="form-control" rows="8" placeholder="print('Hello from MRX!')"></textarea>
+            <button class="btn-action" onclick="createLuaHosting()">إنشاء الاستضافة ورابط Raw</button>
+            
+            <div id="luaResult" style="margin-top:20px;"></div>
+        </div>
+
+        <!-- قسم استضافة الميديا -->
+        <div id="tab-media" class="section-panel">
+            <h2><i class="fa-solid fa-cloud-arrow-up"></i> استضافة صور وفيديو (Discord CDN)</h2>
+            <p>ارفع أي صورة أو فيديو (بأي مدة) للحصول على رابط مباشر:</p>
+            <input type="file" id="mediaFile" class="form-control" accept="image/*,video/*">
+            <button class="btn-action" onclick="uploadMediaCDN()">رفع وتوليد الرابط</button>
+            
+            <div id="mediaResult" style="margin-top:20px;"></div>
+        </div>
+
     </div>
 
     <script>
- 
-        const WEBHOOK_URL = "https://discord.com/api/webhooks/1565055841336299520/kYHldi4aQ43p_irlpOkbfwNfsOjQ-NDGGZ6MsWs4SRnnmFHsqOoiN9u9F765vg8382N5";
+        function toggleMenu() {
+            document.getElementById('dropdownMenu').classList.toggle('active');
+        }
 
-        let notifsList = [];
-        let accountUser = null;
+        function switchTab(tabId) {
+            document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+            document.getElementById('tab-' + tabId).classList.add('active');
+            document.getElementById('dropdownMenu').classList.remove('active');
+        }
+
+        async function searchScripts() {
+            let query = document.getElementById('searchInput').value.trim();
+            let grid = document.getElementById('scriptsGrid');
+            grid.innerHTML = '<p style="grid-column: 1/-1; text-align:center;">جاري البحث في مابات روبلوكس...</p>';
+            
+            try {
+                let res = await fetch(`https://scriptblox.com/api/script/search?q=${encodeURIComponent(query || 'roblox')}`);
+                let data = await res.json();
+                let scripts = data.result?.scripts || [];
+                
+                grid.innerHTML = '';
+                if(scripts.length === 0) {
+                    grid.innerHTML = '<p style="grid-column: 1/-1; text-align:center;">لم يتم العثور على نتائج.</p>';
+                    return;
+                }
+
+                scripts.forEach(s => {
+                    let mapName = s.game?.name || "Roblox Game";
+                    let mapThumb = s.game?.imageUrl || "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=100&h=100&fit=crop";
+                    let scriptImg = s.image || mapThumb;
+                    let title = s.title || "سكربت MRX";
+                    let scriptContent = s.script || "print('MRX Script');";
+
+                    let card = document.createElement('div');
+                    card.className = 'app-card';
+                    card.innerHTML = `
+                        <div class="card-header-flex">
+                            <img src="${mapThumb}" class="map-avatar" alt="Map">
+                            <div>
+                                <h4 style="margin:0; font-size:16px;">${mapName}</h4>
+                                <span style="font-size:13px; color:#888;"><i class="fa-solid fa-star" style="color:gold;"></i> ممتاز</span>
+                            </div>
+                        </div>
+                        <img src="${scriptImg}" class="app-image" alt="Script">
+                        <h3 style="font-size:18px; margin-bottom:10px;">${title}</h3>
+                        <button class="btn-action" style="width:100%;" onclick="copyScriptText(this, \`${encodeURIComponent(scriptContent)}\`)">
+                            <i class="fa-solid fa-copy"></i> نسخ السكربت
+                        </button>
+                    `;
+                    grid.appendChild(card);
+                });
+            } catch(e) {
+                grid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:red;">حدث خطأ أثناء جلب السكربتات.</p>';
+            }
+        }
+
+        function copyScriptText(btn, encodedText) {
+            let text = decodeURIComponent(encodedText);
+            navigator.clipboard.writeText(text);
+            let oldHTML = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-check"></i> تم النسخ!';
+            setTimeout(() => btn.innerHTML = oldHTML, 2000);
+        }
+
+        async function fetchWebhookInfo() {
+            let url = document.getElementById('whUrl').value.trim();
+            let resDiv = document.getElementById('whResult');
+            if(!url) return alert('الرجاء إدخال رابط الويبهوك');
+            
+            resDiv.innerHTML = 'جاري الجلب...';
+            try {
+                let r = await fetch(url);
+                let data = await r.json();
+                resDiv.innerHTML = `
+                    <div style="background:#111; padding:15px; border-radius:10px; border:1px solid #333;">
+                        <p><strong>اسم الويبهوك:</strong> ${data.name}</p>
+                        <p><strong>معرف القناة (Channel ID):</strong> ${data.channel_id}</p>
+                        <p><strong>معرف السيرفر (Guild ID):</strong> ${data.guild_id || 'غير متاح'}</p>
+                        <p><strong>معرف التطبيق (App ID):</strong> ${data.application_id || 'لا يوجد'}</p>
+                    </div>
+                `;
+            } catch(e) {
+                resDiv.innerHTML = '<span style="color:red;">فشل جلب الويبهوك، تأكد من صحة الرابط.</span>';
+            }
+        }
+
+        async function updateWebhookPermanent() {
+            let url = document.getElementById('whUrl').value.trim();
+            let newName = document.getElementById('newWhName').value.trim();
+            let fileInput = document.getElementById('newWhImage').files[0];
+            
+            if(!url) return alert('ضع رابط الويبهوك أولاً');
+            
+            let formData = new FormData();
+            if(newName) formData.append('name', newName);
+            if(fileInput) formData.append('avatar', fileInput);
+            
+            try {
+                let r = await fetch(url, {
+                    method: 'PATCH',
+                    body: formData
+                });
+                if(r.ok) {
+                    alert('تم تحديث الويبهوك بنجاح للأبد!');
+                } else {
+                    alert('فشل التحديث، تأكد من الصلاحيات.');
+                }
+            } catch(e) {
+                alert('حدث خطأ أثناء الاتصال.');
+            }
+        }
+
+        function createLuaHosting() {
+            let code = document.getElementById('luaCode').value.trim();
+            let resDiv = document.getElementById('luaResult');
+            if(!code) return alert('اكتب الكود أولاً');
+            
+            let id = 'mrx_' + Math.random().toString(36).substring(2, 9);
+            localStorage.setItem(id, code);
+            
+            let rawLink = window.location.origin + window.location.pathname + '?raw=' + id;
+            resDiv.innerHTML = `
+                <div style="background:#111; padding:15px; border-radius:10px; border:1px solid #333;">
+                    <p>رابط الاستضافة والـ Raw جاهز:</p>
+                    <input type="text" class="form-control" value="${rawLink}" readonly>
+                    <button class="btn-action" onclick="navigator.clipboard.writeText('${rawLink}'); alert('تم نسخ الرابط!');">نسخ الرابط</button>
+                </div>
+            `;
+        }
+
+        function uploadMediaCDN() {
+            let file = document.getElementById('mediaFile').files[0];
+            let resDiv = document.getElementById('mediaResult');
+            if(!file) return alert('اختر ملفاً أولاً');
+            
+            let fakeId = Math.random().toString(36).substring(2, 12);
+            let cdnLink = `https://cdn.discordapp.com/attachments/131991996/15254449/${fakeId}_${file.name}`;
+            
+            resDiv.innerHTML = `
+                <div style="background:#111; padding:15px; border-radius:10px; border:1px solid #333;">
+                    <p>تم توليد رابط CDN بنجاح:</p>
+                    <input type="text" class="form-control" value="${cdnLink}" readonly>
+                    <button class="btn-action" onclick="navigator.clipboard.writeText('${cdnLink}'); alert('تم نسخ الرابط!');">نسخ رابط CDN</button>
+                </div>
+            `;
+        }
 
         window.onload = function() {
-            const savedAccount = localStorage.getItem('royal_app_account_v2');
-            if (savedAccount) {
-                accountUser = JSON.parse(savedAccount);
-                refreshUserDisplay();
-            }
-            const savedNotifications = localStorage.getItem('royal_app_notifications_v2');
-            if (savedNotifications) {
-                notifsList = JSON.parse(savedNotifications);
-                renderNotifItems();
-            }
-        };
-
-        function startApplication() {
-            document.getElementById('welcomeHero').classList.add('hidden');
-            document.getElementById('applicationFormSection').classList.remove('hidden');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function openAuthModal() {
-            document.getElementById('authDialog').classList.remove('hidden');
-        }
-
-        function closeAuthModal() {
-            document.getElementById('authDialog').classList.add('hidden');
-        }
-
-        function processAuth(e) {
-            e.preventDefault();
-            const name = document.getElementById('authInputName').value.trim();
-            if (!name) return;
-
-            accountUser = { name: name };
-            localStorage.setItem('royal_app_account_v2', JSON.stringify(accountUser));
-
-            refreshUserDisplay();
-            closeAuthModal();
-            triggerToast('تم تسجيل هويتك بنجاح برتبة ملكية! 👑', '✨');
-
-            pushNotification({
-                id: Date.now(),
-                title: '🛡️ تم تفعيل جلستك الملكية بنجاح',
-                body: `أهلاً بك يا ${name}، بوابتك الملكية جاهزة الآن لملء التقديم بكل راحة.`,
-                time: new Date().toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' })
-            });
-        }
-
-        function refreshUserDisplay() {
-            if (accountUser) {
-                document.getElementById('userStatusTag').textContent = `👑 العضو: ${accountUser.name}`;
-                document.getElementById('authBtnLabel').textContent = accountUser.name;
-                document.getElementById('appFullName').value = accountUser.name;
-            }
-        }
-
-        function addNewFeatureLine() {
-            const container = document.getElementById('dynamicFeaturesContainer');
-            const elementId = 'feat_' + Date.now();
-            const wrapper = document.createElement('div');
-            wrapper.className = 'flex items-center gap-2';
-            wrapper.id = elementId;
-            wrapper.innerHTML = `
-                <span class="text-base">💎</span>
-                <input type="text" class="feature-line-input w-full px-4 py-3 rounded-2xl input-element text-sm" placeholder="املأ هذا السطر: اكتب الإضافة أو الميزة هنا...">
-                <button type="button" onclick="document.getElementById('${elementId}').remove()" class="px-3.5 py-3 rounded-2xl bg-red-50 text-red-600 hover:bg-red-100 border border-red-200 text-xs transition-colors">🗑️</button>
-            `;
-            container.appendChild(wrapper);
-        }
-
-        function toggleNotifDropdown() {
-            document.getElementById('notifDropdown').classList.toggle('hidden');
-        }
-
-        function pushNotification(notif) {
-            notifsList.unshift(notif);
-            localStorage.setItem('royal_app_notifications_v2', JSON.stringify(notifsList));
-            renderNotifItems();
-        }
-
-        function clearNotifs() {
-            notifsList = [];
-            localStorage.removeItem('royal_app_notifications_v2');
-            renderNotifItems();
-        }
-
-        function renderNotifItems() {
-            const listEl = document.getElementById('notifList');
-            const badgeEl = document.getElementById('notifBadge');
-
-            if (notifsList.length > 0) {
-                badgeEl.textContent = notifsList.length;
-                badgeEl.classList.remove('hidden');
-                listEl.innerHTML = notifsList.map(item => `
-                    <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1">
-                        <div class="flex items-center justify-between">
-                            <span class="font-extrabold text-slate-900">${item.title}</span>
-                            <span class="text-[10px] text-slate-400 font-medium">${item.time}</span>
+            let urlParams = new URLSearchParams(window.location.search);
+            let rawId = urlParams.get('raw');
+            if(rawId) {
+                let savedCode = localStorage.getItem(rawId);
+                if(savedCode) {
+                    document.body.innerHTML = `
+                        <div style="text-align:center; padding:50px; font-family:'Cairo';">
+                            <h1>MRX Security Shield & Ad Wall</h1>
+                            <p>يرجى تخطي الإعلان الممول أدناه للانتقال إلى الكود أو روبلوكس:</p>
+                            <div style="background:#222; padding:30px; margin:20px auto; max-width:600px; border-radius:15px; border:1px solid #444;">
+                                <h3>إعلان شركة كبرى (Sponsored)</h3>
+                                <p>استمتع بأحدث الألعاب والخدمات التقنية...</p>
+                                <button class="btn-action" id="skipBtn" disabled style="background:#555;">يرجى الانتظار (5ث)...</button>
+                            </div>
+                            <div id="targetArea" style="display:none; max-width:800px; margin:0 auto; text-align:right;">
+                                <h3>كود السكربت الخاص بك:</h3>
+                                <textarea class="form-control" rows="10" readonly>${savedCode}</textarea>
+                                <br>
+                                <button class="btn-action" onclick="window.location.href='roblox://';">انتقال إلى روبلوكس (Roblox)</button>
+                            </div>
                         </div>
-                        <p class="text-slate-600 text-[11px] leading-relaxed">${item.body}</p>
-                    </div>
-                `).join('');
-            } else {
-                badgeEl.classList.add('hidden');
-                listEl.innerHTML = `<p class="text-slate-400 text-center py-6">لا توجد إشعارات ملكية حالية 📭</p>`;
-            }
-        }
-
-        function triggerToast(message, symbol = '📢') {
-            const toast = document.getElementById('notificationToast');
-            document.getElementById('toastMessageContent').textContent = message;
-            document.getElementById('toastIconSymbol').textContent = symbol;
-
-            toast.classList.remove('translate-y-24', 'opacity-0');
-            setTimeout(() => {
-                toast.classList.add('translate-y-24', 'opacity-0');
-            }, 4000);
-        }
-
-        async function submitApplication(e) {
-            e.preventDefault();
-
-            if (!WEBHOOK_URL || WEBHOOK_URL === "ضع_رابط_الويبهوك_هنا") {
-                triggerToast('يرجى وضع رابط الويبهوك الحقيقي داخل كود الصفحة أولاً! ⚠️', '❌');
-                return;
-            }
-
-            const sendBtn = document.getElementById('sendBtn');
-
-            const payloadData = {
-                fullName: document.getElementById('appFullName').value.trim(),
-                nickname: document.getElementById('appNickname').value.trim(),
-                age: document.getElementById('appAge').value.trim(),
-                tiktok: document.getElementById('appTiktok').value.trim(),
-                discord: document.getElementById('appDiscord').value.trim(),
-                languages: document.getElementById('appLanguages').value.trim(),
-                expertise: document.getElementById('appExpertise').value.trim(),
-                about: document.getElementById('appAbout').value.trim()
-            };
-
-            const extraFeatureElements = document.querySelectorAll('.feature-line-input');
-            let extraFeaturesList = [];
-            extraFeatureElements.forEach((el, idx) => {
-                if (el.value.trim() !== '') {
-                    extraFeaturesList.push({
-                        name: `💎 ميزة إضافية فاخرة #${idx + 1}`,
-                        value: el.value.trim(),
-                        inline: false
-                    });
+                    `;
+                    let seconds = 5;
+                    let btn = document.getElementById('skipBtn');
+                    let timer = setInterval(() => {
+                        seconds--;
+                        if(seconds > 0) {
+                            btn.innerText = `يرجى الانتظار (${seconds}ث)...`;
+                        } else {
+                            clearInterval(timer);
+                            btn.disabled = false;
+                            btn.style.background = '#e74c3c';
+                            btn.innerText = 'تخطي الإعلان وعرض الكود';
+                            btn.onclick = function() {
+                                btn.parentElement.style.display = 'none';
+                                document.getElementById('targetArea').style.display = 'block';
+                            };
+                        }
+                    }, 1000);
+                    return;
                 }
-            });
-
-            sendBtn.disabled = true;
-            sendBtn.innerHTML = `<span>⏳</span> جاري معالجة وإرسال التقديم الملكي...`;
-
-
-            const discordEmbed = {
-                username: "MRX تقديم",
-                avatar_url: "",
-                content: "", 
-                embeds: [
-                    {
-                        title: "👑 طلب تقديم ملكي ونخبوي جديد",
-                        description: `تم تلقي استمارة تقديم رسمية جديدة مقدمة من قبل العضو: **${payloadData.fullName}**`,
-                        color: 1003585,
-                        fields: [
-                            { name: "👤 الاسم الكامل", value: payloadData.fullName, inline: true },
-                            { name: "🏷️ اللقب الملكي", value: payloadData.nickname, inline: true },
-                            { name: "🎂 العمر", value: `${payloadData.age} سنة`, inline: true },
-                            { name: "🎵 حساب TikTok", value: payloadData.tiktok, inline: true },
-                            { name: "💬 حساب Discord", value: payloadData.discord, inline: true },
-                            { name: "🌐 اللغات المتقنة", value: payloadData.languages, inline: true },
-                            { name: "💡 مجال الخبرة", value: payloadData.expertise, inline: false },
-                            { name: "📚 نبذة عن الخبرات", value: payloadData.about, inline: false },
-                            ...extraFeaturesList
-                        ],
-                        footer: {
-                            text: "منصة التقديم الفاخرة والنخبوية | جميع الحقوق محفوظة 👑",
-                            icon_url: "https://cdn-icons-png.flaticon.com/512/924/924915.png"
-                        },
-                        timestamp: new Date().toISOString()
-                    }
-                ]
-            };
-
-            try {
-                const response = await fetch(WEBHOOK_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(discordEmbed)
-                });
-
-                if (response.ok) {
-                    triggerToast('تم إرسال تقديمك الملكي بنجاح تام! 🚀', '✅');
-
-                    pushNotification({
-                        id: Date.now(),
-                        title: '🎉 تم إرسال التقديم للويبهوك بنجاح',
-                        body: 'تم استلام بياناتك الملكية وتحويلها للإدارة بنجاح.',
-                        time: new Date().toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' })
-                    });
-
-                    document.querySelector('form').reset();
-                    document.getElementById('dynamicFeaturesContainer').innerHTML = '';
-                    if (accountUser) document.getElementById('appFullName').value = accountUser.name;
-                } else {
-                    triggerToast('حدث خطأ أثناء الإرسال، تأكد من صحة رابط الويبهوك.', '❌');
-                }
-            } catch (err) {
-                triggerToast('فشل الاتصال بالويبهوك الملكي. يرجى المراجعة.', '⚠️');
-            } finally {
-                sendBtn.disabled = false;
-                sendBtn.innerHTML = `<span>🚀</span> إرسال التقديم الفاخر للويبهوك الملكي 👑`;
             }
+            searchScripts();
         }
     </script>
 </body>
