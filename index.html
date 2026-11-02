@@ -1,492 +1,133 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MRX HUB</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        @keyframes float {
-          0% { transform: translateY(0) translateX(0) rotate(0deg); }
-          50% { transform: translateY(-30px) translateX(15px) rotate(5deg); }
-          100% { transform: translateY(0) translateX(0) rotate(0deg); }
-        }
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Cairo', sans-serif;
-            background-color: #0a0a0a;
-            color: white;
-            overflow-x: hidden;
-            background-image: linear-gradient(to bottom, #000000, #0a0a0a);
-        }
-        .navbar {
-            width: 100%;
-            text-align: center;
-            padding-top: 20px;
-            position: fixed;
-            top: 0;
-            z-index: 1000;
-        }
-        .nav-container {
-            display: inline-block;
-            background: linear-gradient(90deg, #111111, #333333, #111111);
-            border-radius: 15px;
-            padding: 0;
-            overflow: hidden;
-            box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
-        }
-        .navbar a {
-            display: inline-block;
-            color: white;
-            text-align: center;
-            padding: 16px 30px;
-            text-decoration: none;
-            font-size: 18px;
-            margin: 0;
-            float: right;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s;
-        }
-        .navbar a:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-        }
-        .menu-toggle {
-            display: inline-block;
-            color: white;
-            padding: 16px 20px;
-            font-size: 22px;
-            cursor: pointer;
-            float: right;
-        }
-        .dropdown-menu {
-            display: none;
-            position: absolute;
-            top: 75px;
-            right: 20px;
-            background: #111111;
-            border: 1px solid #333333;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-            z-index: 1001;
-            width: 220px;
-            text-align: right;
-        }
-        .dropdown-menu.active {
-            display: block;
-        }
-        .dropdown-menu a {
-            display: block;
-            padding: 12px 20px;
-            color: white;
-            text-decoration: none;
-            font-size: 16px;
-            border-bottom: 1px solid #222222;
-        }
-        .dropdown-menu a:hover {
-            background: #222222;
-        }
-        .content {
-            padding: 120px 20px 50px;
-            text-align: center;
-            min-height: 100vh;
-        }
-        .pc-title {
-            font-size: 60px;
-            font-weight: 900;
-            letter-spacing: 5px;
-            margin: 40px 0 30px;
-            text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
-            background: linear-gradient(to right, #ffffff, #888888, #ffffff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-size: 300% 100%;
-            animation: gradient 8s ease infinite;
-        }
-        @keyframes gradient {
-            0% {background-position: 0% 50%}
-            50% {background-position: 100% 50%}
-            100% {background-position: 0% 50%}
-        }
-        .search-box {
-            max-width: 600px;
-            margin: 0 auto 40px;
-            display: flex;
-            gap: 15px;
-        }
-        .search-input {
-            flex: 1;
-            padding: 15px 25px;
-            border-radius: 30px;
-            border: 1px solid #444;
-            background: rgba(20,20,20,0.8);
-            color: white;
-            font-size: 18px;
-            outline: none;
-        }
-        .search-btn {
-            padding: 0 30px;
-            border-radius: 30px;
-            border: none;
-            background: #333;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 18px;
-            transition: 0.3s;
-        }
-        .search-btn:hover {
-            background: #555;
-        }
-        .app-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 30px;
-            max-width: 1200px;
-            margin: 50px auto;
-            padding: 0 20px;
-        }
-        .app-card {
-            background: rgba(25, 25, 25, 0.5);
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(50, 50, 50, 0.4);
-            text-align: right;
-            padding: 20px;
-        }
-        .card-header-flex {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-        .map-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #555;
-        }
-        .app-image {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            border-radius: 12px;
-            margin-bottom: 15px;
-        }
-        .section-panel {
-            display: none;
-            max-width: 800px;
-            margin: 0 auto;
-            background: rgba(20,20,20,0.8);
-            padding: 30px;
-            border-radius: 20px;
-            border: 1px solid #333;
-            text-align: right;
-        }
-        .section-panel.active {
-            display: block;
-        }
-        .form-control {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0 20px;
-            background: #111;
-            border: 1px solid #333;
-            border-radius: 10px;
-            color: white;
-            font-size: 16px;
-        }
-        .btn-action {
-            background: #333;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 10px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .btn-action:hover {
-            background: #555;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>TRX</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;width:100%;min-height:100%;overflow-x:hidden;overflow-y:auto;background:#030303;color:#fff;scroll-behavior:smooth}
+body{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+.scene{position:fixed;inset:0;isolation:isolate;background:#050505;z-index:-4}
+.backdrop{position:absolute;inset:-2%;width:104%;height:104%;object-fit:cover;object-position:center center;filter:brightness(.45) contrast(1.2) saturate(.85);z-index:-3}
+.shade{position:absolute;inset:0;background:radial-gradient(circle at center, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.85) 100%), linear-gradient(180deg,rgba(0,0,0,.2),rgba(0,0,0,.9));z-index:-2}
+#snow{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:3}
+.wrapper{position:relative;z-index:4;width:100%;display:flex;flex-direction:column;align-items:center;padding:30px 15px;gap:35px}
+.center{display:flex;align-items:center;flex-direction:column;text-align:center;padding:15px;margin-top:12vh}
+.avatar-box{position:relative;width:105px;height:105px;margin-bottom:12px;flex-shrink:0}
+.avatar{display:block;width:100%;height:100%;object-fit:cover;border-radius:50%;border:1px solid rgba(255,255,255,0.1);box-shadow:0 0 25px rgba(0,0,0,0.9), 0 0 15px rgba(0,0,0,1)}
+.avatar-badge{position:absolute;right:1px;bottom:2px;width:24px;height:24px;border-radius:50%;background:#23d160;border:3px solid #080808;box-shadow:0 0 10px rgba(35,209,96,.6);animation:onlinePulse 1.8s ease-in-out infinite}
+@keyframes onlinePulse{0%,100%{box-shadow:0 0 0 2px rgba(35,209,96,.2),0 0 8px rgba(35,209,96,.5);transform:scale(1)}50%{box-shadow:0 0 0 5px rgba(35,209,96,0),0 0 15px rgba(35,209,96,.9);transform:scale(1.05)}}
+.name-line{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:0}
+.name{font-size:24px;font-weight:800;letter-spacing:-0.5px;text-shadow:0 0 12px rgba(0,0,0,0.9), 0 0 5px rgba(255,255,255,0.2)}
+.verified{width:15px;height:15px;background:#e1e1e1;color:#111;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:900}
+.clock{font-size:18px;font-weight:500;letter-spacing:1px;margin-top:10px;color:#ccc;text-shadow:0 0 10px rgba(0,0,0,1);font-variant-numeric:tabular-nums}
+.socials{display:flex;gap:10px;margin-top:14px}
+.social-btn{width:36px;height:36px;border-radius:8px;border:1px solid rgba(255,255,255,.08);background:rgba(10,10,12,.6);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:grid;place-items:center;color:#eee;text-decoration:none;box-shadow:0 0 15px rgba(0,0,0,0.9);transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}
+.social-btn:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.3);box-shadow:0 0 20px rgba(0,0,0,1), 0 0 10px rgba(255,255,255,0.15)}
+.social-btn svg{width:16px;height:16px;fill:currentColor}
+/* مربع الأصدقاء نيـون أسود */
+.friends-card{width:100%;max-width:340px;background:rgba(8,8,10,0.65);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(30,30,35,0.8);border-radius:14px;padding:16px;box-shadow:0 0 20px rgba(0,0,0,0.9), 0 0 15px rgba(0,0,0,1), inset 0 0 15px rgba(0,0,0,0.8);margin-bottom:40px;transition:all 0.35s cubic-bezier(0.16, 1, 0.3, 1)}
+.friends-card:hover{transform:translateY(-3px);border-color:rgba(80,80,95,0.6);box-shadow:0 0 30px rgba(0,0,0,1), 0 0 25px rgba(0, 0, 0, 0.95), inset 0 0 20px rgba(0,0,0,0.9)}
+.friends-title{font-size:14px;font-weight:700;margin:0 0 12px 0;text-align:center;color:#888;letter-spacing:1.5px;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,0.05);padding-bottom:8px;text-shadow:0 0 8px rgba(0,0,0,1)}
+.friend-item{display:flex;align-items:center;justify-content:space-between;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.04);border-radius:8px;padding:8px 12px;margin-bottom:8px;transition:all 0.25s ease;box-shadow:inset 0 0 8px rgba(0,0,0,0.8)}
+.friend-item:last-child{margin-bottom:0}
+.friend-item:hover{background:rgba(15,15,18,0.8);border-color:rgba(255,255,255,0.15);transform:scale(1.01);box-shadow:0 0 12px rgba(0,0,0,1)}
+.friend-id{font-family:monospace;font-size:11px;color:#aaa;letter-spacing:0.3px}
+.transfer-btn{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;background:rgba(15,15,20,0.9);border:1px solid rgba(40,40,45,0.9);border-radius:6px;color:#ddd;text-decoration:none;font-size:11px;font-weight:600;transition:all 0.25s ease;box-shadow:0 0 10px rgba(0,0,0,0.8)}
+.transfer-btn:hover{background:#000;border-color:rgba(100,100,110,0.8);color:#fff;transform:scale(1.03);box-shadow:0 0 15px rgba(0, 0, 0, 1), 0 0 8px rgba(255,255,255,0.15)}
+@media(max-width:600px){.center{margin-top:8vh}.friends-card{max-width:310px;padding:14px}}
+</style>
 </head>
 <body>
+<main class="scene">
+<img class="backdrop" src="https://cdn.imagetourls.com/uploads/tyImg/2Rpxs6M9.jpg" alt="">
+<div class="shade"></div>
+</main>
+<canvas id="snow"></canvas>
+<div class="wrapper">
+<section class="center">
+<div class="avatar-box">
+<img class="avatar" src="https://cdn.imagetourls.com/uploads/tyImg/ZD1tnW3t.jpg" alt="TRX profile picture">
+<span class="avatar-badge"></span>
+</div>
+<div class="name-line"><span class="name">TRX</span><span class="verified">✓</span></div>
+<div class="clock" id="clock">--:--:-- --</div>
+<div class="socials">
+<a class="social-btn" href="https://www.tiktok.com/@.._trx" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+<svg viewBox="0 0 24 24"><path d="M19.6 7.1a6.8 6.8 0 0 1-4.2-1.5v8.1a6.1 6.1 0 1 1-5.3-6.1v3.2a2.9 2.9 0 1 0 2.1 2.8V2.5h3.2c.2 2.1 1.7 3.8 4.2 4.1v.5Z"/></svg>
+</a>
+<a class="social-btn" href="https://discord.com/users/1446138117076553824" target="_blank" rel="noopener noreferrer" aria-label="Discord account trx_">
+<svg viewBox="0 0 24 24"><path d="M19.7 5.1A18.5 18.5 0 0 0 15.1 3.7l-.6 1.2a17 17 0 0 0-5 0l-.6-1.2a18.5 18.5 0 0 0-4.6 1.4C1.4 9.4.6 13.6 1 17.8a18.7 18.7 0 0 0 5.7 2.9l1.2-2a12 12 0 0 1-1.9-.9l.5-.4a13.3 13.3 0 0 0 11 0l.5.4a12 12 0 0 1-1.9.9l1.2 2a18.7 18.7 0 0 0 5.7-2.9c.5-4.9-.8-9-3.3-12.7ZM8.8 14.8c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2Zm6.4 0c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2Z"/></svg>
+</a>
+</div>
+</section>
 
-    <div class="navbar">
-        <div class="nav-container">
-            <a href="#" onclick="switchTab('scripts')"><i class="fa-solid fa-code"></i> السكربتات</a>
-            <a href="#" onclick="switchTab('webhook')"><i class="fa-solid fa-bolt"></i> الويبهوك</a>
-            <a href="#" onclick="switchTab('hosting')"><i class="fa-solid fa-server"></i> استضافة Lua</a>
-            <a href="#" onclick="switchTab('media')"><i class="fa-solid fa-cloud-arrow-up"></i> استضافة ميديا</a>
-            <div class="menu-toggle" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></div>
-        </div>
-    </div>
+<section class="friends-card">
+<h3 class="friends-title">Friends</h3>
+<div class="friend-item">
+<span class="friend-id">1397691675521847296</span>
+<a class="transfer-btn" href="https://discord.com/users/1397691675521847296" target="_blank" rel="noopener noreferrer">نقل إلى حسابه</a>
+</div>
+<div class="friend-item">
+<span class="friend-id">1511938389602209936</span>
+<a class="transfer-btn" href="https://discord.com/users/1511938389602209936" target="_blank" rel="noopener noreferrer">نقل إلى حسابه</a>
+</div>
+</section>
+</div>
+<script>
+    
+setInterval(() => {
+document.getElementById("clock").textContent = new Date().toLocaleTimeString("en-US", {hour:"2-digit", minute:"2-digit", second:"2-digit", hour12:true});
+}, 1000);
+document.getElementById("clock").textContent = new Date().toLocaleTimeString("en-US", {hour:"2-digit", minute:"2-digit", second:"2-digit", hour12:true});
 
-    <div class="dropdown-menu" id="dropdownMenu">
-        <a href="#" onclick="switchTab('scripts')"><i class="fa-solid fa-code"></i> بحث السكربتات</a>
-        <a href="#" onclick="switchTab('webhook')"><i class="fa-solid fa-bolt"></i> إدارة الويبهوك</a>
-        <a href="#" onclick="switchTab('hosting')"><i class="fa-solid fa-server"></i> استضافة Lua</a>
-        <a href="#" onclick="switchTab('media')"><i class="fa-solid fa-cloud-arrow-up"></i> رفع وميديا CDN</a>
-    </div>
-
-    <div class="content">
-        
-        <!-- قسم السكربتات -->
-        <div id="tab-scripts" class="section-panel active" style="background:transparent; border:none; padding:0;">
-            <div class="pc-title">MRX SCRIPTS HUB</div>
-            <div class="search-box">
-                <input type="text" id="searchInput" class="search-input" placeholder="ابحث عن اسم ماب أو سكربت روبلوكس...">
-                <button class="search-btn" onclick="searchScripts()"><i class="fa-solid fa-search"></i> بحث</button>
-            </div>
-            <div class="app-grid" id="scriptsGrid">
-                <!-- النتائج تظهر هنا -->
-            </div>
-        </div>
-
-        <!-- قسم الويبهوك -->
-        <div id="tab-webhook" class="section-panel">
-            <h2><i class="fa-solid fa-bolt"></i> إدارة وتعديل الويبهوك</h2>
-            <p>ضع رابط الويبهوك لجلب كافة معلوماته أو لتعديل اسمه وصورته للأبد:</p>
-            <label>رابط الويبهوك:</label>
-            <input type="text" id="whUrl" class="form-control" placeholder="https://discord.com/api/webhooks/...">
-            <button class="btn-action" onclick="fetchWebhookInfo()">جلب المعلومات</button>
-            
-            <div id="whResult" style="margin-top:20px;"></div>
-            
-            <hr style="border-color:#333; margin:20px 0;">
-            
-            <h3>تعديل اسم وصورة الويبهوك (دائم)</h3>
-            <label>الاسم الجديد:</label>
-            <input type="text" id="newWhName" class="form-control" placeholder="اسم جديد...">
-            <label>صورة الويبهوك (اختر صورة من الجوال):</label>
-            <input type="file" id="newWhImage" class="form-control" accept="image/*">
-            <button class="btn-action" onclick="updateWebhookPermanent()">تحديث الويبهوك للأبد</button>
-        </div>
-
-        <!-- قسم استضافة Lua -->
-        <div id="tab-hosting" class="section-panel">
-            <h2><i class="fa-solid fa-server"></i> محرك استضافة سكربتات Lua</h2>
-            <p>اكتب كود اللاسكربت أو ارفع ملفه لتوليد رابط Raw حقيقي ومدمج مع نظام تخطي وحماية:</p>
-            <label>كود السكربت (Lua):</label>
-            <textarea id="luaCode" class="form-control" rows="8" placeholder="print('Hello from MRX!')"></textarea>
-            <button class="btn-action" onclick="createLuaHosting()">إنشاء الاستضافة ورابط Raw</button>
-            
-            <div id="luaResult" style="margin-top:20px;"></div>
-        </div>
-
-        <!-- قسم استضافة الميديا -->
-        <div id="tab-media" class="section-panel">
-            <h2><i class="fa-solid fa-cloud-arrow-up"></i> استضافة صور وفيديو (Discord CDN)</h2>
-            <p>ارفع أي صورة أو فيديو (بأي مدة) للحصول على رابط مباشر:</p>
-            <input type="file" id="mediaFile" class="form-control" accept="image/*,video/*">
-            <button class="btn-action" onclick="uploadMediaCDN()">رفع وتوليد الرابط</button>
-            
-            <div id="mediaResult" style="margin-top:20px;"></div>
-        </div>
-
-    </div>
-
-    <script>
-        function toggleMenu() {
-            document.getElementById('dropdownMenu').classList.toggle('active');
-        }
-
-        function switchTab(tabId) {
-            document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
-            document.getElementById('tab-' + tabId).classList.add('active');
-            document.getElementById('dropdownMenu').classList.remove('active');
-        }
-
-        async function searchScripts() {
-            let query = document.getElementById('searchInput').value.trim();
-            let grid = document.getElementById('scriptsGrid');
-            grid.innerHTML = '<p style="grid-column: 1/-1; text-align:center;">جاري البحث في مابات روبلوكس...</p>';
-            
-            try {
-                let res = await fetch(`https://scriptblox.com/api/script/search?q=${encodeURIComponent(query || 'roblox')}`);
-                let data = await res.json();
-                let scripts = data.result?.scripts || [];
-                
-                grid.innerHTML = '';
-                if(scripts.length === 0) {
-                    grid.innerHTML = '<p style="grid-column: 1/-1; text-align:center;">لم يتم العثور على نتائج.</p>';
-                    return;
-                }
-
-                scripts.forEach(s => {
-                    let mapName = s.game?.name || "Roblox Game";
-                    let mapThumb = s.game?.imageUrl || "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=100&h=100&fit=crop";
-                    let scriptImg = s.image || mapThumb;
-                    let title = s.title || "سكربت MRX";
-                    let scriptContent = s.script || "print('MRX Script');";
-
-                    let card = document.createElement('div');
-                    card.className = 'app-card';
-                    card.innerHTML = `
-                        <div class="card-header-flex">
-                            <img src="${mapThumb}" class="map-avatar" alt="Map">
-                            <div>
-                                <h4 style="margin:0; font-size:16px;">${mapName}</h4>
-                                <span style="font-size:13px; color:#888;"><i class="fa-solid fa-star" style="color:gold;"></i> ممتاز</span>
-                            </div>
-                        </div>
-                        <img src="${scriptImg}" class="app-image" alt="Script">
-                        <h3 style="font-size:18px; margin-bottom:10px;">${title}</h3>
-                        <button class="btn-action" style="width:100%;" onclick="copyScriptText(this, \`${encodeURIComponent(scriptContent)}\`)">
-                            <i class="fa-solid fa-copy"></i> نسخ السكربت
-                        </button>
-                    `;
-                    grid.appendChild(card);
-                });
-            } catch(e) {
-                grid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:red;">حدث خطأ أثناء جلب السكربتات.</p>';
-            }
-        }
-
-        function copyScriptText(btn, encodedText) {
-            let text = decodeURIComponent(encodedText);
-            navigator.clipboard.writeText(text);
-            let oldHTML = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-check"></i> تم النسخ!';
-            setTimeout(() => btn.innerHTML = oldHTML, 2000);
-        }
-
-        async function fetchWebhookInfo() {
-            let url = document.getElementById('whUrl').value.trim();
-            let resDiv = document.getElementById('whResult');
-            if(!url) return alert('الرجاء إدخال رابط الويبهوك');
-            
-            resDiv.innerHTML = 'جاري الجلب...';
-            try {
-                let r = await fetch(url);
-                let data = await r.json();
-                resDiv.innerHTML = `
-                    <div style="background:#111; padding:15px; border-radius:10px; border:1px solid #333;">
-                        <p><strong>اسم الويبهوك:</strong> ${data.name}</p>
-                        <p><strong>معرف القناة (Channel ID):</strong> ${data.channel_id}</p>
-                        <p><strong>معرف السيرفر (Guild ID):</strong> ${data.guild_id || 'غير متاح'}</p>
-                        <p><strong>معرف التطبيق (App ID):</strong> ${data.application_id || 'لا يوجد'}</p>
-                    </div>
-                `;
-            } catch(e) {
-                resDiv.innerHTML = '<span style="color:red;">فشل جلب الويبهوك، تأكد من صحة الرابط.</span>';
-            }
-        }
-
-        async function updateWebhookPermanent() {
-            let url = document.getElementById('whUrl').value.trim();
-            let newName = document.getElementById('newWhName').value.trim();
-            let fileInput = document.getElementById('newWhImage').files[0];
-            
-            if(!url) return alert('ضع رابط الويبهوك أولاً');
-            
-            let formData = new FormData();
-            if(newName) formData.append('name', newName);
-            if(fileInput) formData.append('avatar', fileInput);
-            
-            try {
-                let r = await fetch(url, {
-                    method: 'PATCH',
-                    body: formData
-                });
-                if(r.ok) {
-                    alert('تم تحديث الويبهوك بنجاح للأبد!');
-                } else {
-                    alert('فشل التحديث، تأكد من الصلاحيات.');
-                }
-            } catch(e) {
-                alert('حدث خطأ أثناء الاتصال.');
-            }
-        }
-
-        function createLuaHosting() {
-            let code = document.getElementById('luaCode').value.trim();
-            let resDiv = document.getElementById('luaResult');
-            if(!code) return alert('اكتب الكود أولاً');
-            
-            let id = 'mrx_' + Math.random().toString(36).substring(2, 9);
-            localStorage.setItem(id, code);
-            
-            let rawLink = window.location.origin + window.location.pathname + '?raw=' + id;
-            resDiv.innerHTML = `
-                <div style="background:#111; padding:15px; border-radius:10px; border:1px solid #333;">
-                    <p>رابط الاستضافة والـ Raw جاهز:</p>
-                    <input type="text" class="form-control" value="${rawLink}" readonly>
-                    <button class="btn-action" onclick="navigator.clipboard.writeText('${rawLink}'); alert('تم نسخ الرابط!');">نسخ الرابط</button>
-                </div>
-            `;
-        }
-
-        function uploadMediaCDN() {
-            let file = document.getElementById('mediaFile').files[0];
-            let resDiv = document.getElementById('mediaResult');
-            if(!file) return alert('اختر ملفاً أولاً');
-            
-            let fakeId = Math.random().toString(36).substring(2, 12);
-            let cdnLink = `https://cdn.discordapp.com/attachments/131991996/15254449/${fakeId}_${file.name}`;
-            
-            resDiv.innerHTML = `
-                <div style="background:#111; padding:15px; border-radius:10px; border:1px solid #333;">
-                    <p>تم توليد رابط CDN بنجاح:</p>
-                    <input type="text" class="form-control" value="${cdnLink}" readonly>
-                    <button class="btn-action" onclick="navigator.clipboard.writeText('${cdnLink}'); alert('تم نسخ الرابط!');">نسخ رابط CDN</button>
-                </div>
-            `;
-        }
-
-        window.onload = function() {
-            let urlParams = new URLSearchParams(window.location.search);
-            let rawId = urlParams.get('raw');
-            if(rawId) {
-                let savedCode = localStorage.getItem(rawId);
-                if(savedCode) {
-                    document.body.innerHTML = `
-                        <div style="text-align:center; padding:50px; font-family:'Cairo';">
-                            <h1>MRX Security Shield & Ad Wall</h1>
-                            <p>يرجى تخطي الإعلان الممول أدناه للانتقال إلى الكود أو روبلوكس:</p>
-                            <div style="background:#222; padding:30px; margin:20px auto; max-width:600px; border-radius:15px; border:1px solid #444;">
-                                <h3>إعلان شركة كبرى (Sponsored)</h3>
-                                <p>استمتع بأحدث الألعاب والخدمات التقنية...</p>
-                                <button class="btn-action" id="skipBtn" disabled style="background:#555;">يرجى الانتظار (5ث)...</button>
-                            </div>
-                            <div id="targetArea" style="display:none; max-width:800px; margin:0 auto; text-align:right;">
-                                <h3>كود السكربت الخاص بك:</h3>
-                                <textarea class="form-control" rows="10" readonly>${savedCode}</textarea>
-                                <br>
-                                <button class="btn-action" onclick="window.location.href='roblox://';">انتقال إلى روبلوكس (Roblox)</button>
-                            </div>
-                        </div>
-                    `;
-                    let seconds = 5;
-                    let btn = document.getElementById('skipBtn');
-                    let timer = setInterval(() => {
-                        seconds--;
-                        if(seconds > 0) {
-                            btn.innerText = `يرجى الانتظار (${seconds}ث)...`;
-                        } else {
-                            clearInterval(timer);
-                            btn.disabled = false;
-                            btn.style.background = '#e74c3c';
-                            btn.innerText = 'تخطي الإعلان وعرض الكود';
-                            btn.onclick = function() {
-                                btn.parentElement.style.display = 'none';
-                                document.getElementById('targetArea').style.display = 'block';
-                            };
-                        }
-                    }, 1000);
-                    return;
-                }
-            }
-            searchScripts();
-        }
-    </script>
+const canvas = document.getElementById("snow");
+const ctx = canvas.getContext("2d");
+let dpr = Math.min(window.devicePixelRatio || 1, 3);
+let width = window.innerWidth;
+let height = window.innerHeight;
+canvas.width = Math.round(width * dpr);
+canvas.height = Math.round(height * dpr);
+canvas.style.width = width + "px";
+canvas.style.height = height + "px";
+ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+let flakes = Array.from({length: Math.min(180, Math.round(width / 2.5))}, () => ({
+x: Math.random() * width,
+y: Math.random() * height,
+r: Math.random() * 2 + .6,
+speed: Math.random() * 1.1 + .3,
+drift: (Math.random() - .5) * .5,
+alpha: Math.random() * .5 + .2,
+blur: Math.random() > .75
+}));
+window.addEventListener("resize", () => {
+dpr = Math.min(window.devicePixelRatio || 1, 3);
+width = window.innerWidth;
+height = window.innerHeight;
+canvas.width = Math.round(width * dpr);
+canvas.height = Math.round(height * dpr);
+canvas.style.width = width + "px";
+canvas.style.height = height + "px";
+ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}, {passive: true});
+setInterval(() => {
+ctx.clearRect(0, 0, width, height);
+for (const f of flakes) {
+ctx.beginPath();
+ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+ctx.fillStyle = "rgba(255,255,255," + f.alpha + ")";
+if (f.blur) { ctx.shadowBlur = 8; ctx.shadowColor = "rgba(255,255,255,.7)"; } else { ctx.shadowBlur = 0; }
+ctx.fill();
+f.y += f.speed;
+f.x += f.drift + Math.sin(f.y * .008) * .2;
+if (f.y > height + 8) { f.y = -8; f.x = Math.random() * width; }
+if (f.x < -8) f.x = width + 8;
+if (f.x > width + 8) f.x = -8;
+}
+ctx.shadowBlur = 0;
+}, 1000 / 60);
+</script>
 </body>
 </html>
