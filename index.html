@@ -1,1 +1,652 @@
 
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#050505">
+<title>TRX</title>
+
+<style>
+*{box-sizing:border-box}
+
+html,body{
+margin:0;
+width:100%;
+min-height:100%;
+background:#050505;
+color:#fff;
+}
+
+html{
+overflow-x:hidden;
+overflow-y:auto;
+scroll-behavior:smooth;
+}
+
+body{
+font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+overflow-x:hidden;
+}
+
+.scene{
+position:relative;
+isolation:isolate;
+background:#080808;
+min-height:100vh;
+display:flex;
+flex-direction:column;
+align-items:center;
+}
+
+.backdrop{
+position:fixed;
+inset:-2%;
+width:104%;
+height:104%;
+object-fit:cover;
+object-position:center center;
+filter:brightness(.62) contrast(1.12) saturate(.9);
+z-index:-3;
+}
+
+.shade{
+position:fixed;
+inset:0;
+background:linear-gradient(
+180deg,
+rgba(0,0,0,.16),
+rgba(0,0,0,.08) 45%,
+rgba(0,0,0,.65)
+);
+z-index:-2;
+pointer-events:none;
+}
+
+#snow{
+position:fixed;
+inset:0;
+width:100%;
+height:100%;
+pointer-events:none;
+z-index:3;
+}
+
+
+
+.center{
+position:relative;
+width:100%;
+min-height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+flex-direction:column;
+text-align:center;
+padding:28px 22px;
+z-index:4;
+}
+
+.avatar-box{
+position:relative;
+width:min(190px,48vw);
+height:min(190px,48vw);
+margin-bottom:18px;
+flex-shrink:0;
+}
+
+.avatar{
+display:block;
+width:100%;
+height:100%;
+object-fit:cover;
+border-radius:50%;
+filter:drop-shadow(0 12px 24px rgba(0,0,0,.5));
+}
+
+.avatar-badge{
+position:absolute;
+right:1px;
+bottom:3px;
+width:38px;
+height:38px;
+border-radius:50%;
+background:#23d160;
+border:5px solid rgba(30,30,33,.96);
+box-shadow:0 0 0 2px rgba(35,209,96,.25),0 0 17px rgba(35,209,96,.75);
+animation:onlinePulse 1.8s ease-in-out infinite;
+}
+
+@keyframes onlinePulse{
+0%,100%{
+box-shadow:0 0 0 2px rgba(35,209,96,.2),0 0 13px rgba(35,209,96,.55);
+transform:scale(1);
+}
+50%{
+box-shadow:0 0 0 7px rgba(35,209,96,0),0 0 25px rgba(35,209,96,.95);
+transform:scale(1.06);
+}
+}
+
+.name-line{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:15px;
+}
+
+.name{
+font-size:clamp(31px,8vw,40px);
+font-weight:800;
+letter-spacing:-1.1px;
+text-shadow:0 3px 18px rgba(0,0,0,.5);
+}
+
+.verified{
+width:19px;
+height:19px;
+background:#f4f4f4;
+color:#555;
+border-radius:50%;
+display:grid;
+place-items:center;
+font-size:17px;
+font-weight:900;
+}
+
+.clock{
+font-size:clamp(23px,6vw,30px);
+font-weight:500;
+letter-spacing:1.2px;
+margin-top:18px;
+text-shadow:0 3px 18px rgba(0,0,0,.7);
+font-variant-numeric:tabular-nums;
+}
+
+.socials{
+display:flex;
+gap:12px;
+margin-top:21px;
+}
+
+.social-btn{
+width:44px;
+height:44px;
+border-radius:10px;
+border:1px solid rgba(255,255,255,.35);
+background:rgba(0,0,0,.45);
+backdrop-filter:blur(12px);
+-webkit-backdrop-filter:blur(12px);
+display:grid;
+place-items:center;
+color:#fff;
+text-decoration:none;
+box-shadow:0 0 15px rgba(255,255,255,.13),inset 0 1px rgba(255,255,255,.12);
+transition:.2s;
+}
+
+.social-btn:hover{
+transform:translateY(-3px);
+border-color:#fff;
+box-shadow:0 0 22px rgba(255,255,255,.45);
+}
+
+.social-btn svg{
+width:20px;
+height:20px;
+fill:currentColor;
+}
+
+
+
+.friends-section{
+position:relative;
+z-index:4;
+width:min(650px,94%);
+padding:30px 0 75px;
+text-align:center;
+}
+
+.friends-title{
+font-size:29px;
+font-weight:900;
+margin:0 0 30px;
+color:#fff;
+text-shadow:
+0 0 8px #fff,
+0 0 18px rgba(255,255,255,.8),
+0 0 35px rgba(255,255,255,.4);
+letter-spacing:1px;
+}
+
+.friends-grid{
+display:grid;
+grid-template-columns:1fr;
+gap:24px;
+}
+
+
+
+.friend-card{
+position:relative;
+isolation:isolate;
+display:flex;
+align-items:center;
+gap:14px;
+padding:17px;
+border-radius:19px;
+background:#050505;
+overflow:hidden;
+}
+
+.friend-card::before{
+content:"";
+position:absolute;
+inset:-150%;
+z-index:-2;
+background:conic-gradient(
+transparent 0deg,
+transparent 230deg,
+#777 270deg,
+#fff 290deg,
+#aaa 310deg,
+transparent 340deg
+);
+animation:neonRotate 4s linear infinite;
+}
+
+.friend-card::after{
+content:"";
+position:absolute;
+inset:2px;
+border-radius:17px;
+background:rgba(3,3,3,.98);
+z-index:-1;
+}
+
+@keyframes neonRotate{
+to{
+transform:rotate(360deg);
+}
+}
+
+.friend-card:hover{
+box-shadow:
+0 0 15px rgba(255,255,255,.7),
+0 0 35px rgba(255,255,255,.25);
+}
+
+
+.friend-avatar{
+width:65px;
+height:65px;
+flex-shrink:0;
+object-fit:cover;
+border-radius:50%;
+border:2px solid #eee;
+box-shadow:
+0 0 10px rgba(255,255,255,.8),
+0 0 22px rgba(255,255,255,.25);
+background:#171717;
+}
+
+
+
+.friend-info{
+flex:1;
+min-width:0;
+text-align:left;
+}
+
+.friend-name{
+font-size:19px;
+font-weight:900;
+color:#fff;
+text-shadow:0 0 10px rgba(255,255,255,.65);
+}
+
+.friend-username{
+font-size:12px;
+color:#aaa;
+margin-top:7px;
+overflow-wrap:anywhere;
+}
+
+
+
+.friend-link{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:7px;
+padding:10px 12px;
+border-radius:12px;
+color:white;
+text-decoration:none;
+white-space:nowrap;
+font-size:12px;
+font-weight:800;
+background:rgba(255,255,255,.05);
+border:1px solid #fff;
+box-shadow:0 0 10px rgba(255,255,255,.4);
+transition:.25s;
+}
+
+.friend-link:hover{
+background:rgba(255,255,255,.15);
+box-shadow:0 0 20px rgba(255,255,255,.8);
+transform:scale(1.04);
+}
+
+.friend-link svg{
+width:17px;
+height:17px;
+fill:none;
+stroke:#fff;
+stroke-width:2;
+stroke-linecap:round;
+stroke-linejoin:round;
+flex-shrink:0;
+}
+
+
+
+@media(max-width:430px){
+
+.center{
+padding:22px 18px;
+}
+
+.friend-card{
+gap:10px;
+padding:13px;
+}
+
+.friend-avatar{
+width:53px;
+height:53px;
+}
+
+.friend-name{
+font-size:16px;
+}
+
+.friend-link{
+font-size:10px;
+padding:9px 8px;
+}
+
+.friend-username{
+font-size:10px;
+}
+
+}
+</style>
+</head>
+
+<body>
+
+<main class="scene">
+
+<img class="backdrop"
+src="https://cdn.imagetourls.com/uploads/tyImg/2Rpxs6M9.jpg"
+alt="">
+
+<div class="shade"></div>
+
+<canvas id="snow"></canvas>
+
+
+
+<section class="center">
+
+<div class="avatar-box">
+
+<img class="avatar"
+src="https://cdn.imagetourls.com/uploads/tyImg/ZD1tnW3t.jpg"
+alt="TRX profile picture">
+
+<span class="avatar-badge"></span>
+
+</div>
+
+<div class="name-line">
+<span class="name">TRX</span>
+<span class="verified">✓</span>
+</div>
+
+<div class="clock" id="clock">11:29:19 PM</div>
+
+<div class="socials">
+
+<a class="social-btn"
+href="https://www.tiktok.com/@.._trx"
+target="_blank"
+rel="noopener noreferrer"
+aria-label="TikTok">
+
+<svg viewBox="0 0 24 24">
+<path d="M19.6 7.1a6.8 6.8 0 0 1-4.2-1.5v8.1a6.1 6.1 0 1 1-5.3-6.1v3.2a2.9 2.9 0 1 0 2.1 2.8V2.5h3.2c.2 2.1 1.7 3.8 4.2 4.1v.5Z"/>
+</svg>
+
+</a>
+
+<a class="social-btn"
+href="https://discord.com/users/1446138117076553824"
+target="_blank"
+rel="noopener noreferrer"
+aria-label="Discord">
+
+<svg viewBox="0 0 24 24">
+<path d="M19.7 5.1A18.5 18.5 0 0 0 15.1 3.7l-.6 1.2a17 17 0 0 0-5 0l-.6-1.2a18.5 18.5 0 0 0-4.6 1.4C1.4 9.4.6 13.6 1 17.8a18.7 18.7 0 0 0 5.7 2.9l1.2-2a12 12 0 0 1-1.9-.9l.5-.4a13.3 13.3 0 0 0 11 0l.5.4a12 12 0 0 1-1.9.9l1.2 2a18.7 18.7 0 0 0 5.7-2.9c.5-4.9-.8-9-3.3-12.7ZM8.8 14.8c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2Zm6.4 0c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2Z"/>
+</svg>
+
+</a>
+
+</div>
+
+</section>
+
+
+
+<section class="friends-section">
+
+<h2 class="friends-title">♛ أخوياء TRX ♛</h2>
+
+<div class="friends-grid">
+
+
+
+<div class="friend-card">
+
+<img class="friend-avatar"
+src="https://cdn.imagetourls.com/uploads/tyImg/BuAwMPvb.jpg"
+alt="TZ">
+
+<div class="friend-info">
+
+<div class="friend-name">TZ</div>
+
+<div class="friend-username">673y</div>
+
+</div>
+
+<a class="friend-link"
+href="https://discord.com/users/1511938389602209936"
+target="_blank"
+rel="noopener noreferrer">
+
+<svg viewBox="0 0 24 24">
+<path d="M14 3h7v7"/>
+<path d="M10 14 21 3"/>
+<path d="M19 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h6"/>
+</svg>
+
+نقل حساب
+
+</a>
+
+</div>
+
+
+
+<div class="friend-card">
+
+<img class="friend-avatar"
+src="https://cdn.imagetourls.com/uploads/tyImg/eEQmLNNn.jpg"
+alt="الجوكر">
+
+<div class="friend-info">
+
+<div class="friend-name">الجوكر 👑</div>
+
+<div class="friend-username">immaculate_hamster_83395</div>
+
+</div>
+
+<a class="friend-link"
+href="https://discord.com/users/1397691675521847296"
+target="_blank"
+rel="noopener noreferrer">
+
+<svg viewBox="0 0 24 24">
+<path d="M14 3h7v7"/>
+<path d="M10 14 21 3"/>
+<path d="M19 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h6"/>
+</svg>
+
+نقل حساب
+
+</a>
+
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+<script>
+
+
+
+const clock=document.getElementById("clock");
+
+function tick(){
+
+const now=new Date();
+
+clock.textContent=now.toLocaleTimeString("en-US",{
+hour:"2-digit",
+minute:"2-digit",
+second:"2-digit",
+hour12:true
+});
+
+}
+
+tick();
+
+setInterval(tick,1000);
+
+
+
+
+const canvas=document.getElementById("snow");
+const ctx=canvas.getContext("2d");
+
+let width=0;
+let height=0;
+let dpr=1;
+let flakes=[];
+
+function resize(){
+
+dpr=Math.min(window.devicePixelRatio||1,3);
+
+width=window.innerWidth;
+height=window.innerHeight;
+
+canvas.width=Math.round(width*dpr);
+canvas.height=Math.round(height*dpr);
+
+canvas.style.width=width+"px";
+canvas.style.height=height+"px";
+
+ctx.setTransform(dpr,0,0,dpr,0,0);
+
+ctx.imageSmoothingEnabled=true;
+
+flakes=Array.from({
+length:Math.min(220,Math.round(width/2.2))
+},()=>({
+
+x:Math.random()*width,
+y:Math.random()*height,
+r:Math.random()*2.4+.7,
+speed:Math.random()*1.15+.35,
+drift:(Math.random()-.5)*.55,
+alpha:Math.random()*.55+.2,
+blur:Math.random()>.72
+
+}));
+
+}
+
+function draw(){
+
+ctx.clearRect(0,0,width,height);
+
+for(const f of flakes){
+
+ctx.beginPath();
+
+ctx.arc(f.x,f.y,f.r,0,Math.PI*2);
+
+ctx.fillStyle="rgba(255,255,255,"+f.alpha+")";
+
+if(f.blur){
+
+ctx.shadowBlur=10;
+ctx.shadowColor="rgba(255,255,255,.8)";
+
+}else{
+
+ctx.shadowBlur=0;
+
+}
+
+ctx.fill();
+
+f.y+=f.speed;
+
+f.x+=f.drift+Math.sin(f.y*.008)*.22;
+
+if(f.y>height+8){
+f.y=-8;
+f.x=Math.random()*width;
+}
+
+if(f.x<-8)f.x=width+8;
+
+if(f.x>width+8)f.x=-8;
+
+}
+
+ctx.shadowBlur=0;
+
+requestAnimationFrame(draw);
+
+}
+
+window.addEventListener("resize",resize,{passive:true});
+
+resize();
+
+draw();
+
+</script>
+
+</body>
+</html>
